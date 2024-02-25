@@ -1,0 +1,122 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border list-none p-0 m-0 scroll-smooth;
+  }
+
+  body {
+    @apply bg-white text-primary-black min-h-screen font-roboto;
+  }
+}
+
+/* TYPOGRAPHY */
+
+.h1-bold {
+  @apply text-[36px] font-bold leading-[140%];
+}
+
+.h1-semibold {
+  @apply text-[36px] font-semibold leading-[140%];
+}
+
+.h2-bold {
+  @apply text-[30px] font-bold leading-[140%];
+}
+
+.h3-bold {
+  @apply text-[24px] font-bold leading-[140%];
+}
+
+.base-semibold {
+  @apply text-[16px] font-semibold leading-[140%];
+}
+
+.base-medium {
+  @apply text-[16px] font-medium leading-[140%];
+}
+
+.base-regular {
+  @apply text-[16px] font-normal leading-[140%];
+}
+
+.body-bold {
+  @apply text-[18px] font-bold leading-[140%];
+}
+
+.body-medium {
+  @apply text-[18px] font-medium leading-[140%];
+}
+
+.small-semibold {
+  @apply text-[14px] font-semibold leading-[140%] tracking-tighter;
+}
+
+.small-medium {
+  @apply text-[14px] font-medium leading-[140%];
+}
+
+.small-regular {
+  @apply text-[14px] font-normal leading-[140%];
+}
+
+.subtle-semibold {
+  @apply text-[12px] font-semibold leading-[140%];
+}
+
+.tiny-medium {
+  @apply text-[10px] font-medium leading-[140%];
+}
+
+/* UTILITIES */
+.flex-center {
+  @apply flex justify-center items-center;
+}
+
+.flex-between {
+  @apply flex justify-between items-center;
+}
+
+.flex-start {
+  @apply flex justify-start items-center;
+}
+
+
+@layer components {
+  /* SHADCN COMPONENTS */
+  /* Form */
+  .shad-form_label {
+    @apply text-primary-black !important;
+  }
+
+  .shad-form_message {
+    @apply text-primary-red !important;
+  }
+
+  .shad-input {
+    @apply h-12 bg-transparent border border-light-grey placeholder:text-primary-black focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-grey !important;
+  }
+
+  .shad-textarea {
+    @apply h-36 bg-light-grey rounded-xl border-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important;
+  }
+
+  /* Button */
+  .shad-button_primary {
+    @apply bg-primary-black hover:opacity-90 text-light-grey flex gap-2 !important;
+  }
+
+  .shad-button_dark_4 {
+    @apply h-12 bg-primary-black px-5 text-light-grey flex gap-2 !important; 
+  }
+
+  .shad-button_ghost {
+    @apply flex gap-4 items-center justify-start hover:bg-transparent hover:text-primary-black !important;
+  }
+}
+
+
