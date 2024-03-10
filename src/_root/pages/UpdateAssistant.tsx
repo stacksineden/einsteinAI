@@ -189,9 +189,9 @@ const UpdateAssistant = () => {
             {assistantObject?.description || <Skeleton height={80} />}
           </h2>
           <div className="flex items-center gap-5 border-t border-t-light-grey py-2 px-3">
-            <p className="text-sm md:text-base text-primary-black opacity-60 font-medium">
+            {/* <p className="text-sm md:text-base text-primary-black opacity-60 font-medium">
               114K Hires
-            </p>
+            </p> */}
             <div
               className={`text-xs font-semibold bg-light-grey py-1 px-2 rounded-md uppercase ${getLevelColor(
                 getAssistantLevel(

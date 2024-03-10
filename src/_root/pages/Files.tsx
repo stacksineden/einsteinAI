@@ -36,7 +36,7 @@ const Files = () => {
     if (!fileId) return;
     setCurrentlyDeletedFile(fileId);
     try {
-      const deletedFile = await deleteFile(fileId);
+      const deletedFile = await deleteFile(fileId); 
       if (!deletedFile) {
         return toast({
           title: "Something went wrong!",

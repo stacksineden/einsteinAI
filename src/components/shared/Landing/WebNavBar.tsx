@@ -4,11 +4,11 @@ import { Menu, UserCircle } from "lucide-react";
 import { useState } from "react";
 
 const nav_Links = [
-  {
-    url: "/",
-    key: "home",
-    label: "Home",
-  },
+  // {
+  //   url: "/",
+  //   key: "home",
+  //   label: "Home",
+  // },
   {
     url: "/use_cases",
     key: "use_cases",
@@ -20,9 +20,14 @@ const nav_Links = [
     label: "Pricing",
   },
   {
-    url: "/blog",
+    url: "https://medium.com/@stacksineden",
     key: "blog",
     label: "Blog",
+  },
+  {
+    url: "/help-center",
+    key: "faqs",
+    label: "FAQs",
   },
   {
     url: "/enterprise",
@@ -77,10 +82,10 @@ const WebNavBar = () => {
                 className={`my-2 divide-y text-base divide-zinc-100 text-zinc-800`}
                 onClick={() => closenModal()}
               >
-                <Link to="/">
+                {/* <Link to="/">
                   {" "}
                   <li className="block py-2">Home</li>
-                </Link>
+                </Link> */}
                 <Link to="/use_cases">
                   {" "}
                   <li className="block py-2">Use Cases</li>
@@ -89,9 +94,12 @@ const WebNavBar = () => {
                   {" "}
                   <li className="block py-2">Pricing</li>
                 </Link>
-                <Link to="/blog">
-                  {" "}
+                <Link to="https://medium.com/@stacksineden" target="_blank">
                   <li className="block py-2">Blog</li>
+                </Link>
+                <Link to="/help-center">
+                  {" "}
+                  <li className="block py-2">FAQs</li>
                 </Link>
                 <Link to="/enterprise">
                   {" "}
@@ -103,8 +111,12 @@ const WebNavBar = () => {
         </div>
       )}
       <nav className="mx-auto max-w-[1440px] flex items-center justify-between relative z-30 py-5 px-6 lg:px-20 3xl:px-0">
-        <Link to="/" className="font-medium text-primary-blue text-xl">
-          EinsteinAI
+        <Link to="/" className="w-[150px] md:w-[170px]">
+          <img
+            src="/assets/images/text-brand.png"
+            alt="brand"
+            className="w-full object-contain"
+          />
         </Link>
         <ul className="hidden h-full gap-12 lg:flex">
           {nav_Links?.map((link) => (

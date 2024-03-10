@@ -329,12 +329,26 @@ export async function getUserSubcriptionStatus(user_id: string) {
   return userSubscriptionDetails;
 }
 
-//update user subcritption
+//delete user subscription
+// export async function deleteUserSubciptionStatus(id: string) {
+//   if (!id) return;
+//   try {
+//     const deleteSubscription = await databases.deleteDocument(
+//       appwriteConfig.databaseId,
+//       appwriteConfig.userSubscriptionCollectionId,
+//       id
+//     );
+//     if (!deleteSubscription)
+//       throw new Error("Failed to delete User Subscription");
+//     return deleteSubscription;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
 export async function signOutAccount() {
   try {
     const session = await account.deleteSession("current");
-
     return session;
   } catch (error) {
     console.log(error);

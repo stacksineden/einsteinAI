@@ -15,11 +15,11 @@ import { pricingItems } from "@/modelDataset";
 
 const Pricing = () => {
   const navigate = useNavigate();
-  const [billingFrequency, setBillingFrequency] = useState("weekly");
+  const [billingFrequency, setBillingFrequency] = useState("monthly");
 
   return (
     <WebLayoutWrapper>
-      <div className="mx-auto max-w-[1440px] px-5 md:px-20 py-20 ">
+      <div className="mx-auto max-w-[1440px] px-5 md:px-20 py-20">
         <div className="text-center w-[90%] md:w-[70%] mx-auto">
           <h1 className="text-6xl font-bold sm:7xl text-primary-black">
             Pricing

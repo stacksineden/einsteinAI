@@ -11,13 +11,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SigninValidationSchema } from "@/lib/validation"; 
+import { SigninValidationSchema } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useUserContext } from "@/context/AuthContext";
 import { useSignInAccount } from "@/lib/tanstack-query/queriesAndMutation";
-
 
 const SignInForm = () => {
   const { toast } = useToast();
@@ -67,7 +66,13 @@ const SignInForm = () => {
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
-        <div className="font-bold text-3xl text-primary-blue">EinsteinAI</div>
+        <Link to="/" className="w-[150px] md:w-[170px]">
+          <img
+            src="/assets/images/text-brand.png"
+            alt="brand"
+            className="w-full object-contain"
+          />
+        </Link>
         <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
           Log in to your account
         </h2>

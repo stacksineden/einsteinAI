@@ -1,12 +1,13 @@
 import { Menu } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useCallback, useState } from "react";
-import NavItem from "./NavItem"; 
+import NavItem from "./NavItem";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignOutAccount } from "@/lib/tanstack-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { useToast } from "../ui/use-toast";
 
 type CreateAssistantModalProps = {
   isOpen: boolean;
@@ -50,7 +51,10 @@ const CreateAssistantModal = ({
               enterprise plan.
             </p>
             <div className="mt-3 flex items-center justify-center">
-              <Button className="bg-primary-black text-white" onClick={()=> Navigate('/enterprise')}>
+              <Button
+                className="bg-primary-black text-white"
+                onClick={() => Navigate("/enterprise")}
+              >
                 Learn More
               </Button>
             </div>
@@ -63,17 +67,29 @@ const CreateAssistantModal = ({
 
 const UserMenu = () => {
   const Navigate = useNavigate();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const { mutate: signOut, isSuccess } = useSignOutAccount();
+  const { mutateAsync: signOut, isPending: isSigningOut } = useSignOutAccount();
 
   const { user } = useUserContext();
 
-  const handleSignOut = () => {
-    signOut();
-    if (isSuccess) {
+  const handleSignOut = async () => {
+    const response = await signOut();
+    if (response) {
+      toast({
+        description: "Logout successful!",
+        className: "bg-primary-blue text-white",
+      });
       Navigate("/sign-in");
+    }
+    if (!response) {
+      return toast({
+        title: "Something went wrong!",
+        description: "Unable to sign you out",
+        className: "bg-red-200 text-white",
+      });
     }
   };
 
@@ -112,12 +128,30 @@ const UserMenu = () => {
           <div className="flex flex-col cursor-pointer">
             <>
               <NavItem
-                onClick={() => Navigate("/account")}
+                onClick={() => {
+                  setIsOpen(false);
+                  Navigate("/account");
+                }}
                 label="Your account"
               />
-              <NavItem onClick={() => Navigate("/files")} label="Files" />
-              <NavItem onClick={()=> Navigate("/my-assistants")} label="My Assistants"/>
-              <NavItem onClick={() => handleSignOut()} label="Sign Out" />
+              <NavItem
+                onClick={() => {
+                  setIsOpen(false);
+                  Navigate("/files");
+                }}
+                label="Files"
+              />
+              <NavItem
+                onClick={() => {
+                  setIsOpen(false);
+                  Navigate("/my-assistants");
+                }}
+                label="My Assistants"
+              />
+              <NavItem
+                onClick={handleSignOut}
+                label={isSigningOut ? "Signing Out" : "Sign Out"}
+              />
             </>
           </div>
         </div>

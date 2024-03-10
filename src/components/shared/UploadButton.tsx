@@ -47,7 +47,7 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
         //send request to open ai to upload file
         const res = await uploadFileToOpenAI(acceptedFile);
         //save the res to the db on behalf of the user.
-        console.log(res, "response");
+        // console.log(res, "response");
 
         if (res) {
           toast({
@@ -111,7 +111,7 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
                   <span className="font-semibold">Click to upload</span> or drag
                   and drop
                 </p>
-                <p className="text-xs text-zinc-500">PDF up to 10 MB</p>
+                <p className="text-xs text-zinc-500">File size up to 512 MB</p>
               </div>
 
               {acceptedFiles && acceptedFiles[0] ? (

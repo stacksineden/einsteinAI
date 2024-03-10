@@ -4,6 +4,8 @@ import {
   getImageUrlByName,
   getMatchingPromptsForAssistants,
 } from "@/modelDataset";
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import ChatIntro from "./ChatIntro";
 import ReactMarkdown from "react-markdown";
 import { Loader2, Clipboard, CheckCheck } from "lucide-react";
@@ -42,8 +44,10 @@ const Messages = ({
     const role = message?.role;
     const contentValue = message?.content?.[0]?.text?.value || "";
 
+    const isCodeSnippet = contentValue.startsWith("```");
+
     return (
-      <div className={`py-5 text-primary-black`}>
+      <div className={`py-5 text-primary-black overflow-x-scroll`}>
         <div className="px-5 md:px-10 max-w-2xl mx-auto flex flex-col gap-1">
           <div className="flex space-x-2 items-center">
             <img
@@ -61,9 +65,18 @@ const Messages = ({
           </div>
           {/* pt-1 text-sm md:text-base text-primary-black tracking-wide */}
           {/* <p className="pt-1 text-sm md:text-base text-primary-black tracking-wide"> */}
-          <ReactMarkdown className="text-primary-black text-base">
+          {/* <ReactMarkdown className="text-primary-black text-base">
             {contentValue}
-          </ReactMarkdown>
+          </ReactMarkdown> */}
+          {isCodeSnippet ? (
+            <SyntaxHighlighter language="javascript" style={a11yDark}>
+              {contentValue}
+            </SyntaxHighlighter>
+          ) : (
+            <ReactMarkdown className="text-primary-black text-base">
+              {contentValue}
+            </ReactMarkdown>
+          )}
           {/* </p> */}
           {/* copy chat content */}
           {role !== "user" && !copied && (
@@ -157,3 +170,8 @@ type MessageBlockProps = {
     }[];
   };
 };
+
+
+
+
+

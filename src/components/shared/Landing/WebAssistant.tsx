@@ -14,22 +14,22 @@ const WebAssistant = () => {
           <div className="flex items-center gap-2">
             <BadgeCheck className="h-9 w-9 text-primary-blue" />
             <p className="text-base text-white font-light">
-              Access top freelancers and professional business tools for any
-              project.Build your own branded marketplace of certified experts.
+              Customize AI for precise expertise in diverse fields. Tailor
+              assistants to align with your unique use-cases effectively.
             </p>
           </div>
           <div className="flex items-center gap-2">
             <BadgeCheck className="h-9 w-9 text-primary-blue" />
             <p className="text-base text-white font-light">
-              Access top freelancers and professional business tools for any
-              project.Build your own branded marketplace of certified experts.
+              Effortlessly integrate AI assistants for efficient, collaborative,
+              and intelligent workflow enhancement.
             </p>
           </div>
           <div className="flex items-center gap-2">
             <BadgeCheck className="h-9 w-9 text-primary-blue" />
             <p className="text-base text-white font-light">
-              Access top freelancers and professional business tools for any
-              project.Build your own branded marketplace of certified experts.
+              EinsteinAI transforms tasks, offering smart assistance for
+              enhanced efficiency in every aspect of your life.
             </p>
           </div>
         </div>

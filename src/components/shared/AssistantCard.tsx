@@ -3,6 +3,7 @@ import { AssistantModel } from "@/modelDataset";
 import { getLevelColor, truncateText } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { useUserContext } from "@/context/AuthContext";
+import { Button } from "../ui/button";
 
 const AssistantCard = ({ data }: AssistantCardProps) => {
   const { userSubscriptionDetails } = useUserContext();
@@ -12,7 +13,7 @@ const AssistantCard = ({ data }: AssistantCardProps) => {
       to={
         userSubscriptionDetails?.is_subscribed && data?.level !== "Rookie"
           ? `/pretrained-assistant/${data?.id!}`
-          : userSubscriptionDetails?.is_subscribed && data?.level === "Rookie" 
+          : userSubscriptionDetails?.is_subscribed && data?.level === "Rookie"
           ? `/pretrained-assistant/${data?.id!}`
           : !userSubscriptionDetails?.is_subscribed && data?.level === "Rookie"
           ? `/pretrained-assistant/${data?.id!}`
@@ -42,13 +43,18 @@ const AssistantCard = ({ data }: AssistantCardProps) => {
           {truncateText(data?.pitch!, 80)}
         </div>
         <div className="flex justify-between items-center px-1">
-          <p className="text-sm font-semibold text-primary-black">14k Hires</p>
+          {/* <p className="text-sm font-semibold text-primary-black">14k Hires</p> */}
           <div
             className={`text-xs font-semibold ${getLevelColor(
               data?.level!
             )} bg-light-grey py-1 px-2 rounded-md uppercase`}
           >
             {data?.level}
+          </div>
+          <div
+            className="bg-primary-black text-primary-yellow text-sm py-1 px-2 rounded-md font-medium"
+          >
+            Train
           </div>
         </div>
       </div>

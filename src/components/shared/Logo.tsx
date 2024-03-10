@@ -1,10 +1,15 @@
-import { Link } from "react-router-dom"
-
+import { Link } from "react-router-dom";
 
 const Logo = () => {
   return (
-    <Link to='/app' className="font-bold text-lg md:text-2xl text-primary-blue cursor-pointer">EinsteinAI</Link>
-  )
-}
+    <Link to="/app" className="w-[150px] md:w-[170px]">
+      <img
+        src="/assets/images/text-brand.png"
+        alt="brand"
+        className="w-full object-contain"
+      />
+    </Link>
+  );
+};
 
-export default Logo
+export default Logo;

@@ -173,8 +173,19 @@ export const useGetUserSubscriptionDetails = (userId?: string) => {
   });
 };
 
+// export const useDeleteSubscription = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: (id: string) => deleteUserSubciptionStatus(id!),
+//     onSuccess: () =>
+//       queryClient.invalidateQueries({
+//         queryKey: [QUERY_KEYS.GET_USER_SUBSCRIPTION_DETAILS],
+//       }),
+//   });
+// };
+
 export const useSignOutAccount = () => {
   return useMutation({
-    mutationFn: signOutAccount,
+    mutationFn: () => signOutAccount(),
   });
 };

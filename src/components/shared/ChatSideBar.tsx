@@ -85,7 +85,7 @@ const CreateThreadModal = ({
             >
               {isCreatingThread ? (
                 <div className="flex-center gap-2">
-                  <Loader />
+                  <Loader2 className="h-4 w-4 text-white animate-spin" />
                 </div>
               ) : (
                 "Submit"
@@ -131,7 +131,7 @@ const ChatSideBar = ({
     const res = await createAssistantThreadOpenAI(description);
     if (res) {
       toast({
-        description: "Your Thread is successfully created.", 
+        description: "Your Thread is successfully created.",
         className: "bg-primary-blue text-white",
       });
       //save to database
@@ -141,7 +141,7 @@ const ChatSideBar = ({
         assistant_id: id!,
       };
 
-      const newThread = await saveThread(threadObject); 
+      const newThread = await saveThread(threadObject);
       if (newThread) {
         toast({
           description: "Your Thread is successfully saved.",
@@ -237,9 +237,13 @@ const ChatSideBar = ({
       </div>
       <div className="flex flex-col">
         <div className="flex items-center px-2 py-1 rounded-lg group h-10 gap-2 cursor-pointer">
-          <p className="font-medium text-primary-blue text-lg pl-1">
-            EinsteinAI
-          </p>
+          <Link to="/app" className="w-[170px] px-3 bg-zinc-900">
+            <img
+              src="/assets/images/text-brand.png"
+              alt="brand"
+              className="w-full object-contain"
+            />
+          </Link>
         </div>
       </div>
     </div>

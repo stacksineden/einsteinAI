@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useChatContext } from "@/context/ChatContext";
 import { retrieveAssistantOpenAI } from "@/lib/openAI/api";
 import { Loader2, Menu, PenSquare, Send, Share, XCircle } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ChatIntro from "@/components/shared/ChatIntro";
 import ChatSideBar from "@/components/shared/ChatSideBar";
 import { getMatchingPromptsForAssistants } from "@/modelDataset";
@@ -173,12 +173,16 @@ const AssistantChat = () => {
           {/* CHAT HEADER */}
           <div className="py-4 px-3 md:px-1 flex items-center justify-between sticky">
             <Menu
-              className="h-5 w-5 text-primary-black cursor-pointer block md:hidden"
+              className="h-9 w-9 text-primary-black cursor-pointer block md:hidden"
               onClick={() => setShowMobileSideBar(true)}
             />
-            <p className="font-medium text-primary-blue text-xl pl-2">
-              EinsteinAI
-            </p>
+            <Link to="/app" className="w-[170px] ml-2">
+              <img
+                src="/assets/images/text-brand.png"
+                alt="brand"
+                className="w-full object-contain"
+              />
+            </Link>
             <div className="w-full flex justify-end px-3 items-center">
               <Share className="h-5 w-5 text-primary-black cursor-pointer" />
             </div>

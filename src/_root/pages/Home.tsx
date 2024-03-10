@@ -1,15 +1,18 @@
+import { useEffect } from "react";
 import AssistantCard from "@/components/shared/AssistantCard";
 import Container from "@/components/shared/Container";
 import EmptyComponent from "@/components/shared/EmptyComponent";
 import { useAssistantCategoryContext } from "@/context/AssistantCategoryContext";
-// import { useUserContext } from "@/context/AuthContext";
+import { useUserContext } from "@/context/AuthContext";
 import { dataSet } from "@/modelDataset";
 
 const Home = () => {
   const { assistantCategory } = useAssistantCategoryContext();
-  // const {isEmailVerified} = useUserContext();
+  const { checkAuthUser } = useUserContext();
 
-  // console.log(isEmailVerified,'arike')
+  useEffect(() => {
+    checkAuthUser();
+  }, []);
 
   // Check if assistantCategory is an empty string
   const filteredAssistants = assistantCategory

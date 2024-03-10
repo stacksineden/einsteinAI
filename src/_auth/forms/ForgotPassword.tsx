@@ -14,6 +14,7 @@ import { ForgetPasswordValidationSchema } from "@/lib/validation";
 import { Button } from "@/components/ui/button";
 import { forgotPassword } from "@/lib/appwrite/api";
 import { useToast } from "@/components/ui/use-toast";
+import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
   const { toast } = useToast();
@@ -27,11 +28,10 @@ const ForgotPassword = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(
-    values: z.infer<typeof ForgetPasswordValidationSchema> 
+    values: z.infer<typeof ForgetPasswordValidationSchema>
   ) {
-   
     const response = await forgotPassword(values?.email);
-    console.log(response, )  
+    console.log(response);
     if (response) {
       toast({
         description: "An Email has been set to reset your password",
@@ -49,7 +49,13 @@ const ForgotPassword = () => {
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
-        <div className="font-bold text-3xl text-primary-blue">EinsteinAI</div>
+        <Link to="/" className="w-[150px] md:w-[170px]">
+          <img
+            src="/assets/images/text-brand.png"
+            alt="brand"
+            className="w-full object-contain"
+          />
+        </Link>
         <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">Forgot Password</h2>
         <p className="text-primary-black font-light small-medium md:base-regular">
           Please Input your email to reset password

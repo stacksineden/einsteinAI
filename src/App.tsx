@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import AuthLayout from "./_auth/AuthLayout";
 import SignUpForm from "./_auth/forms/SignUpForm";
 import SignInForm from "./_auth/forms/SignInForm";
@@ -22,8 +23,16 @@ import ForgotPassword from "./_auth/forms/ForgotPassword";
 import ResetPassword from "./_auth/forms/ResetPassword";
 import Pricing from "./_root/Pricing";
 import Enterprise from "./_root/Enterprise";
+import UseCases from "./_root/UseCases";
+import HelpCenter from "./_root/HelpCenter";
+import NotFound from "./_root/NotFound";
 
 function App() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, [pathname]);
+
   return (
     <>
       <Routes>
@@ -53,8 +62,11 @@ function App() {
           <Route path="/chat-assistant/:id" element={<AssistantChat />} />
         </Route>
         <Route index element={<Landing />} />
-        <Route path="/enterprise" element={<Enterprise />}/>
+        <Route path="/enterprise" element={<Enterprise />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="use_cases" element={<UseCases />} />
+        <Route path="help-center" element={<HelpCenter />}/>
+        <Route path="*" element={<NotFound />} /> 
       </Routes>
       <Toaster />
     </>

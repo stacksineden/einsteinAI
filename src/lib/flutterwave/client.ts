@@ -24,6 +24,30 @@ export async function getFlutterwavePaymentPlans() {
   }
 }
 
+// export async function cancelFlutterwavePaymentPlan(plan_id: string) {
+//   const url = `/api/payment-plans/${plan_id}/cancel`;
+//   try {
+//     const response = await axios.put(
+//       url,
+//       {},
+//       {
+//         headers: {
+//           "Content-Type": "application/json",
+//           ...authHeaders,
+//         },
+//       }
+//     );
+
+//     if (response?.data) {
+//       return response.data?.data;
+//     } else {
+//       console.log("Failed cancel plan");
+//     }
+//   } catch (error) {
+//     console.error("An error occurred while cancellling plan:", error);
+//   }
+// }
+
 //whichever plan that is selected has the plan id passed into it
 
 //charge the card

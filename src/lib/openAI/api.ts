@@ -331,11 +331,10 @@ export async function submitToolsOutputOpenAI(
 //functions for openai specialised calls
 
 export async function generateImageOpenAI(prompt: string) {
-  const url = "https://api.openai.com/v1/images/generations";
-  //downgraded to dalle -2 becuase of rate limit
+  const url = "https://api.openai.com/v1/images/generations"; 
   const requestPayload = {
     prompt,
-    model: "dall-e-2",
+    model: "dall-e-3",
     n: 1,
     response_format: "url",
     size: "1024x1024",

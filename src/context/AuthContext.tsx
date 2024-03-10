@@ -14,6 +14,7 @@ export const INITIAL_USER_SUBSCRIPTION_DETAILS = {
   is_subscribed: false,
   subscription_start_date: "",
   amount: 0,
+  id:""
 };
 
 const INITIAL_STATE = {
@@ -56,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     INITIAL_STATE.isEmailVerified
   );
   const [userSubscriptionDetails, setUserSubscriptionDetails] =
-    useState<ISubscription>(INITIAL_USER_SUBSCRIPTION_DETAILS);
+    useState<ISubscription>(INITIAL_USER_SUBSCRIPTION_DETAILS); 
 
   const checkAuthUser = async () => {
     try {
@@ -71,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             is_subscribed: response?.is_subscribed,
             subscription_start_date: response?.subscription_start_date,
             amount: response?.amount,
+            id:response?.$id
           });
         }
         if (!userSubscriptionDetails) {
@@ -90,9 +92,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const excludedPaths = [
         "/",
         "/reset-password",
-        "/sign-up",
+        "/sign-up", 
         "/sign-in",
         "/pricing",
+        "/use_cases",
+        "/help-center",
+        "/enterprise"
       ];
       if (!currentAccount && !excludedPaths.includes(location.pathname)) {
         navigate("/sign-in");
@@ -115,6 +120,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         location.pathname.includes("/sign-up") ||
         location.pathname.includes("/sign-in") ||
         location.pathname.includes("/pricing") ||
+        location.pathname.includes("/use_cases") ||
+        location.pathname.includes("/help-center") ||
+        location.pathname.includes("/enterprise") ||
         location.pathname === "/"
       ) &&
       (cookieFallback === "[]" ||
@@ -132,7 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser,
     isLoading,
     isAuthenticated,
-    setIsAuthenticated,
+    setIsAuthenticated, 
     checkAuthUser,
     isEmailVerified,
     setIsEmailVerified,

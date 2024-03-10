@@ -81,7 +81,13 @@ const SignUpForm = () => {
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
-        <div className="font-bold text-3xl text-primary-blue">EinsteinAI</div>
+        <Link to="/" className="w-[150px] md:w-[170px]">
+          <img
+            src="/assets/images/text-brand.png"
+            alt="brand"
+            className="w-full object-contain"
+          />
+        </Link>
         <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
           Create a new account
         </h2>

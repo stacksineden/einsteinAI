@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import CardSkeleton from "@/components/shared/CardSkeleton";
 import Container from "@/components/shared/Container";
 import MyAssistantsCard from "@/components/shared/MyAssistantsCard";
@@ -9,7 +10,11 @@ import { Ghost } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Assistants = () => {
-  const { user } = useUserContext();
+  const { user, checkAuthUser } = useUserContext();
+
+  useEffect(() => {
+    checkAuthUser();
+  }, []);
 
   const {
     data: assistants,
@@ -20,7 +25,7 @@ const Assistants = () => {
   //   console.log(assistants, "assistants");
   return (
     <Container>
-      <h1 className="mb-3 font-bold text-2xl md:text-4xl text-primary-black">
+      <h1 className="mb-3 font-bold text-2xl md:text-4xl text-primary-black px-3 md:px-2"> 
         My Assistants
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-6 gap-4 p-6 md:p-0">
