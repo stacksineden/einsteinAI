@@ -32,7 +32,7 @@ const Messages = ({
     }
   }, [messages]);
 
-  // console.log(messages, "messages from react query");
+
 
   // .message-content {
   //   white-space: pre-line; /* Ensures formatting and line breaks are respected */
@@ -105,7 +105,6 @@ const Messages = ({
     );
   };
 
-  // console.log(messages, "messages from react query");
 
   return (
     <>

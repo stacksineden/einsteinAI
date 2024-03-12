@@ -16,7 +16,7 @@ type UploadZoneProps = {
 const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const { mutateAsync: saveFile, isPending: isLoadingSaving } =
+  const { mutateAsync: saveFile } =
     useSaveFileToDB();
 
   const { user } = useUserContext();
@@ -47,7 +47,7 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
         //send request to open ai to upload file
         const res = await uploadFileToOpenAI(acceptedFile);
         //save the res to the db on behalf of the user.
-        // console.log(res, "response");
+  
 
         if (res) {
           toast({
@@ -59,7 +59,7 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
           return toast({
             title: "Something went wrong!",
             description: "Please try again",
-            className:"bg-red-200 text-white"
+            className: "bg-red-200 text-white",
           });
         }
 
@@ -77,7 +77,7 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
           return toast({
             title: "Unable to save file!",
             description: "Please try again",
-            className:"bg-red-200 text-white"
+            className: "bg-red-200 text-white",
           });
         }
 
@@ -105,13 +105,19 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
               htmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
             >
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
                 <Cloud className="h-6 w-6 text-zinc-500 mb-2" />
                 <p className="mb-2 text-sm text-zinc-700">
                   <span className="font-semibold">Click to upload</span> or drag
                   and drop
                 </p>
                 <p className="text-xs text-zinc-500">File size up to 512 MB</p>
+                <p className="text-xs text-zinc-500 mt-2">
+                  <span className="font-medium">PDF, CSV, DOCX, MD, JSON</span>{" "} 
+                  and various other file types are supported
+                  <br />
+                  Refer to the FAQs for a comprehensive list of supported files
+                </p>
               </div>
 
               {acceptedFiles && acceptedFiles[0] ? (

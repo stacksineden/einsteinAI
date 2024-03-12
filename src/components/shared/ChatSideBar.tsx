@@ -6,7 +6,6 @@ import {
 } from "@/lib/tanstack-query/queriesAndMutation";
 import {
   ArrowBigLeftDash,
-  Loader,
   Loader2,
   PenSquare,
   XCircle,
@@ -119,9 +118,9 @@ const ChatSideBar = ({
     data: threads,
     isPending: isThreadsLoading,
     isError: isErrorThreads,
-  } = useGetAssistantThreads(id!);
+  } = useGetAssistantThreads(id!); 
 
-  const { mutateAsync: saveThread, isPending: isLoadingSaving } =
+  const { mutateAsync: saveThread } =
     useSaveThreadToDB();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);

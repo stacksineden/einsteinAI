@@ -1,7 +1,7 @@
 //fetch payment plans
 
 import axios from "axios";
-import { authHeaders, flutterWaveBaseUrl } from "./config";
+import { authHeaders } from "./config";
 
 export async function getFlutterwavePaymentPlans() {
   const url = "/api/payment-plans";

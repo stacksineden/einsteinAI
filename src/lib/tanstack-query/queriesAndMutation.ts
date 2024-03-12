@@ -9,8 +9,7 @@ import {
 import {
   useQuery,
   useMutation,
-  useQueryClient,
-  useInfiniteQuery,
+  useQueryClient
 } from "@tanstack/react-query";
 import {
   createUserAccount,
@@ -26,11 +25,10 @@ import {
   saveThreadToDB,
   signInAccount,
   signOutAccount,
-  updateAssistantInDB,
-  updateUserVerification,
+  updateAssistantInDB
 } from "../appwrite/api";
 import { QUERY_KEYS } from "./queryKeys";
-import { listMessagesOpenAI, retrieveRunOpenAI } from "../openAI/api";
+import { listMessagesOpenAI } from "../openAI/api";
 import { getFlutterwavePaymentPlans } from "../flutterwave/client";
 
 export const useCreateUserAccount = () => {

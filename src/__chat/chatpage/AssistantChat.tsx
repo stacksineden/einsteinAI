@@ -2,25 +2,27 @@ import { useEffect, useState } from "react";
 import ChatInput from "@/components/shared/ChatInput";
 import Messages from "@/components/shared/Messages";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useChatContext } from "@/context/ChatContext";
 import { retrieveAssistantOpenAI } from "@/lib/openAI/api";
-import { Loader2, Menu, PenSquare, Send, Share, XCircle } from "lucide-react";
+import { Loader2, Menu, Share, XCircle } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ChatIntro from "@/components/shared/ChatIntro";
 import ChatSideBar from "@/components/shared/ChatSideBar";
 import { getMatchingPromptsForAssistants } from "@/modelDataset";
 import { useUserContext } from "@/context/AuthContext";
 import { getAssistantLevel } from "@/lib/utils";
+import { useMatchingPromptContext } from "@/context/MatchingPromptContext";
 
 const AssistantChat = () => {
   const { id } = useParams();
   const { activeThreadId, setAciveThreadId } = useChatContext();
   const { userSubscriptionDetails } = useUserContext();
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [assistantObject, setAssistantObject] = useState<IAssistant>({});
   const [showMobileSideBar, setShowMobileSideBar] = useState(false);
   const [isLoadingAssistant, setIsLoadingAssistant] = useState(true);
+
+  const { setPromptMessage } = useMatchingPromptContext();
 
   const navigate = useNavigate();
 
@@ -28,6 +30,10 @@ const AssistantChat = () => {
 
   const getAssistantInfo = async (id: string) => {
     const data = await retrieveAssistantOpenAI(id);
+    // redirect to app if assiatant is not found
+    if (!data) {
+      navigate("/app");
+    }
     setAssistantObject(data);
     setIsLoadingAssistant(false);
   };
@@ -38,6 +44,7 @@ const AssistantChat = () => {
     return () => {
       // Reset the activeThreadId to an empty string
       setAciveThreadId("");
+      setPromptMessage("");
     };
   }, [id]);
 

@@ -7,7 +7,7 @@ import {
 } from "@/lib/openAI/api";
 import { Input } from "@/components/ui/input";
 import { AssistantModel, dataSet, getImageUrlByName } from "@/modelDataset";
-import { getAssistantLevel, getLevelColor, truncateText } from "@/lib/utils";
+import { getAssistantLevel, getLevelColor } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -42,7 +42,7 @@ const UpdateAssistant = () => {
   const navigate = useNavigate();
 
   //get assistants-details from open ai
-  const [isExpanded, setIsExpanded] = useState(false);
+  // const [isExpanded, setIsExpanded] = useState(false);
   const [shouldSelectFiles, setShouldSelectFiles] = useState(false);
   const [assistantObject, setAssistantObject] = useState<IAssistant>({});
 
@@ -58,9 +58,9 @@ const UpdateAssistant = () => {
     getAssistantInfo(id!);
   }, [id]);
 
-  const toggleExpansion = () => {
-    setIsExpanded(!isExpanded);
-  };
+  // const toggleExpansion = () => {
+  //   setIsExpanded(!isExpanded);
+  // };
 
   //get user files
   const {
@@ -69,7 +69,6 @@ const UpdateAssistant = () => {
     isError: isErrorFiles,
   } = useGetUserFiles(user?.id);
 
-  // console.log(assistantObject, "assistantObject");
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof EditAssistantValidationSchema>>({
@@ -136,12 +135,11 @@ const UpdateAssistant = () => {
       file_ids: values.files,
     };
 
-    // console.log(assistantObject, "assistantObjectassistantObject");
     const responseFromOpenAI = await updateAssistantOpenAI(
       id!,
       assistantObjectTobeUpdated
     );
-    console.log(responseFromOpenAI, "responseFromOpenAI");
+
     if (responseFromOpenAI) {
       toast({
         description: "Your Assistant is successfully updated.",

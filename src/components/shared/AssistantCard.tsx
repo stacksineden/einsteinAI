@@ -3,7 +3,6 @@ import { AssistantModel } from "@/modelDataset";
 import { getLevelColor, truncateText } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { useUserContext } from "@/context/AuthContext";
-import { Button } from "../ui/button";
 
 const AssistantCard = ({ data }: AssistantCardProps) => {
   const { userSubscriptionDetails } = useUserContext();

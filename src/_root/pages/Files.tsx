@@ -36,7 +36,7 @@ const Files = () => {
     if (!fileId) return;
     setCurrentlyDeletedFile(fileId);
     try {
-      const deletedFile = await deleteFile(fileId); 
+      const deletedFile = await deleteFile(fileId);
       if (!deletedFile) {
         return toast({
           title: "Something went wrong!",
@@ -78,7 +78,6 @@ const Files = () => {
               >
                 <div className="flex flex-col gap-2">
                   <div className="pt-6 px-6 flex w-full items-center justify-between space-x-2">
-                    {/* <div className="h-7 w-7 flex-shrink-0 bg-gradient-to-r from-cyan-700 to-blue-700" /> */}
                     <File className="h-5 w-5" />
                     <div className="flex-1 truncate">
                       <div className="flex items-center space-x-3">
@@ -102,7 +101,8 @@ const Files = () => {
                       handleDeleteUserFile(file?.$id, file?.fileId)
                     }
                   >
-                    {currentlyDeletedFile === file.$id ? (
+                    {currentlyDeletedFile === file.$id &&
+                    isDeletingFileLoading ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       <Trash className="h-4 w-4" />
@@ -121,10 +121,10 @@ const Files = () => {
           <p>Let&apos;s upload your first PDF.</p>
         </div>
       )}
-      {isErrorFiles && ( 
-  <div className="mt-20 flex flex-col items-center gap-2 justify-center">
-       <Ghost className="h-8 w-8 text-zinc-800" />
-       <h3 className="font-semibold text-xl text-primary-red">
+      {isErrorFiles && (
+        <div className="mt-20 flex flex-col items-center gap-2 justify-center">
+          <Ghost className="h-8 w-8 text-zinc-800" />
+          <h3 className="font-semibold text-xl text-primary-red">
             Error getting Assistants
           </h3>
           <p>
@@ -134,7 +134,7 @@ const Files = () => {
             </Link>
             back to App, or relaod the page
           </p>
-  </div>
+        </div>
       )}
     </Container>
   );

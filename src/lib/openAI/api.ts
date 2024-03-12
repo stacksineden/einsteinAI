@@ -6,7 +6,6 @@ import {
   ICreateAssistantOpenAI,
   ICreateMessage,
   ICreateRun,
-  IToolsOutput,
   IupdateAssistantOpenAI,
   ToolDetails,
 } from "@/types";

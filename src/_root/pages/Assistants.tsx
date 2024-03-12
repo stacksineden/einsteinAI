@@ -22,7 +22,6 @@ const Assistants = () => {
     isError: isErrorAssistants,
   } = useGetUserAssistants(user?.id);
 
-  //   console.log(assistants, "assistants");
   return (
     <Container>
       <h1 className="mb-3 font-bold text-2xl md:text-4xl text-primary-black px-3 md:px-2"> 

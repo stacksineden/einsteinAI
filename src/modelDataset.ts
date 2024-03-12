@@ -3209,4 +3209,15 @@ export const faqs = [
     answer:
       "Enterprise users can fill out a request form on EinsteinAI to communicate their specialized functionalities. Direct conversations follow to gain a thorough understanding of expectations, providing valuable insights into potential solutions. Development of a tailored assistant aligned with business objectives then commences.",
   },
+  {
+    key: "question_7",
+    question: "What file types are supported by Einstein AI Assistants?",
+    answer:
+      ".c - text/x-c, .cpp - text/x-c++, .csv - application/csv, .docx, .html - text/html, .java - text/x-java, .json - application/json, .md - text/markdown, .pdf - application/pdf, .php - text/x-php, .pptx , .py - text/x-python, .rb - text/x-ruby, .tex - text/x-tex, .txt - text/plain, .css - text/css, .js - text/javascript, .tar - application/x-tar, .ts - application/typescript, .xlsx , .xml, .zip ",
+  },
+  {
+    key:"question_8",
+    question:"How does Knowledge Retrieval work in Einstein AI Assistants?",
+    answer:`Knowledge Retrieval enhances Assistants with external knowledge from uploaded documents. To enable Retrieval, include the "retrieval" tool type in the tools parameter of the Assistant object. Check the documentation for more information on how to upload, index, and retrieve knowledge`
+  }
 ];

@@ -37,7 +37,6 @@ const ResetPassword = () => {
   async function onSubmit(
     values: z.infer<typeof ResetPasswordValidationSchema>
   ) {
-    console.log(values);
     const respone = await resetPassword(
       userId!,
       secret!,

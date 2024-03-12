@@ -20,7 +20,7 @@ import { useSignInAccount } from "@/lib/tanstack-query/queriesAndMutation";
 
 const SignInForm = () => {
   const { toast } = useToast();
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { checkAuthUser } = useUserContext();
   const navigate = useNavigate();
 
   const { mutateAsync: signInAccount, isPending: isLogginInUser } =

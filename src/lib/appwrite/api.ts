@@ -134,7 +134,7 @@ export async function getCurrentUser() {
     };
     return userObject;
   } catch (err) {
-    console.log(err, "here it is");
+    console.log(err, "");
   }
 }
 

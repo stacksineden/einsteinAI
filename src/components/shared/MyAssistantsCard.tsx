@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { getAssistantLevel, truncateText } from "@/lib/utils";
-import { MyAssistantModel, dataSet, getImageUrlByName } from "@/modelDataset";
+import { getImageUrlByName } from "@/modelDataset";
 import { Models } from "appwrite";
-import { PenSquare, Trash } from "lucide-react";
+import { Loader2, PenSquare, Trash } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
@@ -95,7 +95,13 @@ const DeleteAssitantModal = ({
               aria-label="send message"
               onClick={() => handleDeletAssistant()}
             >
-              Yes
+              {isDeletingAssistant ? (
+                <div className="flex-center gap-2">
+                  <Loader2 className="h-4 w-4 text-white animate-spin" />
+                </div>
+              ) : (
+                "Yes"
+              )}
             </Button>
             <Button
               className="bg-white hover:opacity-90 flex gap-2 text-primary-red border border-primary-red"

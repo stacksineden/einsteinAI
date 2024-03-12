@@ -15,7 +15,7 @@ const VerifyAccount = () => {
     try {
       const response = await updateUserVerification(userId!, secret!); 
       if (response) {
-        console.log("Account has been verified");
+        // console.log("Account has been verified");
         toast({
           description: "Your Account has been successfully verified",
           className: "bg-primary-blue text-white",

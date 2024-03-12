@@ -31,7 +31,6 @@ const ForgotPassword = () => {
     values: z.infer<typeof ForgetPasswordValidationSchema>
   ) {
     const response = await forgotPassword(values?.email);
-    console.log(response);
     if (response) {
       toast({
         description: "An Email has been set to reset your password",

@@ -7,7 +7,7 @@ import {
   // pricingItems,
   proPlanFeatures,
 } from "@/modelDataset";
-import { BadgeCheck, CheckCheck } from "lucide-react";
+import {  CheckCheck } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {
@@ -23,7 +23,6 @@ import {
   useGetFlutterwavePaymentPlans,
 } from "@/lib/tanstack-query/queriesAndMutation";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
-// import Skeleton from "react-loading-skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ISubscription, IUser } from "@/types";
@@ -47,7 +46,6 @@ type PaymentModalProps = {
 };
 
 const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
-  console.log(user?.id);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   // Billing Information
   const [billingFrequency, setBillingFrequency] = useState("weekly");
@@ -56,8 +54,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
   const { toast } = useToast();
 
   const {
-    mutateAsync: createSubscritpion,
-    isPending: isCreatingUserSubscription,
+    mutateAsync: createSubscritpion
   } = useCreateUserSubscription();
 
   // console.log(user, "useruseruseruser");
@@ -74,7 +71,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     undefined
   );
 
-  console.log(paymentPlans, "plans");
+  // console.log(paymentPlans, "plans");
 
   const getPlan = (frequency: string, selectedCurrency: string) => {
     const planDetails = paymentPlansArray?.find(
@@ -215,7 +212,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                   onClick={() => {
                     handleFlutterPayment({
                       callback: async (response) => {
-                        console.log(response, "payment res");
+                        // console.log(response, "payment res");
                         //send this to appwrite to create a subscription
                         if (response) {
                           const paymentPayload = {
@@ -341,7 +338,6 @@ const UserAccount = () => {
     checkAuthUser();
   }, []);
 
-  // console.log(user?.id, "client-id");
 
   return (
     <Container>

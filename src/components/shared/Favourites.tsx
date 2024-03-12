@@ -1,7 +1,7 @@
 import { Heart } from "lucide-react";
 
-const Favourites = ({ assistantId }: FavouritesProps) => {
-  const hasFavourites = false;
+const Favourites = () => {
+  // const hasFavourites = false;
   const toggleFavourites = () => {};
   return (
     <div
@@ -15,6 +15,6 @@ const Favourites = ({ assistantId }: FavouritesProps) => {
 
 export default Favourites;
 
-type FavouritesProps = {
-  assistantId: string;
-};
+// type FavouritesProps = {
+//   assistantId: string;
+// };

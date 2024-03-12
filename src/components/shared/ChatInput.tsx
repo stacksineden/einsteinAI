@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import { Loader2, Paperclip, Send } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-// import { useUserContext } from "@/context/AuthContext";
-// import { useToast } from "../ui/use-toast";
-import Dropzone from "react-dropzone";
+// import Dropzone from "react-dropzone";
 import {
   cancelRunOpenAI,
   chatCompletionOpenAI,
@@ -13,7 +10,7 @@ import {
   generateImageOpenAI,
   retrieveRunOpenAI,
   submitToolsOutputOpenAI,
-  uploadFileToOpenAI,
+  // uploadFileToOpenAI,
 } from "@/lib/openAI/api";
 import { useToast } from "../ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
@@ -26,76 +23,75 @@ import {
 import { useMatchingPromptContext } from "@/context/MatchingPromptContext";
 import { Textarea } from "../ui/textarea";
 
-type UploadDropZoneProps = {
-  setInMessageFiles: React.Dispatch<React.SetStateAction<string[]>>;
-};
+// type UploadDropZoneProps = {
+//   setInMessageFiles: React.Dispatch<React.SetStateAction<string[]>>;
+// };
 
-const UploadDropZone = ({ setInMessageFiles }: UploadDropZoneProps) => {
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  const { toast } = useToast();
+// const UploadDropZone = ({ setInMessageFiles }: UploadDropZoneProps) => {
+//   const [isUploading, setIsUploading] = useState<boolean>(false);
+//   const { toast } = useToast();
 
-  return (
-    <Dropzone
-      multiple={false}
-      onDrop={async (acceptedFile) => {
-        setIsUploading(true);
-        const res = await uploadFileToOpenAI(acceptedFile);
-        if (res) {
-          setInMessageFiles([res?.id]);
-          toast({
-            description: "File Saved! You can now send your message.",
-            className: "bg-primary-blue text-white",
-          });
-        }
-        if (!res) {
-          return toast({
-            title: "Something went wrong!",
-            description: "Please try again",
-            className: "bg-red-200 text-white",
-          });
-        }
+//   return (
+//     <Dropzone
+//       multiple={false}
+//       onDrop={async (acceptedFile) => {
+//         setIsUploading(true);
+//         const res = await uploadFileToOpenAI(acceptedFile);
+//         if (res) {
+//           setInMessageFiles([res?.id]);
+//           toast({
+//             description: "File Saved! You can now send your message.",
+//             className: "bg-primary-blue text-white",
+//           });
+//         }
+//         if (!res) {
+//           return toast({
+//             title: "Something went wrong!",
+//             description: "Please try again",
+//             className: "bg-red-200 text-white",
+//           });
+//         }
 
-        // set file ids to the res.id
-      }}
-    >
-      {({ getRootProps, getInputProps, acceptedFiles }) => (
-        <div className="flex items-center justify-center" {...getRootProps()}>
-          <label
-            htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer"
-          >
-            <div className="flex items-center justify-center py-2 px-4 bg-white rounded-lg shadow-lg gap-2">
-              <div className="text-sm text-primary-black truncate md:block hidden">
-                {acceptedFiles && acceptedFiles[0]
-                  ? acceptedFiles[0]?.name
-                  : "Attach File"}
-              </div>
-              <Paperclip className="h-6 w-6 text-primary-black" />
-            </div>
-            <input
-              {...getInputProps()}
-              className="hidden"
-              // id="dropzone-file"
-            />
-          </label>
-        </div>
-      )}
-    </Dropzone>
-  );
-};
+//         // set file ids to the res.id
+//       }}
+//     >
+//       {({ getRootProps, getInputProps, acceptedFiles }) => (
+//         <div className="flex items-center justify-center" {...getRootProps()}>
+//           <label
+//             htmlFor="dropzone-file"
+//             className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer"
+//           >
+//             <div className="flex items-center justify-center py-2 px-4 bg-white rounded-lg shadow-lg gap-2">
+//               <div className="text-sm text-primary-black truncate md:block hidden">
+//                 {acceptedFiles && acceptedFiles[0]
+//                   ? acceptedFiles[0]?.name
+//                   : "Attach File"}
+//               </div>
+//               <Paperclip className="h-6 w-6 text-primary-black" />
+//             </div>
+//             <input
+//               {...getInputProps()}
+//               className="hidden"
+//               // id="dropzone-file"
+//             />
+//           </label>
+//         </div>
+//       )}
+//     </Dropzone>
+//   );
+// };
 
 const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { promptMessage } = useMatchingPromptContext();
+  const { promptMessage} = useMatchingPromptContext(); 
 
   //state for files that will be uploaded during chat
-  const [inMessageFiles, setInMessageFiles] = useState<string[]>([]);
+  const [inMessageFiles,] = useState<string[]>([]);
   const [message, setMessage] = useState(promptMessage || "");
   const [isRunning, setIsRunning] = useState(false);
   const [isRunId, setIsRunId] = useState("");
 
-  // console.log(promptMessage, "promptmessage");
 
   useEffect(() => {
     setMessage(promptMessage || "");
@@ -113,6 +109,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
         description: "Run is completed",
         className: "bg-primary-blue text-white",
       });
+      setMessage("");
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
       });
@@ -185,10 +182,6 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
             try {
               const response = await google_search(query);
               if (response) {
-                // console.log(
-                //   response,
-                //   "response from serper api at client level"
-                // );
                 toolOutputs.push({
                   tool_call_id: toolCall.id,
                   output: JSON.stringify(response),
@@ -206,7 +199,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
             const { location } = args;
             if (!location) return;
             try {
-              const response = await get_weather(location);
+              const response = await get_weather(location); 
               if (response) {
                 toolOutputs.push({
                   tool_call_id: toolCall.id,
@@ -259,7 +252,6 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
       }
     } else {
       // Handle other states or wait for completion
-      // console.log("Thinking....");
       toast({
         description: "I'm thinking about this....",
         className: "bg-primary-blue text-white",
@@ -306,7 +298,6 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
       return;
     }
     const res = await createMessageOpenAi(threadId!, messageObject);
-    // console.log(res, "response meesgae from openAi");
     //we need to process run ==> get run Id from res
     if (!res) {
       toast({
@@ -327,8 +318,6 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
       assistant_id: assistantId,
     };
     const runResponse = await createRunOpenAI(threadId!, runObject);
-    // console.log(runResponse, "runResponserunResponserunResponse");
-
     if (!runResponse) {
       toast({
         description: "Run has failed",

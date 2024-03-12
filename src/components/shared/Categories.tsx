@@ -6,7 +6,6 @@ import {
   ImagePlus,
   Languages,
   LineChart,
-  Mic2,
   Palmtree,
   PencilLine,
   Percent,

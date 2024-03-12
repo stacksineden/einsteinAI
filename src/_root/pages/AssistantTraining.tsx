@@ -55,10 +55,6 @@ const AssistantTraining = () => {
     isError: isErrorFiles,
   } = useGetUserFiles(user?.id);
 
-  // console.log(files?.documents, "files");
-
-  // console.log(assistantTrainingObject);
-
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
@@ -72,7 +68,9 @@ const AssistantTraining = () => {
       is_selecting_files: false,
       is_code_interpreter: false,
       files: [],
-      model: "gpt-3.5-turbo-1106",
+      model: assistantTrainingObject[0]?.model
+        ? assistantTrainingObject[0]?.model
+        : "gpt-3.5-turbo-1106",
       description: "",
     },
   });
@@ -89,7 +87,6 @@ const AssistantTraining = () => {
   async function onSubmit(
     values: z.infer<typeof CreateAssistantValidationSchema>
   ) {
-    // console.log(values, "form values");
 
     //i need to find a way to dynamically add function types. not all assistants have the same functions sets
     const assistantObject = {
@@ -109,10 +106,6 @@ const AssistantTraining = () => {
         role: assistantTrainingObject[0]?.role,
       },
     };
-    console.log(
-      assistantObject,
-      "assistantObjectassistantObjectassistantObject"
-    );
     // create an assistant with openAI
     const responseFromOpenAI = await createAssistantOpenAI(assistantObject);
 
@@ -139,7 +132,6 @@ const AssistantTraining = () => {
       name: responseFromOpenAI?.name,
       role: responseFromOpenAI?.metadata?.role,
     };
-    // console.log(assistantToBeSaved, "assistantToBeSaved");
 
     const newAssistant = await saveAssistant(assistantToBeSaved);
     if (!newAssistant) {
@@ -169,9 +161,9 @@ const AssistantTraining = () => {
             {assistantTrainingObject[0]?.pitch || ""}
           </h2>
           <div className="flex items-center gap-5 border-t border-t-light-grey py-2 px-3">
-            <p className="text-sm md:text-base text-primary-black opacity-60 font-medium">
+            {/* <p className="text-sm md:text-base text-primary-black opacity-60 font-medium">
               114K Hires
-            </p>
+            </p> */}
             <div
               className={`text-xs font-semibold ${getLevelColor(
                 assistantTrainingObject[0]?.level!
@@ -471,6 +463,12 @@ const AssistantTraining = () => {
                 </div>
               </div>
 
+              <div className="text-sm text-primary-red font-medium">
+                Please note that assistants generating images have a 1-hour
+                expiration time for the image generations. Please download and
+                utilize these images before they expire.
+              </div>
+
               {userSubscriptionDetails?.is_subscribed &&
               assistantTrainingObject[0]?.level !== "Rookie" ? (
                 <Button
@@ -520,7 +518,7 @@ const AssistantTraining = () => {
                 assistantTrainingObject[0]?.level !== "Rookie" ? (
                 <Link
                   to={"/account"}
-                  className="text-center p-2 bg-primary-black text-white" 
+                  className="text-center p-2 bg-primary-black text-white"
                 >
                   Upgrade to Train
                 </Link>

@@ -8,11 +8,8 @@ import Messages from "@/components/shared/Messages";
 import ChatInput from "@/components/shared/ChatInput";
 import { Loader2, Trash2, XCircle } from "lucide-react";
 import { useGetAssistantThreads } from "@/lib/tanstack-query/queriesAndMutation";
-import { QUERY_KEYS } from "@/lib/tanstack-query/queryKeys";
-import { useQueryClient } from "@tanstack/react-query";
 
 const AssistantChat = () => {
-  const queryClient = useQueryClient();
   const { id } = useParams();
 
   const {
