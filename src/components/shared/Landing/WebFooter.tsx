@@ -8,9 +8,9 @@ const WebFooter = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-y-10 px-20 md:px-32 py-14">
         <div className="space-y-4 text-xs text-primary-black cursor-pointer">
           <h5 className="font-bold text-[16px]">ABOUT</h5>
-          <p onClick={() => Navigate("/")}>How einsteinAI works</p>
-          <p onClick={() => Navigate("/")}>Blog</p>
-          <p onClick={() => Navigate("/")}>StacksinEDEN</p>
+          <p onClick={() => Navigate("/help-center")}>How einsteinAI works</p>
+          <p onClick={() => Navigate("https://medium.com/@stacksineden")}>Blog</p>
+          <p onClick={() => Navigate("/")}>StacksinEDEN</p> 
           <p onClick={() => Navigate("/")}>FAQs</p>
         </div>
         <div className="space-y-4 text-xs text-primary-black cursor-pointer">

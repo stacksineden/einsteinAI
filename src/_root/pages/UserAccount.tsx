@@ -47,6 +47,7 @@ type PaymentModalProps = {
 };
 
 const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
+  console.log(user?.id);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   // Billing Information
   const [billingFrequency, setBillingFrequency] = useState("weekly");
@@ -73,7 +74,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     undefined
   );
 
-  console.log(paymentPlans,'plans')
+  console.log(paymentPlans, "plans");
 
   const getPlan = (frequency: string, selectedCurrency: string) => {
     const planDetails = paymentPlansArray?.find(
@@ -107,8 +108,6 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     payment_options: "card",
     payment_plan: String(planObject?.id!),
     customer: {
-      //send the user id
-      id: user?.id!,
       email: user?.email!,
       phone_number: "",
       name: user?.name!,
@@ -157,7 +156,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                 <SelectGroup onChange={(e) => console.log(e)}>
                   <SelectItem value="weekly">Weekly</SelectItem>
                   <SelectItem value="monthly">Monthly</SelectItem>
-                  {/* <SelectItem value="hourly">Hourly</SelectItem> */}
+                  <SelectItem value="hourly">Hourly</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -413,7 +412,7 @@ const UserAccount = () => {
                   Cancel Subscription
                 </Button> */}
                   <p className="text-primary-blue font-medium text-sm">
-                    Subscription stsrt date
+                    Current Billing start date
                   </p>
                   <p className="text-base text-primary-black">
                     {formatDateString(

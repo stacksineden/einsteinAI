@@ -228,7 +228,7 @@ export async function deleteUserFiles(fileId: string) {
       appwriteConfig.filesCollectionId,
       fileId
     );
-    if (!deletedFile) throw Error;
+    if (!deletedFile) throw Error; 
     return deletedFile;
   } catch (err) {
     console.log(err);
