@@ -29,7 +29,7 @@ const CreateAssistantModal = ({
       }}
     >
       <DialogTrigger onClick={() => setIsOpen(true)} asChild>
-        <div className="text-xs md:text-sm font-semibold text-white md:text-black py-2 md:py-3 px-3 md:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer bg-primary-black md:bg-transparent">
+        <div className="text-xs md:text-sm truncate font-semibold text-white md:text-black py-2 md:py-3 px-3 md:px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer bg-primary-black md:bg-transparent">
           Create Assistant
         </div>
       </DialogTrigger>

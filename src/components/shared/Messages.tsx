@@ -32,8 +32,6 @@ const Messages = ({
     }
   }, [messages]);
 
-
-
   // .message-content {
   //   white-space: pre-line; /* Ensures formatting and line breaks are respected */
   //   padding: 0; /* Adjust or remove padding as needed */
@@ -105,7 +103,6 @@ const Messages = ({
     );
   };
 
-
   return (
     <>
       <div
@@ -131,7 +128,7 @@ const Messages = ({
           </div>
         )}
       </div>
-      {messages?.data?.length === 0 && !messages?.data && (
+        {messages?.data?.length === 0 && !messages?.data && (
         <ChatIntro
           assistant_name={pretrainingName}
           user_assistant_name={assistantName}
@@ -169,8 +166,3 @@ type MessageBlockProps = {
     }[];
   };
 };
-
-
-
-
-

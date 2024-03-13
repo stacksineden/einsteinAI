@@ -171,7 +171,7 @@ const AssistantChat = () => {
               <ChatSideBar
                 showMobileSideBar={setShowMobileSideBar}
                 assistant_name={
-                  assistantObject?.metadata?.assistant_pretraining_name!
+                  assistantObject?.metadata?.assistant_pretraining_name! 
                 }
               />
             </div>
@@ -205,7 +205,8 @@ const AssistantChat = () => {
           </div>
           {/* CHAT INTRO */}
           {!activeThreadId && (
-            <ChatIntro
+           <div className="flex-1 overflow-y-auto overflow-x-hidden">
+             <ChatIntro 
               assistant_name={
                 assistantObject?.metadata?.assistant_pretraining_name!
               }
@@ -214,6 +215,7 @@ const AssistantChat = () => {
               )}
               user_assistant_name={assistantObject?.name!}
             />
+           </div>
           )}
 
           {/* chat window */}

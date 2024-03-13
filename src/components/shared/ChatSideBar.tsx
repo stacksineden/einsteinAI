@@ -4,12 +4,7 @@ import {
   useGetAssistantThreads,
   useSaveThreadToDB,
 } from "@/lib/tanstack-query/queriesAndMutation";
-import {
-  ArrowBigLeftDash,
-  Loader2,
-  PenSquare,
-  XCircle,
-} from "lucide-react";
+import { ArrowBigLeftDash, Loader2, PenSquare, XCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -118,10 +113,9 @@ const ChatSideBar = ({
     data: threads,
     isPending: isThreadsLoading,
     isError: isErrorThreads,
-  } = useGetAssistantThreads(id!); 
+  } = useGetAssistantThreads(id!);
 
-  const { mutateAsync: saveThread } =
-    useSaveThreadToDB();
+  const { mutateAsync: saveThread } = useSaveThreadToDB();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -148,6 +142,7 @@ const ChatSideBar = ({
         });
         setIsCreatingThread(false);
         setIsOpen(false);
+        showMobileSideBar && showMobileSideBar(false);
         setAciveThreadId(threadObject?.thread_id!);
       }
       if (!newThread) {

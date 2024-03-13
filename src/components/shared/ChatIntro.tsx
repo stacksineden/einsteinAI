@@ -7,9 +7,9 @@ const ChatIntro = ({
   matching_prompts,
   user_assistant_name,
 }: ChatIntroProps) => {
-  const { setPromptMessage } = useMatchingPromptContext();
+  const { setPromptMessage } = useMatchingPromptContext(); 
   return (
-    <div className="text-primary-black flex flex-col items-center justify-center h-screen px-2">
+    <div className="text-primary-black overflow-y-auto flex-col items-center justify-center px-2">
       <div className="flex flex-col items-center gap-2 mb-32">
         <div className="h-20 w-20 rounded-full shadow-md bg-light-grey">
           <img
@@ -33,7 +33,7 @@ const ChatIntro = ({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-full md:max-w-[80%]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-full md:max-w-[80%] mx-auto">
         {matching_prompts &&
           matching_prompts?.map((prompt, _i) => (
             <div
