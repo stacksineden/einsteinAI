@@ -32,7 +32,7 @@ const AssistantChat = () => {
     const data = await retrieveAssistantOpenAI(id);
     // redirect to app if assiatant is not found
     if (!data) {
-      navigate("/app");
+      navigate("/my-assistants");
     }
     setAssistantObject(data);
     setIsLoadingAssistant(false);

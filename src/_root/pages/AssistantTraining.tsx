@@ -304,7 +304,7 @@ const AssistantTraining = () => {
                         placeholder={`${assistantTrainingObject[0]?.prompt}`}
                         className="shad-input"
                         {...field}
-                      />
+                      /> 
                     </FormControl>
                     <FormMessage />
                   </FormItem>

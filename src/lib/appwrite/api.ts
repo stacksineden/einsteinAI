@@ -24,7 +24,7 @@ export async function createUserAccount(user: INewUser) {
 
     if (session) {
       const verifyUser = await account.createVerification(
-        "http://localhost:5173/verify-user"
+        `${import.meta.env.VITE_EINSTEIN_BASE_URL}/verify-user`
       );
       if (verifyUser) {
         const avatarUrl = avatars.getInitials(user.name);
@@ -86,7 +86,7 @@ export async function forgotPassword(email: string) {
   try {
     const response = await account.createRecovery(
       email,
-      "http://localhost:5173/reset-password"
+      `${import.meta.env.VITE_EINSTEIN_BASE_URL}/reset-password`
     );
     if (response) {
       return response;
@@ -228,7 +228,7 @@ export async function deleteUserFiles(fileId: string) {
       appwriteConfig.filesCollectionId,
       fileId
     );
-    if (!deletedFile) throw Error; 
+    if (!deletedFile) throw Error;
     return deletedFile;
   } catch (err) {
     console.log(err);
