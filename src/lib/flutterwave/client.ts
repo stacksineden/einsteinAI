@@ -9,7 +9,7 @@ export async function getFlutterwavePaymentPlans() {
   if (import.meta.env.MODE === "development") {
     url = "/api/payment-plans"; // Use local development URL
   } else {
-    url = "https://api.flutterwave.com/v3/api/payment-plans"; // Use production URL
+    url = "https://api.flutterwave.com/v3/payment-plans"; // Use production URL
   }
 
   try {
