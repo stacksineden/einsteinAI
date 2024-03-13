@@ -4,7 +4,13 @@ import axios from "axios";
 import { authHeaders } from "./config";
 
 export async function getFlutterwavePaymentPlans() {
-  const url = "/api/payment-plans";
+  let url;
+
+  if (import.meta.env.MODE === "development") {
+    url = "/api/payment-plans"; // Use local development URL
+  } else {
+    url = "https://api.flutterwave.com/v3/api/payment-plans"; // Use production URL
+  }
 
   try {
     const response = await axios.get(url, {
