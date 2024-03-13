@@ -96,6 +96,7 @@ const UseCases = () => {
                     src={caseData?.image}
                     alt="image-services"
                     className="bg-contain w-full h-full rounded-r-[2rem]"
+                    loading="lazy"
                   />
                 </div>
               </div>
@@ -116,6 +117,7 @@ const UseCases = () => {
                     src={caseData?.image}
                     alt="image-services"
                     className="bg-cover w-full h-full rounded-t-[2rem]"
+                    loading="lazy"
                   />
                 </div>
 

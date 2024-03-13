@@ -27,6 +27,7 @@ const AssistantCard = ({ data }: AssistantCardProps) => {
             src={data?.imageUrl!}
             alt="assistant"
             className="object-cover w-full h-full group-hover:scale-110 transition"
+            loading="lazy"
           />
           {/* <div className="absolute top-3 right-3">
             <Favourites assistantId={data?.id!} />

@@ -11,6 +11,7 @@ const CategoryCard = ({ image, name }: CategoryCardType) => {
           src={image}
           alt="catergories"
           className="object-cover rounded-xl w-full h-full"
+          loading="lazy"
         />
       </div>
       <h3 className="text-base text-primary-balck mt-2">

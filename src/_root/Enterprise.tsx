@@ -27,6 +27,7 @@ const Enterprise = () => {
             src="/assets/images/gridimg.png"
             alt="assistantimage"
             className="object-cover w-full h-full"
+            loading="lazy"
           />
         </div>
       </div>

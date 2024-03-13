@@ -59,6 +59,7 @@ const WebHero = () => {
                   src="/assets/images/assistants/henry.png"
                   alt="user"
                   className="h-8 w-8 rounded-full bg-light-grey"
+                  loading="lazy"
                 />
                 <p className="text-sm text-primary-black">You</p>
               </div>
@@ -72,6 +73,7 @@ const WebHero = () => {
                   src="/assets/images/assistants/eddy.png"
                   alt="user"
                   className="h-8 w-8 rounded-full bg-light-grey"
+                  loading="lazy"
                 />
                 <p className="text-sm text-primary-black">Eddy</p>
               </div>

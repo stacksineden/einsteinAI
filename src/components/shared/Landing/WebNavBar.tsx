@@ -116,6 +116,7 @@ const WebNavBar = () => {
             src="/assets/images/text-brand.png"
             alt="brand"
             className="w-full object-contain"
+            loading="lazy"
           />
         </Link>
         <ul className="hidden h-full gap-12 lg:flex">

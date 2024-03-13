@@ -47,6 +47,7 @@ const WebAssistant = () => {
           src="/assets/images/assistantbg.png"
           alt="assistants"
           className="w-full h-full object-contain"
+          loading="lazy"
         />
       </div>
     </div>
