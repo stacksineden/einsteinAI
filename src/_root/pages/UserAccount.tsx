@@ -187,6 +187,12 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                 <p className="text-primary-black opacity-70 text-sm">
                   For Optimum personal needs
                 </p>
+                {isLoadingPaymentPlans && (
+                  <p className="text-base text-primary-black">Loading Payement plans ...</p>
+                )}
+                {isError && (
+                  <p className="text-base text-primary-red">Error loading payment plans!</p>
+                )}
                 <p className="my-1 text-4xl font-semibold">
                   {planObject?.currency} {planObject?.amount}
                 </p>
