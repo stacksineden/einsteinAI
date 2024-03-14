@@ -9,13 +9,13 @@ export async function getFlutterwavePaymentPlans() {
   if (import.meta.env.MODE === "development") {
     url = "/api/payment-plans"; // Use local development URL
   } else {
-    url = "https://api.flutterwave.com/v3/payment-plans"; // Use production URL
-  }
+    url = "https://flutterwave-webhooks.onrender.com/payment-plans"; // Use production URL 
+  }   
 
   try {
     const response = await axios.get(url, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json",  
         ...authHeaders,
       },
     });

@@ -39,6 +39,7 @@ const CreateAssistantModal = ({
             src="/assets/images/enterprisebg.png"
             alt="background"
             className="cover w-full h-full"
+            loading="lazy"
           />
           <div className="w-full py-5">
             <h4 className="text-4xl text-primary-black font-bold">
