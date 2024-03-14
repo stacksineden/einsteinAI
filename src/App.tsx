@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import {
@@ -13,7 +13,7 @@ import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import NotFound from "./_root/NotFound";
-import Skeleton from "react-loading-skeleton";
+import { Loader2 } from "lucide-react";
 
 const AuthLayout = lazy(() => import("./_auth/AuthLayout"));
 const SignUpForm = lazy(() => import("./_auth/forms/SignUpForm"));
@@ -35,14 +35,41 @@ const UseCases = lazy(() => import("./_root/UseCases"));
 const HelpCenter = lazy(() => import("./_root/HelpCenter"));
 
 function App() {
+  const [showFirstMessage, setShowFirstMessage] = useState(true);
+
   const { pathname } = useLocation();
   useEffect(() => {
     window.scroll(0, 0);
   }, [pathname]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowFirstMessage(!showFirstMessage);
+    }, 5000); // Change interval (in milliseconds) as needed
+    return () => clearTimeout(timer);
+  }, [showFirstMessage]);
+
   return (
     <>
-      <Suspense fallback={<Skeleton height={1100} className="my-2" count={1} />}>
+      <Suspense
+        fallback={
+          <div className="w-[90%] mx-auto h-screen flex items-center justify-center flex-col gap-2">
+            <Loader2 className="h-10 md:h-20 w-10 md:w-20 text-blue-500 animate-spin" />
+            <div className="text-center">
+              {showFirstMessage ? (
+                <p className="text-base md:text-lg text-primary-black">
+                  Hang tight! Our servers are doing some heavy lifting.
+                </p>
+              ) : (
+                <p className="text-base md:text-lg text-primary-black">
+                  In the meantime, why not practice your Jedi mind tricks? Try
+                  to move the loading spinner with your mind... Almost there...
+                </p>
+              )}
+            </div>
+          </div>
+        }
+      >
         <Routes>
           {/* auth */}
           <Route element={<AuthLayout />}>
