@@ -59,7 +59,7 @@ const AssistantChat = () => {
 
   return (
     <>
-      {!userSubscriptionDetails?.is_subscribed &&
+      {!userSubscriptionDetails?.is_subscribed && 
         getAssistantLevel(
           assistantObject?.metadata?.assistant_pretraining_name!
         ) !== "Rookie" && (

@@ -51,7 +51,7 @@ const SignInForm = () => {
         className: "bg-red-200 text-white",
       });
     }
-    const isLoggedIn = await checkAuthUser();
+    const isLoggedIn = await checkAuthUser(); 
     if (isLoggedIn) {
       form.reset();
       navigate("/app");

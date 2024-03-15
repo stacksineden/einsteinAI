@@ -46,7 +46,7 @@ const Messages = ({
 
     return (
       <div className={`py-5 text-primary-black overflow-x-scroll`}>
-        <div className="px-5 md:px-10 max-w-2xl mx-auto flex flex-col gap-1">
+        <div className="px-5 md:px-10 max-w-3xl mx-auto flex flex-col gap-1">
           <div className="flex space-x-2 items-center">
             <img
               src={
