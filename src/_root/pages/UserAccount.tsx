@@ -28,7 +28,6 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ISubscription, IUser } from "@/types";
 import { formatDateString } from "@/lib/utils";
 
-
 interface PaymentPlan {
   id: number;
   name: string;
@@ -64,7 +63,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     data: paymentPlans,
     isLoading: isLoadingPaymentPlans,
     isError,
-  } = useGetFlutterwavePaymentPlans(); 
+  } = useGetFlutterwavePaymentPlans();
   const paymentPlansArray: PaymentPlan[] | undefined = paymentPlans;
   const [planObject, setPlanObject] = useState<PaymentPlan | undefined>(
     undefined
@@ -95,11 +94,11 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
 
   const navigate = useNavigate();
 
-  console.log(user,'user details')
+  console.log(user, "user details");
 
   // Flutterwave configuration
   const config = {
-    public_key: import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY, 
+    public_key: import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY,
     tx_ref: Date.now().toString(),
     amount: planObject?.amount!,
     currency: planObject?.currency! || "NGN",
@@ -112,17 +111,17 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     },
     customizations: {
       title: `Payment for pro ${planObject?.interval} plan`,
-      description: `Payment for pro ${planObject?.interval} plan`, 
+      description: `Payment for pro ${planObject?.interval} plan`,
       logo: "",
     },
   };
 
-  console.log(config,'config')
+  console.log(config, "config");
 
   const handleFlutterPayment = useFlutterwave(config);
 
-  console.log(config,'config')
-  
+  console.log(config, "config");
+
   return (
     <Dialog
       open={isOpen}
@@ -238,11 +237,13 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                             amount: response?.amount!,
                             currency: response?.currency!,
                             subscription_start_date: new Date().toISOString(),
-                            user_email: response?.customer?.email!,
+                            user_email: response?.customer?.email!
+                              ? response?.customer?.email!
+                              : user?.email!,
                             transaction_id: response?.transaction_id!,
                             tx_ref: response?.tx_ref!,
                           };
-                          console.log(paymentPayload,'paymentpayload')
+                          console.log(paymentPayload, "paymentpayload");
                           const createSubscription = await createSubscritpion(
                             paymentPayload
                           );
