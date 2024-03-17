@@ -28,6 +28,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ISubscription, IUser } from "@/types";
 import { formatDateString } from "@/lib/utils";
 
+
 interface PaymentPlan {
   id: number;
   name: string;
@@ -109,8 +110,8 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     },
     customizations: {
       title: `Payment for pro ${planObject?.interval} plan`,
-      description: `Payment for pro ${planObject?.interval} plan`,
-      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
+      description: `Payment for pro ${planObject?.interval} plan`, 
+      logo: "",
     },
   };
 
@@ -221,7 +222,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                   onClick={() => {
                     handleFlutterPayment({
                       callback: async (response) => {
-                        // console.log(response, "payment res");
+                        console.log(response, "payment res");
                         //send this to appwrite to create a subscription
                         if (response) {
                           const paymentPayload = {
@@ -254,7 +255,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                                 "Unable to save Subcription details, please contact us, let's help you figure this out asap",
                               description:
                                 "Something went wrong, Don't panic, It will be resolved",
-                              className: "bg-red-200 text-white",
+                              className: "bg-primary-red text-white",
                             });
                             navigate("/my-assistants");
                           }
