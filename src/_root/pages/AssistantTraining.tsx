@@ -474,7 +474,7 @@ const AssistantTraining = () => {
                 <Button
                   type="submit"
                   className="shad-button_primary"
-                  disabled={isLoadingSaving}
+                  disabled={isLoadingSaving} 
                 >
                   {isLoadingSaving ? (
                     <div className="flex-center gap-2">

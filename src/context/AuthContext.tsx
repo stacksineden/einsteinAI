@@ -62,6 +62,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkAuthUser = async () => {
     try {
       const currentAccount = await getCurrentUser();
+      if(!currentAccount){
+        console.log('user not found')
+      }
       if (currentAccount) {
         const userSubscriptionDetails = await getUserSubcriptionStatus(
           currentAccount?.currentUser.$id

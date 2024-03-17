@@ -7,7 +7,7 @@ import {
   // pricingItems,
   proPlanFeatures,
 } from "@/modelDataset";
-import {  CheckCheck } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {
@@ -53,9 +53,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
 
   const { toast } = useToast();
 
-  const {
-    mutateAsync: createSubscritpion
-  } = useCreateUserSubscription();
+  const { mutateAsync: createSubscritpion } = useCreateUserSubscription();
 
   // console.log(user, "useruseruseruser");
   // console.log(userSubscriptionDetails, "userSubscriptionDetails");
@@ -65,7 +63,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     data: paymentPlans,
     isLoading: isLoadingPaymentPlans,
     isError,
-  } = useGetFlutterwavePaymentPlans();
+  } = useGetFlutterwavePaymentPlans(); 
   const paymentPlansArray: PaymentPlan[] | undefined = paymentPlans;
   const [planObject, setPlanObject] = useState<PaymentPlan | undefined>(
     undefined
@@ -98,7 +96,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
 
   // Flutterwave configuration
   const config = {
-    public_key: import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY_TEST,
+    public_key: import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY, 
     tx_ref: Date.now().toString(),
     amount: planObject?.amount!,
     currency: planObject?.currency! || "NGN",
@@ -188,10 +186,14 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                   For Optimum personal needs
                 </p>
                 {isLoadingPaymentPlans && (
-                  <p className="text-base text-primary-black">Loading Payement plans ...</p>
+                  <p className="text-base text-primary-black">
+                    Loading Payement plans ...
+                  </p>
                 )}
                 {isError && (
-                  <p className="text-base text-primary-red">Error loading payment plans!</p>
+                  <p className="text-base text-primary-red">
+                    Error loading payment plans!
+                  </p>
                 )}
                 <p className="my-1 text-4xl font-semibold">
                   {planObject?.currency} {planObject?.amount}
@@ -215,6 +217,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
               <div className="p-5 flex items-center justify-center">
                 <Button
                   className="bg-primary-black text-white text-sm"
+                  disabled={isLoadingPaymentPlans}
                   onClick={() => {
                     handleFlutterPayment({
                       callback: async (response) => {
@@ -343,7 +346,6 @@ const UserAccount = () => {
   useEffect(() => {
     checkAuthUser();
   }, []);
-
 
   return (
     <Container>

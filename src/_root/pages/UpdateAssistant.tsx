@@ -483,7 +483,7 @@ const UpdateAssistant = () => {
                 )}
               />
 
-              <Button type="submit" className="shad-button_primary">
+              <Button type="submit" className="shad-button_primary" disabled={isLoadingUpdating}>
                 {isLoadingUpdating ? (
                   <div className="flex-center gap-2">
                     <Loader /> Saving changes ...

@@ -48,7 +48,7 @@ const SignInForm = () => {
     if (!session) {
       return toast({
         title: "Sign in failed, please try again.",
-        className: "bg-red-200 text-white",
+        className: "bg-primary-red text-white", 
       });
     }
     const isLoggedIn = await checkAuthUser(); 
@@ -58,7 +58,7 @@ const SignInForm = () => {
     } else {
       return toast({
         title: "Sign up failed, please try again.",
-        className: "bg-red-200 text-white",
+        className: "bg-primary-red text-white",
       });
     }
   }
@@ -110,7 +110,7 @@ const SignInForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="shad-button_primary">
+          <Button type="submit" className="shad-button_primary" disabled={isLogginInUser}>
             {isLogginInUser ? (
               <div className="flex-center gap-2">
                 <Loader /> Logging in ...

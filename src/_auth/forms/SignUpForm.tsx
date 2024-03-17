@@ -46,7 +46,8 @@ const SignUpForm = () => {
     const newUser = await createUserAccount(values);
     if (!newUser) {
       return toast({
-        title: "Sign up failed, please try again.",
+        title: "Sign up failed, please try again.", 
+        className: "bg-primary-red text-white", 
       });
     }
 

@@ -59,7 +59,7 @@ const AssistantChat = () => {
 
   return (
     <>
-      {!userSubscriptionDetails?.is_subscribed && 
+      {!userSubscriptionDetails?.is_subscribed &&
         getAssistantLevel(
           assistantObject?.metadata?.assistant_pretraining_name!
         ) !== "Rookie" && (
@@ -132,15 +132,17 @@ const AssistantChat = () => {
             </div>
             {/* CHAT INTRO */}
             {!activeThreadId && (
-              <ChatIntro
-                assistant_name={
-                  assistantObject?.metadata?.assistant_pretraining_name!
-                }
-                matching_prompts={getMatchingPromptsForAssistants(
-                  assistantObject?.metadata?.assistant_pretraining_name!
-                )}
-                user_assistant_name={assistantObject?.name!}
-              />
+              <div className="flex-1 overflow-y-auto overflow-x-hidden"> 
+                <ChatIntro
+                  assistant_name={ 
+                    assistantObject?.metadata?.assistant_pretraining_name!
+                  }
+                  matching_prompts={getMatchingPromptsForAssistants(
+                    assistantObject?.metadata?.assistant_pretraining_name!
+                  )}
+                  user_assistant_name={assistantObject?.name!}
+                />
+              </div>
             )}
 
             {/* chat window */}
@@ -171,7 +173,7 @@ const AssistantChat = () => {
               <ChatSideBar
                 showMobileSideBar={setShowMobileSideBar}
                 assistant_name={
-                  assistantObject?.metadata?.assistant_pretraining_name! 
+                  assistantObject?.metadata?.assistant_pretraining_name!
                 }
               />
             </div>
@@ -205,17 +207,17 @@ const AssistantChat = () => {
           </div>
           {/* CHAT INTRO */}
           {!activeThreadId && (
-           <div className="flex-1 overflow-y-auto overflow-x-hidden">
-             <ChatIntro 
-              assistant_name={
-                assistantObject?.metadata?.assistant_pretraining_name!
-              }
-              matching_prompts={getMatchingPromptsForAssistants(
-                assistantObject?.metadata?.assistant_pretraining_name!
-              )}
-              user_assistant_name={assistantObject?.name!}
-            />
-           </div>
+            <div className="flex-1 overflow-y-auto overflow-x-hidden">
+              <ChatIntro
+                assistant_name={
+                  assistantObject?.metadata?.assistant_pretraining_name!
+                }
+                matching_prompts={getMatchingPromptsForAssistants(
+                  assistantObject?.metadata?.assistant_pretraining_name!
+                )}
+                user_assistant_name={assistantObject?.name!}
+              />
+            </div>
           )}
 
           {/* chat window */}

@@ -104,9 +104,9 @@ export const pricingItems = [
   {
     plan: "Pro",
     tagline: "For Optimum personal needs",
-    base_price_monthly: "14",
+    base_price_monthly: "15",
     // promo_price_weekly: 9,
-    base_price_weekly: "2.99",
+    base_price_weekly: "4",
     features: [
       {
         text: "Unlimited Assistant Training",
