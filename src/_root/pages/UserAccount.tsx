@@ -236,6 +236,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                             transaction_id: response?.transaction_id!,
                             tx_ref: response?.tx_ref!,
                           };
+                          console.log(paymentPayload,'paymentpayload')
                           const createSubscription = await createSubscritpion(
                             paymentPayload
                           );
