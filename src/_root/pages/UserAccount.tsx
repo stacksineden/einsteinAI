@@ -94,7 +94,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
 
   const navigate = useNavigate();
 
-  console.log(user, "user details");
+  // console.log(user, "user details");
 
   // Flutterwave configuration
   const config = {
@@ -116,11 +116,11 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     },
   };
 
-  console.log(config, "config");
+  // console.log(config, "config");
 
   const handleFlutterPayment = useFlutterwave(config);
 
-  console.log(config, "config");
+
 
   return (
     <Dialog
@@ -227,7 +227,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                   onClick={() => {
                     handleFlutterPayment({
                       callback: async (response) => {
-                        console.log(response, "payment res");
+                        // console.log(response, "payment res");
                         //send this to appwrite to create a subscription
                         if (response) {
                           const paymentPayload = {
@@ -243,7 +243,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                             transaction_id: response?.transaction_id!,
                             tx_ref: response?.tx_ref!,
                           };
-                          console.log(paymentPayload, "paymentpayload");
+                          // console.log(paymentPayload, "paymentpayload");
                           const createSubscription = await createSubscritpion(
                             paymentPayload
                           );
