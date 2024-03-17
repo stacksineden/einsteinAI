@@ -117,6 +117,8 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     },
   };
 
+  console.log(config,'config')
+
   const handleFlutterPayment = useFlutterwave(config);
 
   return (
