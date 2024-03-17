@@ -121,6 +121,8 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
 
   const handleFlutterPayment = useFlutterwave(config);
 
+  console.log(config,'config')
+  
   return (
     <Dialog
       open={isOpen}
