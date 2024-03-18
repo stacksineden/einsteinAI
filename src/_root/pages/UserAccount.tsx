@@ -112,7 +112,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     customizations: {
       title: `Payment for pro ${planObject?.interval} plan`,
       description: `Payment for pro ${planObject?.interval} plan`,
-      logo: "",
+      logo: "https://res.cloudinary.com/dyryfgjro/image/upload/v1710761978/rgia6ac2ctfrsol6rlld.jpg",
     },
   };
 
