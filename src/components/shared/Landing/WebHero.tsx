@@ -26,9 +26,9 @@ const WebHero = () => {
               ))}
           </div>
           <p className="text-base font-bold lg:text-xl text-primary-blue">
-            198k
+            EinsteinAI
             <span className="text-base lg:text-xl ml-1 text-primary-black">
-              Active users
+               is Live
             </span>
           </p>
         </div>
