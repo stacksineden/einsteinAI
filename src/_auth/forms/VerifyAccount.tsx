@@ -33,7 +33,7 @@ const VerifyAccount = () => {
   };
 
   return (
-    <div className="sm:w-420 flex-center flex-col">
+    <div className="sm:w-420 flex-center flex-col text-center">
        <Link to="/" className="w-[150px] md:w-[170px]">
           <img
             src="/assets/images/text-brand.png"

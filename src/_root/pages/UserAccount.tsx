@@ -49,7 +49,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   // Billing Information
   const [billingFrequency, setBillingFrequency] = useState("weekly");
-  const [currency, setCurrency] = useState("NGN");
+  const [currency, setCurrency] = useState("USD");
 
   const { toast } = useToast();
 
@@ -157,7 +157,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                 <SelectGroup onChange={(e) => console.log(e)}>
                   <SelectItem value="weekly">Weekly</SelectItem>
                   <SelectItem value="monthly">Monthly</SelectItem>
-                  <SelectItem value="hourly">Hourly</SelectItem>
+                  {/* <SelectItem value="hourly">Hourly</SelectItem> */}
                 </SelectGroup>
               </SelectContent>
             </Select>
