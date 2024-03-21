@@ -5,19 +5,24 @@ import { useNavigate } from "react-router-dom";
 const WebHero = () => {
   const navigate = useNavigate();
   return (
-    <section className="mx-auto max-w-[1440px] px-6 lg:px-20 3xl:px-0 flex flex-col gap-20 py-10 pb-10 md:gap-28 lg:py-20 xl:flex-row">
-      <div className="absolute right-0 top-0 h-screen w-screen bg-pattern-2 bg-cover bg-center md:-right-28 xl:-top-60"></div>
+    <section className="mx-auto max-w-[1440px] px-6 lg:px-20 3xl:px-0 flex flex-col xl:flex-row h-[70vh]">
       {/* left */}
-      <div className="relative z-20 flex flex-1 flex-col xl:w-1/2">
-        <h1 className="text-[52px] font-bold leading-[120%] lg:text-[64px]">
-          Your Gateway to Smart Assistance.
+      <div className="flex flex-1 flex-col w-full xl:w-1/2 my-auto py-10 md:py-0">
+        <h1 className="text-[30px] font-bold leading-[120%] lg:text-[50px]">
+          Empower Your World with Personalized Assistants
         </h1>
         <p className="text-base mt-3 text-primary-black opacity-70 xl:max-w-[520px]">
-          Our platform utilizes cutting-edge AI technology, allowing you to
-          train your assistants based on custom knowledge and specialized
-          functions
+          Customized virtual assistants tailored to elevate your productivity
+          and streamline your operations. Experience efficiency and
+          effectiveness like never before.
         </p>
         <div className="my-7 flex flex-wrap gap-5">
+          <p className="text-base font-bold lg:text-lg text-primary-blue border border-light-grey rounded-full shadow-md p-3">
+            EinsteinAI
+            <span className="text-base lg:text-xl ml-1 text-primary-black">
+              is Live
+            </span>
+          </p>
           <div className="flex items-center gap-2">
             {Array(5)
               .fill(1)
@@ -25,17 +30,11 @@ const WebHero = () => {
                 <img src="/assets/images/star.svg" alt="star" key={index} />
               ))}
           </div>
-          <p className="text-base font-bold lg:text-xl text-primary-blue">
-            EinsteinAI
-            <span className="text-base lg:text-xl ml-1 text-primary-black">
-               is Live
-            </span>
-          </p>
         </div>
 
         <div className="flex flex-col w-full gap-3 sm:flex-row">
           <Button
-            className="bg-primary-blue text-light-grey flex text-base hover:opacity-90"
+            className="shad-button_primary"
             onClick={() => navigate("/sign-up")}
           >
             Get started
@@ -50,8 +49,9 @@ const WebHero = () => {
         </div>
       </div>
 
-      <div className="relative flex flex-1 items-start">
-        <div className="relative z-20 w-[270px] flex-col gap-8 rounded-3xl bg-light-grey px-4 py-7">
+      <div className="relative flex flex-1 items-start bg-light-grey h-full w-full">
+        {/* demo video */}
+        {/* <div className="relative z-20 w-[270px] flex-col gap-8 rounded-3xl bg-light-grey px-4 py-7">
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center gap-1 w-full">
@@ -83,7 +83,7 @@ const WebHero = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );
