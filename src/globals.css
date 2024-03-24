@@ -117,6 +117,15 @@
   .shad-button_ghost {
     @apply flex gap-4 items-center justify-start hover:bg-transparent hover:text-primary-black !important;
   }
+  .video-carousel_container {
+    @apply relative sm:w-[70vw] w-[88vw] md:h-[70vh] sm:h-[50vh] h-[35vh]
+  }
 }
 
+.screen-max-width {
+  /* margin-inline-start: auto; */
+  margin-inline-end: auto;
+  position: relative;
+  max-width: 1120px;
+}
 

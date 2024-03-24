@@ -120,8 +120,6 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
 
   const handleFlutterPayment = useFlutterwave(config);
 
-
-
   return (
     <Dialog
       open={isOpen}
@@ -295,6 +293,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
 
 const EnterprisePlanModal = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   return (
     <Dialog
@@ -337,7 +336,7 @@ const EnterprisePlanModal = () => {
           <div className="p-5 flex items-center justify-center">
             <Button
               className="bg-primary-black text-white text-sm"
-              onClick={() => {}}
+              onClick={() => navigate("/enterprise")}
             >
               Talk to us
             </Button>

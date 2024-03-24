@@ -360,7 +360,7 @@ export async function chatCompletionOpenAI(prompt: string) {
   if (!prompt) return;
   const url = "https://api.openai.com/v1/chat/completions";
   const requestPayload = {
-    model: "gpt-3.5-turbo",
+    model: "gpt-4-turbo-preview", 
     messages: [
       {
         role: "system",

@@ -7,7 +7,7 @@ const WebHero = () => {
   return (
     <section className="mx-auto max-w-[1440px] px-6 lg:px-20 3xl:px-0 flex flex-col xl:flex-row h-[70vh]">
       {/* left */}
-      <div className="flex flex-1 flex-col w-full xl:w-1/2 my-auto py-10 md:py-0">
+      <div className="flex flex-1 flex-col w-full xl:w-1/2 justify-center bg-feature-bg bg-center bg-no-repeat h-full py-6">
         <h1 className="text-[30px] font-bold leading-[120%] lg:text-[50px]">
           Empower Your World with Personalized Assistants
         </h1>
@@ -17,9 +17,9 @@ const WebHero = () => {
           effectiveness like never before.
         </p>
         <div className="my-7 flex flex-wrap gap-5">
-          <p className="text-base font-bold lg:text-lg text-primary-blue border border-light-grey rounded-full shadow-md p-3">
+          <p className="text-base font-medium text-primary-blue border border-light-grey rounded-full shadow-md p-3">
             EinsteinAI
-            <span className="text-base lg:text-xl ml-1 text-primary-black">
+            <span className="ml-1 text-primary-black">
               is Live
             </span>
           </p>
@@ -37,7 +37,7 @@ const WebHero = () => {
             className="shad-button_primary"
             onClick={() => navigate("/sign-up")}
           >
-            Get started
+            Start Free Trial
           </Button>
           <Button
             className="bg-white text-primary-black flex text-base border border-light-grey hover:shadow-md gap-2"
@@ -51,39 +51,7 @@ const WebHero = () => {
 
       <div className="relative flex flex-1 items-start bg-light-grey h-full w-full">
         {/* demo video */}
-        {/* <div className="relative z-20 w-[270px] flex-col gap-8 rounded-3xl bg-light-grey px-4 py-7">
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-1 w-full">
-                <img
-                  src="/assets/images/assistants/henry.png"
-                  alt="user"
-                  className="h-8 w-8 rounded-full bg-light-grey"
-                  loading="lazy"
-                />
-                <p className="text-sm text-primary-black">You</p>
-              </div>
-              <div className="w-full bg-white text-sm text-primary-black p-2 rounded-lg">
-                How far is Minneapolis from St. Paul?
-              </div>
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-1 w-full justify-end">
-                <img
-                  src="/assets/images/assistants/eddy.png"
-                  alt="user"
-                  className="h-8 w-8 rounded-full bg-light-grey"
-                  loading="lazy"
-                />
-                <p className="text-sm text-primary-black">Eddy</p>
-              </div>
-              <div className="w-full bg-primary-blue text-sm text-white p-2 rounded-lg">
-                The driving distance between downtown Minneapolis and downtown
-                St. Paul is approximately 10 miles (16 kilometers)
-              </div>
-            </div>
-          </div>
-        </div> */}
+       
       </div>
     </section>
   );

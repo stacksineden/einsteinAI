@@ -17,9 +17,13 @@ const Enterprise = () => {
             case.
           </p>
           <div className="w-1/2 mt-3 ml-2">
-            <Button className="bg-primary-black text-base text-white">
+            <a
+              className="bg-primary-black text-base text-white p-3 rounded-md"
+              href="https://www.stacksineden.com/contact"
+              target="_blank"
+            >
               Contact us
-            </Button>
+            </a>
           </div>
         </div>
         <div className="w-full flex-1 hidden md:flex">
@@ -100,9 +104,13 @@ const Enterprise = () => {
             stacksinEDEN's AI empowerment. Get started now!
           </p>
 
-          <Button className="bg-white text-primary-black mt-3">
+          <a
+            className="bg-white text-primary-black mt-3 p-2 rounded-md font-medium"
+            href="https://www.stacksineden.com/"
+            target="_blank"
+          >
             Get started
-          </Button>
+          </a>
         </div>
         <div className="bg-transparent w-full rounded-r-[2rem] hidden md:inline-block">
           <img
@@ -139,9 +147,13 @@ const Enterprise = () => {
                     started now!
                   </p>
                   <div className="flex justify-start my-2">
-                    <Button className="bg-white text-primary-black mt-3">
+                    <a
+                      className="bg-white text-primary-black mt-3 p-2 rounded-md font-medium"
+                      href="https://www.stacksineden.com/"
+                      target="_blank"
+                    >
                       Get started
-                    </Button>
+                    </a>
                   </div>
                 </div>
               </div>
