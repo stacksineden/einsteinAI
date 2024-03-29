@@ -14,10 +14,10 @@ export function truncateText(text: string, maxLength: number): string {
   }
 }
 
-export const getAssistantLevel = (name: string | undefined): string => {
-  if (!name) return '';
+export const getAssistantLevel = (name: string | undefined): string => { 
+  if (!name) return "";
   const assistant = dataSet?.find((data) => data?.name === name);
-  return assistant?.level ?? '';
+  return assistant?.level ?? "";
 };
 
 export function getLevelColor(level: string) {
@@ -34,18 +34,32 @@ export function getLevelColor(level: string) {
   return "text-primary-black";
 }
 
-
 export function formatDateString(dateString: string): string {
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
     // timeZoneName: 'short',
   };
 
-  const formattedDate = new Date(dateString).toLocaleString('en-US', options);
+  const formattedDate = new Date(dateString).toLocaleString("en-US", options);
   return formattedDate;
+}
+
+export const assistantAlertText = [
+  "Cooking up a response...",
+  "Brewing up some knowledge...",
+  "Baking your answer...",
+  "Loading the wisdom..",
+  "Whipping up a solution...",
+  "Summoning the data spirits...",
+  "Crafting your answer...",
+];
+
+export function getRandomStringFromArray(strings: string[]): string {
+  const randomIndex = Math.floor(Math.random() * strings.length);
+  return strings[randomIndex];
 }

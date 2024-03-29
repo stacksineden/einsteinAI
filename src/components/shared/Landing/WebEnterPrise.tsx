@@ -5,7 +5,7 @@ const WebEnterPrise = () => {
   const navigate = useNavigate();
   return (
     <section className="2xl:max-w-[1440px] mx-auto relative py-4 lg:mb-5 lg:py-10 xl:mb-6 px-6 lg:px-20 3xl:px-0 overflow-hidden">
-      <div className="w-full h-[450px] shadow-xl md:grid grid-cols-2 rounded-[2rem] hidden">
+      <div className="w-full h-[500px] shadow-xl md:grid grid-cols-2 rounded-[2rem] hidden">
         <div className="w-full bg-primary-black h-full rounded-l-[2rem] py-5 px-7 text-white relative">
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[88%]">
             <div className="flex flex-col gap-4">

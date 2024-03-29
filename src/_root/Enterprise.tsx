@@ -12,9 +12,13 @@ const Enterprise = () => {
             Enterprise.
           </h2>
           <p className="text-base text-primary-black w-[95%] md:w-[70%] font-light">
-            Develop custom assistants tailored to your unique business
-            requirements to effectively address and fulfill your specific use
-            case.
+            <span className="font-medium">
+              {" "}
+              Empower Your Enterprise with Custom-Built AI Assistants:
+            </span>{" "}
+            Unlock the Potential of Tailor-Made Solutions for Your Unique
+            Business Needs. Elevate Your Operations and Fulfill Specific Use
+            Cases with EinsteinAI
           </p>
           <div className="w-1/2 mt-3 ml-2">
             <a
@@ -64,7 +68,7 @@ const Enterprise = () => {
           <div className="py-7 md:py-12 px-3 flex items-center hover:scale-105 transform transition duration-300 ease-out cursor-pointer rounded-xl text-center shadow-lg md:rounded-3xl border border-primary-red bg-red-50">
             <div className="flex flex-col gap-2">
               <p className="text-primary-black text-lg md:text-2xl flex-1">
-                Request Tailored Functionalities
+                Crafting Your Custom Assistant: From Vision to Reality
               </p>
               <p className="text-base text-primary-black font-light">
                 Through direct conversations, we aim to gain a thorough

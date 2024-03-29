@@ -22,6 +22,13 @@ import {
 } from "@/specialisedFunctions";
 import { useMatchingPromptContext } from "@/context/MatchingPromptContext";
 import { Textarea } from "../ui/textarea";
+import { getRandomStringFromArray, assistantAlertText } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // type UploadDropZoneProps = {
 //   setInMessageFiles: React.Dispatch<React.SetStateAction<string[]>>;
@@ -84,14 +91,13 @@ import { Textarea } from "../ui/textarea";
 const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { promptMessage} = useMatchingPromptContext(); 
+  const { promptMessage } = useMatchingPromptContext();
 
   //state for files that will be uploaded during chat
-  const [inMessageFiles,] = useState<string[]>([]);
+  const [inMessageFiles] = useState<string[]>([]);
   const [message, setMessage] = useState(promptMessage || "");
   const [isRunning, setIsRunning] = useState(false);
   const [isRunId, setIsRunId] = useState("");
-
 
   useEffect(() => {
     setMessage(promptMessage || "");
@@ -106,7 +112,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
       // Handle completed state
       // console.log("Run is completed.");
       toast({
-        description: "Run is completed",
+        description: "We are good to go!",
         className: "bg-primary-blue text-white",
       });
       setMessage("");
@@ -122,7 +128,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
       // Handle requires_action state
       // console.log("Requires action");
       toast({
-        description: "Run requires action",
+        description: "I need to perform some supplementary actions",
         className: "bg-primary-blue text-white",
       });
       const toolCalls =
@@ -199,7 +205,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
             const { location } = args;
             if (!location) return;
             try {
-              const response = await get_weather(location); 
+              const response = await get_weather(location);
               if (response) {
                 toolOutputs.push({
                   tool_call_id: toolCall.id,
@@ -252,8 +258,11 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
       }
     } else {
       // Handle other states or wait for completion
+
       toast({
-        description: "I'm thinking about this....",
+        description:
+          getRandomStringFromArray(assistantAlertText) ||
+          "Figuring this out ...",
         className: "bg-primary-blue text-white",
       });
       queryClient.invalidateQueries({
@@ -268,7 +277,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
       // Handle cancellation, failure, or expiration
       // console.log("Run is cancelled, failed, or expired.");
       toast({
-        description: "Run has failed.",
+        description: "Message delivery failed. Please Try again",
         className: "bg-primary-red text-white",
       });
       queryClient.invalidateQueries({
@@ -289,7 +298,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
     setIsRunning(true);
     if (!threadId) {
       toast({
-        description: "Select or create a thread to start chat",
+        description: "Please select or create a thread to start the chat.",
         className: "bg-primary-black text-white",
       });
     }
@@ -301,9 +310,8 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
     //we need to process run ==> get run Id from res
     if (!res) {
       toast({
-        description:
-          "Sending message failed, you can select or create a thread to start chat",
-        className: "bg-primary-red text-white",
+        description: "Please select or create a thread to start the chat.",
+        className: "bg-black text-white",
       });
       setIsRunning(false);
       throw new Error();
@@ -373,26 +381,35 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
             value={message}
           />
           <div className="flex w-full items-center justify-start mt-2 gap-2 px-2">
-            <Button
-              className="bg-primary-black hover:opacity-90 flex gap-2 text-white"
-              aria-label="send message"
-              onClick={() => handleCreateOpenAiMessage()}
-              disabled={isRunning}
-            >
-              {isRunning ? (
-                <Loader2 className="h-4 w-4 text-white animate-spin" />
-              ) : (
-                <Send className="h-4 w-4 text-white" />
-              )}
-              Add and Run
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button
+                    className="bg-primary-black hover:opacity-90 flex gap-2 text-white"
+                    aria-label="send message"
+                    onClick={() => handleCreateOpenAiMessage()}
+                    disabled={isRunning || !threadId}
+                  >
+                    {isRunning ? (
+                      <Loader2 className="h-4 w-4 text-white animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4 text-white" />
+                    )}
+                    Send
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div className="text-sm font-medium text-black">{!threadId && "Create a thread to start the chat"}</div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Button
               className="bg-primary-red hover:opacity-90 flex gap-2 text-white"
               aria-label="send message"
               disabled={!isRunning}
               onClick={() => handleCancelRun(threadId!, isRunId!)}
             >
-              Cancel Run
+              Cancel
             </Button>
             {/* upload input */}
             {/* <UploadDropZone setInMessageFiles={setInMessageFiles}/>  */}
