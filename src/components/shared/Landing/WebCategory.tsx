@@ -15,7 +15,7 @@ const WebCategory = () => {
       className="w-screen overflow-hidden h-full py-10 sm:px-10 px-5 bg-light-grey"
     >
       <div className="screen-max-width">
-        <div className="mb-5 md:mb-10 w-full md:flex items-end justify-between">
+        <div className="mb-5 w-full md:flex items-end justify-between">
           <h1
             id="title"
             className="text-black lg:text-5xl md:text-5xl text-2xl lg:mb-0 mb-3 ml-1 md:ml-7 opacity-0 translate-y-20 w-[80%] md:w-[40%]"

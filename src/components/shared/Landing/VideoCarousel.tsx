@@ -140,7 +140,7 @@ const VideoCarousel: React.FC = () => {
     }
   };
 
-  const handleLoadedMetaData = (i: number, e: HTMLVideoElement): void =>
+  const handleLoadedMetaData = (e: HTMLVideoElement): void =>
     setLoadedData((prev) => [...prev, e]);
 
   return (
@@ -149,13 +149,22 @@ const VideoCarousel: React.FC = () => {
         {hightlightsSlides.map((list, i) => (
           <div key={list.id} id="slider" className="sm:pr-20 pr-10">
             <div className="video-carousel_container">
-              <div className="w-full h-full flex-center rounded-3xl overflow-hidden bg-black">
+              <div className="ml-1 my-4">
+                <h2
+                  key={i}
+                  className="md:text-3xl text-base font-medium text-black"
+                >
+                  {list?.title}
+                </h2>
+                {/* <p className="text-black opacity-80 text-xs md:text-base w-[90%] md:w-[60%]">
+                  {list.text}
+                </p> */}
+              </div>
+              <div className="w-full h-full flex-center rounded-3xl overflow-hidden bg-white">
                 <video
                   id="video"
                   playsInline={true}
-                  className={`${
-                    list.id === 2 && "translate-x-44"
-                  } pointer-events-none`}
+                  className="pointer-events-none"
                   preload="auto"
                   muted
                   ref={(el) => (videoRef.current[i] = el!)}
@@ -168,24 +177,16 @@ const VideoCarousel: React.FC = () => {
                     setVideo((prev) => ({ ...prev, isPlaying: true }))
                   }
                   onLoadedMetadata={(e) =>
-                    handleLoadedMetaData(i, e.target as HTMLVideoElement)
+                    handleLoadedMetaData(e.target as HTMLVideoElement)
                   }
                 >
                   <source src={list.video} type="video/mp4" />
                 </video>
               </div>
 
-              <div className="absolute top-4 md:top-12 left-[5%] z-10">
-                <h2
-                  key={i}
-                  className="md:text-2xl text-base font-medium text-white"
-                >
-                  {list?.title}
-                </h2>
-                <p className="text-white opacity-80 text-xs md:text-base font-normal md:font-light w-[90%] md:w-[60%]">
-                  {list.text}
-                </p>
-              </div>
+              {/* <div className="absolute top-4 md:top-12 left-[5%] z-10">
+               
+              </div> */}
             </div>
           </div>
         ))}

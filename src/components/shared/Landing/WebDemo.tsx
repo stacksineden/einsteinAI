@@ -5,8 +5,12 @@ const WebDemo = () => {
         Take a Quick Demo:
         <span className="text-primary-blue">See How EinsteinAI Works</span>
       </h2>
-      <div className="h-[75vh] bg-black rounded-3xl w-full mt-2 md:mt-7">
-
+      <div className="bg-black rounded-3xl w-full mt-2 md:mt-7">
+        <video
+          src="/assets/videos/demo.mp4"
+          controls
+          className="w-full aspect-video" 
+        ></video>
       </div>
     </section>
   );

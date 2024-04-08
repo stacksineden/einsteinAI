@@ -12,10 +12,10 @@ const Landing = () => {
     <WebLayoutWrapper>
       <>
         <WebHero />
+        <WebDemo />
         <WebCategory />
         <WebHowTo />
         <WebFeatures />
-        <WebDemo />
         <WebEnterPrise />
         <WebAssistant />
       </>
