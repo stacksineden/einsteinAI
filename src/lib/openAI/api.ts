@@ -212,7 +212,7 @@ export async function createMessageOpenAi(
 //list messages
 export async function listMessagesOpenAI(thread_id: string) {
   try {
-    const url = `https://api.openai.com/v1/threads/${thread_id}/messages`;
+    const url = `https://api.openai.com/v1/threads/${thread_id}/messages?limit=100`;
     const response = await axios.get(url, {
       headers: {
         ...authHeaders,
@@ -360,7 +360,7 @@ export async function chatCompletionOpenAI(prompt: string) {
   if (!prompt) return;
   const url = "https://api.openai.com/v1/chat/completions";
   const requestPayload = {
-    model: "gpt-3.5-turbo",
+    model: "gpt-4-turbo-preview", 
     messages: [
       {
         role: "system",

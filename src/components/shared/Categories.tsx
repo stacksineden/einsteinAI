@@ -58,7 +58,7 @@ export const categories = [
   {
     label: "Digital Arts",
     icon: <ImagePlus />,
-    value: "technology",
+    value: "arts",
   },
   // {
   //   label: "Voice over",

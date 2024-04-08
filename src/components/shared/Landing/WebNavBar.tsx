@@ -110,7 +110,7 @@ const WebNavBar = () => {
           </div>
         </div>
       )}
-      <nav className="mx-auto max-w-[1440px] flex items-center justify-between relative z-30 py-5 px-6 lg:px-20 3xl:px-0">
+      <nav className="mx-auto max-w-[1440px] flex items-center justify-between z-30 py-5 px-6 lg:px-20 3xl:px-0 sticky top-0 w-full bg-white">
         <Link to="/" className="w-[150px] md:w-[170px]">
           <img
             src="/assets/images/text-brand.png"
@@ -124,19 +124,26 @@ const WebNavBar = () => {
             <Link
               to={link?.url}
               key={link?.key}
-              className="text-sm text-primary-black flex items-center justify-center cursor-pointer pb-1.5 transition-all hover:font-bold hover:text-primary-blue"
+              className="text-sm text-primary-black flex items-center justify-center cursor-pointer pb-1.5 transition-all hover:font-bold hover:text-primary-blue font-medium"
             >
               {link?.label}
             </Link>
           ))}
         </ul>
-        <div className="lg:flex items-center justify-center hidden">
+        <div className="lg:flex items-center justify-center hidden gap-3">
+          <Button
+            className="bg-white text-primary-black flex text-base border border-light-grey hover:shadow-md gap-2"
+            onClick={() => navigate("/sign-in")}
+          >
+            {/* <UserCircle className="text-light-grey h-4 w-4" /> */}
+            Sign in
+          </Button>
           <Button
             className="shad-button_primary"
             onClick={() => navigate("/sign-in")}
           >
-            <UserCircle className="text-light-grey h-4 w-4" />
-            Sign in
+            <UserCircle className="text-light-grey h-4 w-4" /> 
+            Get Started
           </Button>
         </div>
 

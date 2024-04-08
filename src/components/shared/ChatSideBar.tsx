@@ -1,10 +1,16 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetAssistantThreads,
   useSaveThreadToDB,
 } from "@/lib/tanstack-query/queriesAndMutation";
-import { ArrowBigLeftDash, Loader2, PenSquare, XCircle } from "lucide-react";
+import {
+  ArrowBigLeftDash,
+  Loader2,
+  PenSquare,
+  UserPlus,
+  XCircle,
+} from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -13,6 +19,7 @@ import { useToast } from "../ui/use-toast";
 import { useChatContext } from "@/context/ChatContext";
 import { getImageUrlByName } from "@/modelDataset";
 import { Link } from "react-router-dom";
+import { useUserContext } from "@/context/AuthContext";
 
 type CreateThreadModalProps = {
   submitFunc: (description: string) => void;
@@ -105,9 +112,12 @@ const ChatSideBar = ({
 }: ChatSideBarProps) => {
   const { id } = useParams();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const { activeThreadId, setAciveThreadId } = useChatContext();
   const [isCreatingThread, setIsCreatingThread] = useState(false);
+
+  const { userSubscriptionDetails } = useUserContext();
 
   const {
     data: threads,
@@ -230,15 +240,27 @@ const ChatSideBar = ({
         </div>
       </div>
       <div className="flex flex-col">
-        <div className="flex items-center px-2 py-1 rounded-lg group h-10 gap-2 cursor-pointer">
-          <Link to="/app" className="w-[170px] px-3 bg-zinc-900">
-            <img
-              src="/assets/images/text-brand.png"
-              alt="brand"
-              className="w-full object-contain"
-            />
-          </Link>
-        </div>
+        {!userSubscriptionDetails?.is_subscribed && (
+          <div
+            className="flex items-center px-2 py-1 rounded-lg group gap-2 cursor-pointer border border-light-grey mt-2"
+            onClick={() => navigate("/account")}
+          >
+            <UserPlus className="text-white w-7 h-7" />
+            <div className="flex flex-col ml-1">
+              <p className="text-base font-medium">Upgrade Plan</p>
+              <p className="text-white opacity-75 text-sm">
+                Get Unlimited assistants
+              </p>
+            </div>
+            {/* <Link to="/app" className="w-[170px] px-3 bg-zinc-900">
+           <img
+             src="/assets/images/text-brand.png"
+             alt="brand"
+             className="w-full object-contain"
+           />
+         </Link> */}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,86 +1,33 @@
-type CategoryCardType = {
-  image: string;
-  name: string;
-};
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import VideoCarousel from "./VideoCarousel";
 
-const CategoryCard = ({ image, name }: CategoryCardType) => {
-  return (
-    <div className="hover:scale-105 transform transition duration-300 ease-out">
-      <div className="relative h-60 w-60">
-        <img
-          src={image}
-          alt="catergories"
-          className="object-cover rounded-xl w-full h-full"
-          loading="lazy"
-        />
-      </div>
-      <h3 className="text-base text-primary-balck mt-2">
-        {name}
-      </h3>
-    </div>
-  );
-};
 
 const WebCategory = () => {
+  useGSAP(() => {
+    gsap.to("#title", { opacity: 1, y: 0 });
+    gsap.to("#link", { opacity: 1, y: 0, duration: 1, stagger: 0.25 });
+  }, []);
+
   return (
-    <section className="2xl:max-w-[1440px] mx-auto relative flex flex-col py-1 lg:mb-5 lg:py-2 xl:mb-6 px-6 lg:px-20 3xl:px-0">
-      <h2 className="text-[24px] md:text-[40px] opacity-70 pb-1 md:pb-3">
-        Need Help with
-      </h2>
-      <div className="flex space-x-4 overflow-scroll p-3 -ml-3 scrollbar-hide">
-        {serviceCategory?.map((category, _i) => (
-          <CategoryCard key={_i} image={category?.img} name={category?.name} />
-        ))}
+    <section
+      id="#highlights"
+      className="w-screen overflow-hidden h-full py-10 sm:px-10 px-5 bg-light-grey"
+    >
+      <div className="screen-max-width">
+        <div className="mb-5 w-full md:flex items-end justify-between">
+          <h1
+            id="title"
+            className="text-black lg:text-5xl md:text-5xl text-2xl lg:mb-0 mb-3 ml-1 md:ml-7 opacity-0 translate-y-20 w-[80%] md:w-[40%]"
+          >
+            Getting Started with{" "}
+            <span className="text-primary-blue">EinstenAI</span>
+          </h1>
+        </div>
+        <VideoCarousel />
       </div>
     </section>
   );
 };
 
 export default WebCategory;
-
-export const serviceCategory = [
-  {
-    img: "/assets/images/service-catergories/writing.webp",
-    name: "Copywriting",
-  },
-  {
-    img: "/assets/images/service-catergories/marketing.webp",
-    name: "Email Marketing",
-  },
-  {
-    img: "/assets/images/service-catergories/nutrition.webp",
-    name: "Diet Coaching",
-  },
-  {
-    img: "/assets/images/service-catergories/translation.webp",
-    name: "Translation",
-  },
-  {
-    img: "/assets/images/service-catergories/tech.webp",
-    name: "Programming",
-  },
-  {
-    img: "/assets/images/service-catergories/business.webp",
-    name: "Business",
-  },
-  {
-    img: "/assets/images/service-catergories/education.webp",
-    name: "Tutoring",
-  },
-  {
-    img: "/assets/images/service-catergories/fitness.webp",
-    name: "Fitness Coaching",
-  },
-  {
-    img: "/assets/images/service-catergories/health.webp",
-    name: "Health",
-  },
-  {
-    img: "/assets/images/service-catergories/social-media.webp",
-    name: "Social Media",
-  },
-  {
-    img: "/assets/images/service-catergories/lifestyle.webp",
-    name: "Lifestyle Coaching",
-  },
-];

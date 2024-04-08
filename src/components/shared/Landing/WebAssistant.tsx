@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const WebAssistant = () => {
   const navigate = useNavigate();
   return (
-    <div className="mx-auto max-w-[1440px] relative flex w-full overflow-hidden bg-pattern bg-cover bg-center bg-no-repeat px-6 py-12 sm:py-24 lg:px-20 xl:max-h-[598px]">
+    <div className="mx-auto max-w-[1440px] relative flex w-full overflow-hidden bg-pattern bg-cover bg-center bg-no-repeat px-6 py-12 sm:py-24 lg:px-20 xl:max-h-[598px] mt-7 bg-black">
       <div className="bg-transparent w-full">
         <h2 className="text-white text-4xl font-medium w-[90%]">
           Transforming Your Work with AI Assistants
