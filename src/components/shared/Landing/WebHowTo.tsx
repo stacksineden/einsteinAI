@@ -1,4 +1,4 @@
-import { MoveRight } from "lucide-react";
+
 
 type CategoryCardType = {
   image: string;
