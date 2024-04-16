@@ -236,11 +236,13 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                     : dayDashPlanObject?.currency}{" "}
                   {planObject ? planObject?.amount : dayDashPlanObject?.amount}
                 </p>
-                <p className="text-primary-black opacity-70">
-                  {planObject && planObject?.interval === "weekly"
-                    ? "Per Week"
-                    : "Per Month"}
-                </p>
+                {billingFrequency !== "hourly" && (
+                  <p className="text-primary-black opacity-70">
+                    {planObject && planObject.interval === "weekly"
+                      ? "Per Week"
+                      : "Per Month"}
+                  </p>
+                )}
               </div>
               {billingFrequency === "hourly" ? (
                 <ul className="my-3 space-y-2 px-3">
@@ -385,7 +387,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                     });
                   }}
                 >
-                  Upgrade 
+                  Upgrade
                 </Button>
               </div>
             </div>
