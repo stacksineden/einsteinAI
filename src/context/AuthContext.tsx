@@ -1,7 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { createContext, useContext, useEffect, useState } from "react";
 import { ISubscription, IUser } from "@/types";
-import { getCurrentUser, getUserSubcriptionStatus } from "@/lib/appwrite/api";
+import {
+  getCurrentUser,
+  getUserSubcriptionStatus,
+  updateUserSubscriptionDetails,
+} from "@/lib/appwrite/api";
 
 export const INITIAL_USER = {
   id: "",
@@ -14,7 +18,8 @@ export const INITIAL_USER_SUBSCRIPTION_DETAILS = {
   is_subscribed: false,
   subscription_start_date: "",
   amount: 0,
-  id:""
+  id: "",
+  subscription_type: "",
 };
 
 const INITIAL_STATE = {
@@ -57,26 +62,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     INITIAL_STATE.isEmailVerified
   );
   const [userSubscriptionDetails, setUserSubscriptionDetails] =
-    useState<ISubscription>(INITIAL_USER_SUBSCRIPTION_DETAILS); 
+    useState<ISubscription>(INITIAL_USER_SUBSCRIPTION_DETAILS);
 
   const checkAuthUser = async () => {
     try {
       const currentAccount = await getCurrentUser();
-      if(!currentAccount){
-        console.log('user not found')
+      if (!currentAccount) {
+        console.log("user not found");
       }
       if (currentAccount) {
         const userSubscriptionDetails = await getUserSubcriptionStatus(
           currentAccount?.currentUser.$id
         );
+
+        //some where aound here ...we will check for the start data for if it is more than an hour..so we ca update the db for false
+
         if (userSubscriptionDetails) {
           const response = userSubscriptionDetails?.documents[0];
-          setUserSubscriptionDetails({
-            is_subscribed: response?.is_subscribed,
-            subscription_start_date: response?.subscription_start_date,
-            amount: response?.amount,
-            id:response?.$id
-          });
+          //if the response start date is more than a day and the response.subscription_type === daydash
+          //update the db with the payload
+          const startDate = new Date(response?.subscription_start_date);
+          const currentDate = new Date();
+          const timeDifference = currentDate.getTime() - startDate.getTime();
+          const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+          if (daysDifference > 1 && response?.subscription_type === "daydash") {
+            const payload = {
+              document_id: response?.$id,
+              is_subscribed: false,
+              subscription_start_date: response?.subscription_start_date,
+              amount: response?.amount,
+              subscription_type: response?.subscription_type,
+              currency: response?.currency,
+              tx_ref: response?.tx_ref,
+              transaction_id: response?.transaction_id,
+            };
+            const updateUserSubscription = await updateUserSubscriptionDetails(
+              payload
+            );
+            if (updateUserSubscription) {
+              // console.log("user susbcription details updated");
+              setUserSubscriptionDetails({
+                is_subscribed: false,
+                subscription_start_date: response?.subscription_start_date,
+                amount: response?.amount,
+                id: response?.$id,
+                subscription_type: response?.subscription_type,
+              });
+            }
+          } else {
+            setUserSubscriptionDetails({
+              is_subscribed: response?.is_subscribed,
+              subscription_start_date: response?.subscription_start_date,
+              amount: response?.amount,
+              id: response?.$id,
+              subscription_type: response?.subscription_type,
+            });
+          }
         }
         if (!userSubscriptionDetails) {
           setUserSubscriptionDetails(INITIAL_USER_SUBSCRIPTION_DETAILS);
@@ -95,12 +137,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const excludedPaths = [
         "/",
         "/reset-password",
-        "/sign-up", 
+        "/sign-up",
         "/sign-in",
         "/pricing",
         "/use_cases",
         "/help-center",
-        "/enterprise"
+        "/enterprise",
       ];
       if (!currentAccount && !excludedPaths.includes(location.pathname)) {
         navigate("/sign-in");
@@ -143,7 +185,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser,
     isLoading,
     isAuthenticated,
-    setIsAuthenticated, 
+    setIsAuthenticated,
     checkAuthUser,
     isEmailVerified,
     setIsEmailVerified,

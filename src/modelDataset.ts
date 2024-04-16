@@ -77,23 +77,35 @@ export const enterprisePlan = [
   },
 ];
 
+export const dayDashPlan = [
+  {
+    text: "24 hours of full access",
+    footnote: ".",
+  },
+  {
+    text: "Flexible payment options",
+    footnote: "Choose your preferred method hassle-free.",
+  },
+  {
+    text: "No credit card required",
+    footnote: "",
+  },
+];
+
 export const pricingItems = [
   {
-    plan: "Free",
-    tagline: "For starters to try out",
-    base_price_monthly: "0",
-    base_price_weekly: "0",
+    plan: "DayDash",
+    tagline: "Unlock Pro features for a day",
+    base_price_monthly: "0.99",
+    base_price_weekly: "0.99",
     features: [
       {
-        text: "1 Assistant Training",
+        text: "24 hours of full access",
         footnote: ".",
       },
       {
-        text: "512MB file size limit",
-        footnote: "The maximum file size of a single PDF file.",
-      },
-      {
-        text: "GPT 3.5 turbo",
+        text: "Flexible payment options",
+        footnote: "Choose your preferred method hassle-free.",
       },
       {
         text: "No credit card required",
@@ -2236,7 +2248,7 @@ export const dataSet = [
       },
     ],
   },
-  
+
   {
     id: "eawt5",
     name: "Alexander",
@@ -3241,7 +3253,6 @@ export const dataSet = [
       },
     ],
   },
-
 ];
 
 export const getMatchingPromptsForAssistants = (

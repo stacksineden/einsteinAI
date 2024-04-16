@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Container from "@/components/shared/Container";
 import { useUserContext } from "@/context/AuthContext";
 import {
+  dayDashPlan,
   enterprisePlan,
   // freePlanFeatures,
   // pricingItems,
@@ -21,6 +22,7 @@ import {
 import {
   useCreateUserSubscription,
   useGetFlutterwavePaymentPlans,
+  useUpdateUserSubscriptionDetails,
 } from "@/lib/tanstack-query/queriesAndMutation";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { useToast } from "@/components/ui/use-toast";
@@ -40,6 +42,12 @@ interface PaymentPlan {
   created_at: string;
 }
 
+interface DayDashPlan {
+  id: number;
+  name: string;
+  amount: number;
+  currency: string;
+}
 type PaymentModalProps = {
   user: IUser;
   userSubscriptionDetails: ISubscription;
@@ -48,12 +56,13 @@ type PaymentModalProps = {
 const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   // Billing Information
-  const [billingFrequency, setBillingFrequency] = useState("weekly");
+  const [billingFrequency, setBillingFrequency] = useState("hourly");
   const [currency, setCurrency] = useState("USD");
 
   const { toast } = useToast();
 
   const { mutateAsync: createSubscritpion } = useCreateUserSubscription();
+  const { mutateAsync: updateSubcription } = useUpdateUserSubscriptionDetails();
 
   // console.log(user, "useruseruseruser");
   // console.log(userSubscriptionDetails, "userSubscriptionDetails");
@@ -69,6 +78,10 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
     undefined
   );
 
+  const [dayDashPlanObject, setDayDashPlanObject] = useState<
+    DayDashPlan | undefined
+  >(undefined);
+
   // console.log(paymentPlans, "plans");
 
   const getPlan = (frequency: string, selectedCurrency: string) => {
@@ -82,6 +95,18 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
   };
 
   useEffect(() => {
+    if (billingFrequency === "hourly") {
+      const planDetails = {
+        id: 67899,
+        name: "DayDash Plan",
+        amount: currency === "USD" ? 0.99 : 1130,
+        currency,
+      };
+      setDayDashPlanObject(planDetails);
+      setPlanObject(undefined); // Reset planObject when billingFrequency is "hourly"
+      return;
+    }
+
     const fetchData = async () => {
       if (!isLoadingPaymentPlans && !isError) {
         const planDetails = getPlan(billingFrequency, currency);
@@ -100,18 +125,24 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
   const config = {
     public_key: import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY,
     tx_ref: Date.now().toString(),
-    amount: planObject?.amount!,
-    currency: planObject?.currency! || "NGN",
-    payment_options: "card",
-    payment_plan: String(planObject?.id!),
+    amount: planObject ? planObject?.amount! : dayDashPlanObject?.amount!,
+    currency: planObject ? planObject?.currency! : dayDashPlanObject?.currency!,
+    payment_options:
+      billingFrequency === "hourly" ? "card, banktransfer, ussd" : "card",
+    payment_plan:
+      billingFrequency !== "hourly" ? String(planObject?.id!) : undefined,
     customer: {
       email: user?.email!,
       phone_number: "",
       name: user?.name!,
     },
     customizations: {
-      title: `Payment for pro ${planObject?.interval} plan`,
-      description: `Payment for pro ${planObject?.interval} plan`,
+      title: `Payment for pro ${
+        planObject ? planObject?.interval : "DayDash"
+      } plan`,
+      description: `Payment for pro ${
+        planObject ? planObject?.interval : "DayDash"
+      } plan`,
       logo: "https://res.cloudinary.com/dyryfgjro/image/upload/v1710761978/rgia6ac2ctfrsol6rlld.jpg",
     },
   };
@@ -155,7 +186,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                 <SelectGroup onChange={(e) => console.log(e)}>
                   <SelectItem value="weekly">Weekly</SelectItem>
                   <SelectItem value="monthly">Monthly</SelectItem>
-                  {/* <SelectItem value="hourly">Hourly</SelectItem> */}
+                  <SelectItem value="hourly">DayDash</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -189,34 +220,53 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                 <p className="text-primary-black opacity-70 text-sm">
                   For Optimum personal needs
                 </p>
-                {isLoadingPaymentPlans && (
+                {isLoadingPaymentPlans && billingFrequency !== "hourly" && (
                   <p className="text-base text-primary-black">
                     Loading Payement plans ...
                   </p>
                 )}
-                {isError && (
+                {isError && billingFrequency !== "hourly" && (
                   <p className="text-base text-primary-red">
                     Error loading payment plans!
                   </p>
                 )}
                 <p className="my-1 text-4xl font-semibold">
-                  {planObject?.currency} {planObject?.amount}
+                  {planObject
+                    ? planObject?.currency
+                    : dayDashPlanObject?.currency}{" "}
+                  {planObject ? planObject?.amount : dayDashPlanObject?.amount}
                 </p>
                 <p className="text-primary-black opacity-70">
-                  {planObject?.interval === "weekly" ? "Per Week" : "Per Month"}
+                  {planObject && planObject?.interval === "weekly"
+                    ? "Per Week"
+                    : "Per Month"}
                 </p>
               </div>
-              <ul className="my-3 space-y-2 px-3">
-                {proPlanFeatures?.map((feature, _i) => (
-                  <li
-                    className="flex space-x-5 text-center gap-2 text-sm"
-                    key={_i}
-                  >
-                    <CheckCheck className="text-primary-blue w-4 h-4" />
-                    {feature?.text}
-                  </li>
-                ))}
-              </ul>
+              {billingFrequency === "hourly" ? (
+                <ul className="my-3 space-y-2 px-3">
+                  {dayDashPlan?.map((feature, _i) => (
+                    <li
+                      className="flex space-x-5 text-center gap-2 text-sm"
+                      key={_i}
+                    >
+                      <CheckCheck className="text-primary-blue w-4 h-4" />
+                      {feature?.text}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="my-3 space-y-2 px-3">
+                  {proPlanFeatures?.map((feature, _i) => (
+                    <li
+                      className="flex space-x-5 text-center gap-2 text-sm"
+                      key={_i}
+                    >
+                      <CheckCheck className="text-primary-blue w-4 h-4" />
+                      {feature?.text}
+                    </li>
+                  ))}
+                </ul>
+              )}
               <div className="border-t border-t-light-grey" />
               <div className="p-5 flex items-center justify-center">
                 <Button
@@ -227,43 +277,98 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                       callback: async (response) => {
                         // console.log(response, "payment res");
                         //send this to appwrite to create a subscription
+                        // console.log(response, "res test");
                         if (response) {
-                          const paymentPayload = {
-                            user_id: user?.id!,
-                            is_subscribed:
-                              response?.status === "successful" ? true : false,
-                            amount: response?.amount!,
-                            currency: response?.currency!,
-                            subscription_start_date: new Date().toISOString(),
-                            user_email: response?.customer?.email!
-                              ? response?.customer?.email!
-                              : user?.email!,
-                            transaction_id: response?.transaction_id!,
-                            tx_ref: response?.tx_ref!,
-                          };
-                          // console.log(paymentPayload, "paymentpayload");
-                          const createSubscription = await createSubscritpion(
-                            paymentPayload
-                          );
-                          if (createSubscription) {
-                            toast({
-                              description:
-                                "Hey Champ! Your have successfully subsribed to the pro plan",
-                              className: "bg-primary-blue text-white",
-                            });
-                            //handle redirection
-                            navigate("/my-assistants");
-                          }
-                          if (!createSubscription) {
-                            //we need to get the user payment details from flutterwave and resolve the issue if they successfully paid
-                            toast({
-                              title:
-                                "Unable to save Subcription details, please contact us, let's help you figure this out asap",
-                              description:
-                                "Something went wrong, Don't panic, It will be resolved",
-                              className: "bg-primary-red text-white",
-                            });
-                            navigate("/my-assistants");
+                          //if user subscription details for this user exists
+                          if (userSubscriptionDetails?.id) {
+                            // console.log('got in block A')
+                            const updatedPaymentPayload = {
+                              document_id: userSubscriptionDetails?.id,
+                              is_subscribed:
+                                response.status === "successful" ||
+                                response.status === "completed"
+                                  ? true
+                                  : false,
+                              currency: response?.currency!,
+                              subscription_start_date: new Date().toISOString(),
+                              tx_ref: response?.tx_ref!,
+                              transaction_id: response?.transaction_id!,
+                              amount: response?.amount!,
+                              subscription_type:
+                                billingFrequency === "hourly"
+                                  ? "daydash"
+                                  : "reoccuring",
+                            };
+                            const updatedSubscription = await updateSubcription(
+                              updatedPaymentPayload
+                            );
+                            if (updatedSubscription) {
+                              toast({
+                                description:
+                                  "Hey Champ! Your have successfully subsribed to the pro plan",
+                                className: "bg-primary-blue text-white",
+                              });
+                              //handle redirection
+                              navigate("/my-assistants");
+                            }
+                            if (!updatedSubscription) {
+                              //we need to get the user payment details from flutterwave and resolve the issue if they successfully paid
+                              toast({
+                                title:
+                                  "Unable to save Subcription details, please contact us, let's help you figure this out asap",
+                                description:
+                                  "Something went wrong, Don't panic, It will be resolved",
+                                className: "bg-primary-red text-white",
+                              });
+                              navigate("/my-assistants");
+                            }
+                          } else {
+                            // console.log('got in block B')
+                            const paymentPayload = {
+                              user_id: user?.id!,
+                              is_subscribed:
+                                response.status === "successful" ||
+                                response.status === "completed"
+                                  ? true
+                                  : false,
+                              amount: response?.amount!,
+                              currency: response?.currency!,
+                              subscription_start_date: new Date().toISOString(),
+                              user_email: response?.customer?.email!
+                                ? response?.customer?.email!
+                                : user?.email!,
+                              transaction_id: response?.transaction_id!,
+                              tx_ref: response?.tx_ref!,
+                              subscription_type:
+                                billingFrequency === "hourly"
+                                  ? "daydash"
+                                  : "reoccuring",
+                            };
+                            //update subscription details with is susbcribed start date tex ref and transaction id
+                            //else create a new susbcrption
+                            const createSubscription = await createSubscritpion(
+                              paymentPayload
+                            );
+                            if (createSubscription) {
+                              toast({
+                                description:
+                                  "Hey Champ! Your have successfully subsribed to the pro plan",
+                                className: "bg-primary-blue text-white",
+                              });
+                              //handle redirection
+                              navigate("/my-assistants");
+                            }
+                            if (!createSubscription) {
+                              //we need to get the user payment details from flutterwave and resolve the issue if they successfully paid
+                              toast({
+                                title:
+                                  "Unable to save Subcription details, please contact us, let's help you figure this out asap",
+                                description:
+                                  "Something went wrong, Don't panic, It will be resolved",
+                                className: "bg-primary-red text-white",
+                              });
+                              navigate("/my-assistants");
+                            }
                           }
                         }
                         if (!response) {
@@ -280,7 +385,7 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                     });
                   }}
                 >
-                  Upgrade
+                  Upgrade 
                 </Button>
               </div>
             </div>
@@ -351,6 +456,8 @@ const UserAccount = () => {
   // User Information
   const { user, userSubscriptionDetails, checkAuthUser } = useUserContext();
 
+  // console.log(userSubscriptionDetails,'user sub')
+
   useEffect(() => {
     checkAuthUser();
   }, []);
@@ -375,7 +482,7 @@ const UserAccount = () => {
               />
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <PaymentModal
                 user={user}
                 userSubscriptionDetails={userSubscriptionDetails}

@@ -3,14 +3,11 @@ import {
   IFile,
   INewUser,
   ISavedAssistant,
+  IUpdateSubscription,
   IUserSubscription,
   Ithread,
 } from "@/types";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createUserAccount,
   createUserSubcription,
@@ -25,7 +22,8 @@ import {
   saveThreadToDB,
   signInAccount,
   signOutAccount,
-  updateAssistantInDB
+  updateAssistantInDB,
+  updateUserSubscriptionDetails,
 } from "../appwrite/api";
 import { QUERY_KEYS } from "./queryKeys";
 import { listMessagesOpenAI } from "../openAI/api";
@@ -168,6 +166,18 @@ export const useGetUserSubscriptionDetails = (userId?: string) => {
     queryKey: [QUERY_KEYS.GET_USER_SUBSCRIPTION_DETAILS, userId],
     queryFn: () => getUserSubcriptionStatus(userId!),
     enabled: !!userId,
+  });
+};
+
+export const useUpdateUserSubscriptionDetails = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: IUpdateSubscription) =>
+      updateUserSubscriptionDetails(payload),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_SUBSCRIPTION_DETAILS],
+      }),
   });
 };
 

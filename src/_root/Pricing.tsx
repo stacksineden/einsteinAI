@@ -59,7 +59,7 @@ const Pricing = () => {
             >
               {item?.plan === "Pro" && (
                 <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-primary-black px-3 py-2 text-sm font-medium text-white text-center">
-                  Most Popular
+                  Recommended
                 </div>
               )}
               <div className="p-5 text-center">
@@ -76,8 +76,8 @@ const Pricing = () => {
                 <p className="text-primary-black opacity-70">
                   {item?.plan !== "Free" && (
                     <>
-                      {billingFrequency === "weekly" && "per week"}
-                      {billingFrequency === "monthly" && "per month"}
+                      {billingFrequency === "weekly" && item?.plan !== 'DayDash' && "per week"}
+                      {billingFrequency === "monthly" && item?.plan !== 'DayDash' && "per month"}
                     </>
                   )}
                 </p>
@@ -102,7 +102,7 @@ const Pricing = () => {
                         : navigate("/sign-in")
                     }
                   >
-                    {item?.plan === "Free"
+                    {item?.plan === "DayDash"
                       ? "Get Started"
                       : item?.plan === "Enterprise"
                       ? "Talk to Us"
