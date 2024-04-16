@@ -6,6 +6,7 @@ import {
   IFile,
   INewUser,
   ISavedAssistant,
+  IUpdateSubscription,
   IUserSubscription,
   Ithread,
 } from "@/types";
@@ -78,7 +79,7 @@ export async function signInAccount(user: { email: string; password: string }) {
     const session = await account.createEmailSession(user.email, user.password);
     return session;
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 }
 
@@ -307,6 +308,7 @@ export async function createUserSubcription(payload: IUserSubscription) {
         user_email: payload?.user_email,
         transaction_id: payload?.transaction_id,
         tx_ref: payload?.tx_ref,
+        subscription_type:payload?.subscription_type
       }
     );
     if (!userSubscription) throw new Error("Failed to add User Subscription");
@@ -327,6 +329,31 @@ export async function getUserSubcriptionStatus(user_id: string) {
   if (!userSubscriptionDetails)
     throw new Error("No User Subscription Details Found");
   return userSubscriptionDetails;
+}
+
+//update user subscription status
+export async function updateUserSubscriptionDetails(payload: IUpdateSubscription) {
+  try {
+    const updatedSubscription = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userSubscriptionCollectionId,
+      payload?.document_id,
+      {
+        is_subscribed: payload?.is_subscribed,
+        currency: payload?.currency,
+        subscription_start_date: payload?.subscription_start_date,
+        tx_ref: payload?.tx_ref,
+        transaction_id: payload?.transaction_id,
+        amount: payload?.amount,
+        subscription_type:payload?.subscription_type
+      }
+    );
+    if (!updatedSubscription) throw new Error();
+    return updatedSubscription;
+  } catch (err) {
+    console.error("Error updating subscription details:", err);
+    throw err; // You might want to handle or log the error based on your application's requirements
+  }
 }
 
 //delete user subscription

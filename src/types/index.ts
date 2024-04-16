@@ -23,7 +23,8 @@ export type ISubscription = {
   is_subscribed: boolean;
   subscription_start_date: string;
   amount: number;
-  id:string;
+  id: string;
+  subscription_type:string;
 };
 
 export type INewUser = {
@@ -150,4 +151,16 @@ export type IUserSubscription = {
   user_email: string;
   transaction_id: number;
   tx_ref: string;
+  subscription_type:string;
+};
+
+export type IUpdateSubscription = {
+  document_id:string
+  is_subscribed: boolean;
+  currency: string;
+  subscription_start_date: string;
+  tx_ref: string;
+  transaction_id: number;
+  amount: number;
+  subscription_type:string;
 };
