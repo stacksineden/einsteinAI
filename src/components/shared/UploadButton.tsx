@@ -5,21 +5,39 @@ import { useToast } from "../ui/use-toast";
 import Dropzone from "react-dropzone";
 import { Cloud, File } from "lucide-react";
 import { Progress } from "../ui/progress";
-import { uploadFileToOpenAI } from "@/lib/openAI/api";
+import {
+  createVectorStoreFileBatchesOpenAI,
+  createVectorStoreOpenAI,
+  uploadFileToOpenAI,
+} from "@/lib/openAI/api";
 import { useUserContext } from "@/context/AuthContext";
-import { useSaveFileToDB } from "@/lib/tanstack-query/queriesAndMutation";
+import {
+  useCreateUserVectorStores,
+  useSaveFileToDB,
+} from "@/lib/tanstack-query/queriesAndMutation";
+import { Models } from "appwrite";
 
 type UploadZoneProps = {
   setIsOpen: (value: boolean) => void;
+  files: Models.DocumentList<Models.Document> | undefined;
+  vector_store_id: string;
 };
 
-const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
+const UploadDropZone = ({
+  setIsOpen,
+  files,
+  vector_store_id,
+}: UploadZoneProps) => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const { mutateAsync: saveFile } =
-    useSaveFileToDB();
+  const { mutateAsync: saveFile } = useSaveFileToDB();
+  const { mutateAsync: createVectorFile } = useCreateUserVectorStores();
 
   const { user } = useUserContext();
+
+  const fileIDs = files?.documents?.map((file) => file?.fileId);
+
+  // console.log(fileIDs, "fileIDsfileIDs");
 
   const { toast } = useToast();
 
@@ -47,20 +65,74 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
         //send request to open ai to upload file
         const res = await uploadFileToOpenAI(acceptedFile);
         //save the res to the db on behalf of the user.
-  
 
         if (res) {
           toast({
-            description: "Your File is successfully uploaded.",
+            description:
+              "Your File is successfully uploaded. Updating memory, Please wait ...",
             className: "bg-primary-blue text-white",
           });
-        }
-        if (!res) {
-          return toast({
-            title: "Something went wrong!",
-            description: "Please try again",
-            className: "bg-red-200 text-white",
-          });
+
+          //if the user hasn't created vector stores before
+          //call create vector calls
+
+          if (vector_store_id) {
+            const updatevectorStoreResponse =
+              await createVectorStoreFileBatchesOpenAI(vector_store_id, [
+                res?.id,
+              ]);
+            if (updatevectorStoreResponse) {
+              toast({
+                description: "File Memory Updated.",
+                className: "bg-primary-blue text-white",
+              });
+            }
+            if (!updatevectorStoreResponse) {
+              return toast({
+                title: "File to update memory.",
+                description: "Please try again",
+                className: "bg-red-200 text-white",
+              });
+            }
+          } else {
+            const updatedFileIDs = [...(fileIDs ?? []), res?.id];
+
+            const vectorStoreresponse = await createVectorStoreOpenAI(
+              updatedFileIDs,
+              `${user?.name}-vector-store`
+            );
+            // console.log(vectorStoreresponse);
+            if (vectorStoreresponse) {
+              //store in appwrite
+              const payload = {
+                user_id: user?.id,
+                name: `${user?.name}-vector-store`,
+                vector_store_id: vectorStoreresponse?.data?.vector_store_id,
+              };
+              // console.log(payload, "payloadpayload");
+              await createVectorFile(payload);
+              toast({
+                description: "File Memory Updated.",
+                className: "bg-primary-blue text-white",
+              });
+              // console.log(saveVectoreStoreFilesToDB);
+            }
+            //if the user has created vector stores before call createVectorStoreFileBatchesOpenAI()
+            if (!vectorStoreresponse) {
+              return toast({
+                title: "File to update memory.",
+                description: "Please try again",
+                className: "bg-red-200 text-white",
+              });
+            }
+          }
+          if (!res) {
+            return toast({
+              title: "Something went wrong!",
+              description: "Please try again",
+              className: "bg-red-200 text-white",
+            });
+          }
         }
 
         const fileObject = {
@@ -81,6 +153,8 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
           });
         }
 
+        //if vector store has been created, retrive from the user object and for store id and pass file id to the vector store after every upload
+        //else if it doesn't exists pass all the files of the user for batch updates after the first upload to create oe
         // try to delete file uploaded to open ai if saving failed.
 
         if (newFile) {
@@ -103,17 +177,17 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
           <div className="flex items-center justify-center h-full w-full">
             <label
               htmlFor="dropzone-file"
-              className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+              className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer bg-zinc-800 hover:bg-zinc-700"
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
-                <Cloud className="h-6 w-6 text-zinc-500 mb-2" />
-                <p className="mb-2 text-sm text-zinc-700">
+                <Cloud className="h-6 w-6 text-zinc-100 mb-2" />
+                <p className="mb-2 text-sm text-zinc-100">
                   <span className="font-semibold">Click to upload</span> or drag
                   and drop
                 </p>
                 <p className="text-xs text-zinc-500">File size up to 512 MB</p>
                 <p className="text-xs text-zinc-500 mt-2">
-                  <span className="font-medium">PDF, CSV, DOCX, MD, JSON</span>{" "} 
+                  <span className="font-medium">PDF, CSV, DOCX, MD, JSON</span>{" "}
                   and various other file types are supported
                   <br />
                   Refer to the FAQs for a comprehensive list of supported files
@@ -154,8 +228,9 @@ const UploadDropZone = ({ setIsOpen }: UploadZoneProps) => {
   );
 };
 
-const UploadButton = () => {
+const UploadButton = ({ files, vector_store_id }: UploadButtonProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <Dialog
       open={isOpen}
@@ -176,10 +251,19 @@ const UploadButton = () => {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <UploadDropZone setIsOpen={setIsOpen} />
+        <UploadDropZone
+          setIsOpen={setIsOpen}
+          files={files}
+          vector_store_id={vector_store_id}
+        />
       </DialogContent>
     </Dialog>
   );
 };
 
 export default UploadButton;
+
+type UploadButtonProps = {
+  files: Models.DocumentList<Models.Document> | undefined;
+  vector_store_id: string;
+};

@@ -33,7 +33,7 @@ const VerifyAccount = () => {
   };
 
   return (
-    <div className="sm:w-420 flex-center flex-col text-center">
+    <div className="w-[85%] md:w-[60%] flex-center flex-col text-center">
        <Link to="/" className="w-[150px] md:w-[170px]">
           <img
             src="/assets/images/text-brand.png"
@@ -41,10 +41,10 @@ const VerifyAccount = () => {
             className="w-full object-contain"
           />
         </Link>
-      <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
+      <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12 text-zinc-100">
         Account Verification.
       </h2>
-      <p className="text-primary-black font-light small-medium md:base-regular">
+      <p className="text-zinc-400 font-light small-medium md:base-regular">
         Welcome back, Please click the button below to verify your account.
       </p>
       <Button

@@ -1,5 +1,6 @@
 import {
   IAssistant,
+  ICreateUserVectorStores,
   IFile,
   INewUser,
   ISavedAssistant,
@@ -11,12 +12,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createUserAccount,
   createUserSubcription,
+  createUserVectorStore,
   deleteAssistantInDB,
   deleteUserFiles,
   getAssistantThreads,
   getUserAssistants,
   getUserFiles,
   getUserSubcriptionStatus,
+  getUserVectoreStoresDetails,
   saveAssistantToDB,
   saveFileToDB,
   saveThreadToDB,
@@ -38,7 +41,7 @@ export const useCreateUserAccount = () => {
 export const useSignInAccount = () => {
   return useMutation({
     mutationFn: (user: { email: string; password: string }) =>
-      signInAccount(user),
+      signInAccount(user), 
   });
 };
 
@@ -191,6 +194,26 @@ export const useUpdateUserSubscriptionDetails = () => {
 //       }),
 //   });
 // };
+
+export const useCreateUserVectorStores = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: ICreateUserVectorStores) =>
+      createUserVectorStore(payload),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_FILES],
+      }),
+  });
+};
+
+export const useGetUserVectorStoreDetails = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_VECTOR_STORE_DETAILS, userId],
+    queryFn: () => getUserVectoreStoresDetails(userId!),
+    enabled: !!userId,
+  });
+};
 
 export const useSignOutAccount = () => {
   return useMutation({

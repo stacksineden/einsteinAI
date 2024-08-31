@@ -37,17 +37,18 @@ const ForgotPassword = () => {
         className: "bg-primary-blue text-white",
       });
     }
-    if (!response) {
+    if (response instanceof Error) {
+      // Assuming err.message contains the API error message
       return toast({
-        title: "Reset password failed, please try again",
-        className: "bg-red-200 text-white",
+        title: response?.message || "Reset password failed, please try again.",
+        className: "bg-primary-red text-white",
       });
     }
   }
 
   return (
     <Form {...form}>
-      <div className="sm:w-420 flex-center flex-col">
+      <div className="w-[85%] md:w-[60%] flex-center flex-col">
         <Link to="/" className="w-[150px] md:w-[170px]">
           <img
             src="/assets/images/text-brand.png"
@@ -55,8 +56,8 @@ const ForgotPassword = () => {
             className="w-full object-contain"
           />
         </Link>
-        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">Forgot Password</h2>
-        <p className="text-primary-black font-light small-medium md:base-regular">
+        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12 text-zinc-100">Forgot Password</h2>
+        <p className="text-zinc-400 font-light small-medium md:base-regular">
           Please Input your email to reset password
         </p>
         <form

@@ -1,15 +1,20 @@
 import { useState } from "react";
-import { getAssistantLevel, truncateText } from "@/lib/utils";
+import {
+  getAssistantClassifier,
+  getAssistantLevel,
+  truncateText,
+} from "@/lib/utils";
 import { getImageUrlByName } from "@/modelDataset";
 import { Models } from "appwrite";
 import { Loader2, PenSquare, Trash } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { deleteAssistantOpenAI } from "@/lib/openAI/api";
 import { useToast } from "../ui/use-toast";
 import { useDeleteAssistantInDB } from "@/lib/tanstack-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
+import { useAppContext } from "@/context/AppContext";
 
 type DeleteAssistantModal = {
   isOpen: boolean;
@@ -86,7 +91,7 @@ const DeleteAssitantModal = ({
               className="w-full h-full object-cover rounded-full"
             />
           </div>
-          <h2 className="font-medium text-lg text-primary-black">
+          <h2 className="font-medium text-lg text-zinc-100">
             Are you sure you want to delete assistant?
           </h2>
           <div className="w-full flex items-center gap-4 justify-center mt-2">
@@ -97,7 +102,7 @@ const DeleteAssitantModal = ({
             >
               {isDeletingAssistant ? (
                 <div className="flex-center gap-2">
-                  <Loader2 className="h-4 w-4 text-white animate-spin" />
+                  <Loader2 className="h-4 w-4 text-zinc-100 animate-spin" />
                 </div>
               ) : (
                 "Yes"
@@ -118,16 +123,19 @@ const DeleteAssitantModal = ({
 };
 
 const MyAssistantsCard = ({ data }: MyAssistantCardProps) => {
+  const navigate = useNavigate();
+
   const { userSubscriptionDetails } = useUserContext();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { setOpenPaymentModal } = useAppContext();
 
   // {getAssistantLevel(data?.assistant_pretraining_name!)}
 
   return (
     <div className="col-span-1 cursor-pointer group shadow-md px-2 py-3 rounded-lg">
       <div className="flex flex-col gap-2 w-full">
-        <div className="aspect-square w-full relative overflow-hidden rounded-xl bg-light-grey">
+        <div className="aspect-square w-full relative overflow-hidden rounded-xl bg-zinc-800">
           <img
             src={
               getImageUrlByName(data?.assistant_pretraining_name) ||
@@ -137,60 +145,72 @@ const MyAssistantsCard = ({ data }: MyAssistantCardProps) => {
             className="object-cover w-full h-full group-hover:scale-110 transition"
           />
         </div>
-        <div className="font-medium text-sm text-primary-black">
+        <div className="font-medium text-xs text-zinc-100">
           {data?.name}{" "}
-          <span className="text-base text-primary-blue">{data?.role}</span>
+          <span className="text-sm text-primary-blue">{data?.role}</span>
         </div>
-        <div className="font-normal text-sm text-primary-black">
+        <div className="font-normal text-xs text-zinc-100">
           {truncateText(data?.instructions!, 80)}
         </div>
-        <div className="flex items-center gap-2 px-1 cursor-pointer">
-          <Link
-            className="text-xs font-semibold text-primary-yellow bg-primary-black py-2 px-4 rounded-md uppercase"
-            to={
+        <div className="flex items-center gap-1 px-1 cursor-pointer">
+          <div
+            className="text-xs font-semibold text-zinc-100 bg-primary-black py-2 px-4 rounded-md uppercase"
+            onClick={() => {
               userSubscriptionDetails?.is_subscribed &&
               getAssistantLevel(data?.assistant_pretraining_name!) !== "Rookie"
-                ? `/chat-assistant/${data?.assistant_id}`
+                ? navigate(`/chat-assistant/${data?.assistant_id}`)
                 : userSubscriptionDetails?.is_subscribed &&
                   getAssistantLevel(data?.assistant_pretraining_name!) ===
                     "Rookie"
-                ? `/chat-assistant/${data?.assistant_id}`
+                ? navigate(`/chat-assistant/${data?.assistant_id}`)
                 : !userSubscriptionDetails?.is_subscribed &&
                   getAssistantLevel(data?.assistant_pretraining_name!) ===
                     "Rookie"
-                ? `/chat-assistant/${data?.assistant_id}`
+                ? navigate(`/chat-assistant/${data?.assistant_id}`)
                 : !userSubscriptionDetails?.is_subscribed &&
                   getAssistantLevel(data?.assistant_pretraining_name!) !==
                     "Rookie"
-                ? "/account"
-                : "/account"
-            }
+                ? setOpenPaymentModal(true)
+                : setOpenPaymentModal(true);
+            }}
           >
             Chat
-          </Link>
-          <Link
-            className="text-xs font-semibold py-2 px-3 rounded-md uppercase shadow-md"
-            to={
-              userSubscriptionDetails?.is_subscribed &&
-              getAssistantLevel(data?.assistant_pretraining_name!) !== "Rookie"
-                ? `/edit-assistant/${data?.assistant_id}/${data?.$id}`
-                : userSubscriptionDetails?.is_subscribed &&
-                  getAssistantLevel(data?.assistant_pretraining_name!) ===
-                    "Rookie"
-                ? `/edit-assistant/${data?.assistant_id}/${data?.$id}`
-                : !userSubscriptionDetails?.is_subscribed &&
-                  getAssistantLevel(data?.assistant_pretraining_name!) ===
-                    "Rookie"
-                ? `/edit-assistant/${data?.assistant_id}/${data?.$id}`
-                : !userSubscriptionDetails?.is_subscribed &&
+          </div>
+          {userSubscriptionDetails?.is_subscribed &&
+            getAssistantClassifier(data?.assistant_pretraining_name!) ===
+              "agent" && (
+              <div
+                className="text-xs font-semibold py-2 px-3 rounded-md uppercase shadow-md"
+                onClick={() => {
+                  userSubscriptionDetails?.is_subscribed &&
                   getAssistantLevel(data?.assistant_pretraining_name!) !==
                     "Rookie"
-                ? "/account"
-                : "/account"
-            }
-          >
-            <PenSquare className="h-4 w-4 text-primary-black" />
-          </Link>
+                    ? navigate(
+                        `/edit-assistant/${data?.assistant_id}/${data?.$id}`
+                      )
+                    : userSubscriptionDetails?.is_subscribed &&
+                      getAssistantLevel(data?.assistant_pretraining_name!) ===
+                        "Rookie"
+                    ? navigate(
+                        `/edit-assistant/${data?.assistant_id}/${data?.$id}`
+                      )
+                    : !userSubscriptionDetails?.is_subscribed &&
+                      getAssistantLevel(data?.assistant_pretraining_name!) ===
+                        "Rookie"
+                    ? navigate(
+                        `/edit-assistant/${data?.assistant_id}/${data?.$id}`
+                      )
+                    : !userSubscriptionDetails?.is_subscribed &&
+                      getAssistantLevel(data?.assistant_pretraining_name!) !==
+                        "Rookie"
+                    ? setOpenPaymentModal(true)
+                    : setOpenPaymentModal(true);
+                }}
+              >
+                <PenSquare className="h-4 w-4 text-zinc-100" />
+              </div>
+            )}
+
           {userSubscriptionDetails?.is_subscribed && (
             <DeleteAssitantModal
               isOpen={isOpen}

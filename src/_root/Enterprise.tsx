@@ -11,7 +11,7 @@ const Enterprise = () => {
             <span className="text-primary-blue">EinsteinAI</span> for
             Enterprise.
           </h2>
-          <p className="text-base text-primary-black w-[95%] md:w-[70%] font-light">
+          <p className="text-base text-zinc-100 w-[95%] md:w-[70%] font-light">
             <span className="font-medium">
               {" "}
               Empower Your Enterprise with Custom-Built AI Assistants:
@@ -20,9 +20,9 @@ const Enterprise = () => {
             Business Needs. Elevate Your Operations and Fulfill Specific Use
             Cases with EinsteinAI
           </p>
-          <div className="w-1/2 mt-3 ml-2">
+          <div className="w-1/2 mt-3 ml-0 md:ml-2">
             <a
-              className="bg-primary-black text-base text-white p-3 rounded-md"
+              className="bg-zinc-900 text-base text-white p-3 rounded-md"
               href="https://www.stacksineden.com/contact"
               target="_blank"
             >
@@ -41,11 +41,11 @@ const Enterprise = () => {
       </div>
 
       {/* sections */}
-      <section className="2xl:max-w-[1440px] mx-auto relative py-1 lg:mb-5 lg:py-10 xl:mb-6 px-6 lg:px-20 3xl:px-0 overflow-hidden bg-feature-bg bg-center bg-no-repeat">
-        <h2 className="text-[35px] md:text-[40px] opacity-70 pb-1 md:pb-3">
+      <section className="2xl:max-w-[1440px] mx-auto relative py-1 lg:mb-5 lg:py-10 xl:mb-6 px-6 lg:px-20 3xl:px-0 overflow-hidden bg-zinc-950">
+        <h2 className="text-[35px] md:text-[40px] pb-1 md:pb-3 text-zinc-100">
           Let&apos;s Have it your way
         </h2>
-        <p className="text-base md:text-lg text-primary-black w-full md:w-1/2 opacity-70 font-light md:font-normal">
+        <p className="text-base md:text-lg text-zinc-100 w-full md:w-1/2 opacity-70 font-light md:font-normal">
           Welcome to EinsteinAI for Enterprise, where we empower business owners
           with the ability to shape their digital future. Our goal is to provide
           you with custom-built assistants designed to meet your unique business
@@ -97,7 +97,7 @@ const Enterprise = () => {
 
       {/* call to action */}
       <div className="my-[4rem] max-w-[98%] md:max-w-[80%] mx-auto rounded-xl md:rounded-3xl md:grid grid-cols-1 md:grid-cols-2 shadow-2xl h-[60vh] hidden">
-        <div className="bg-black w-full rounded-l-[2rem] text-center flex justify-center items-center gap-3 flex-col px-6">
+        <div className="bg-zinc-950 w-full rounded-l-[2rem] text-center flex justify-center items-center gap-3 flex-col px-6">
           <h2 className="text-white font-bold text-[28px]">
             Ignite possibilities. Contact us @ StacksinEden.
           </h2>
@@ -129,7 +129,7 @@ const Enterprise = () => {
       <div className="max-w-[99%] mx-auto px-5 mt-2">
         <div className="w-full my-7 flex flex-col gap-9 py-5 md:hidden">
           <div className="w-full h-[500px] shadow-xl grid grid-cols-1 rounded-[2rem]">
-            <div className="w-full bg-yellow-200  rounded-t-[2rem]">
+            <div className="w-full bg-zinc-950  rounded-t-[2rem]">
               <img
                 src="/assets/images/banner.png"
                 alt="bannerimage"
@@ -137,7 +137,7 @@ const Enterprise = () => {
               />
             </div>
 
-            <div className="w-full bg-black py-5 px-7 text-white rounded-b-[2rem]">
+            <div className="w-full bg-zinc-950 py-5 px-7 text-white rounded-b-[2rem]">
               <div className="w-full">
                 <div className="flex flex-col gap-2">
                   <h2 className="text-[18px] font-semibold">

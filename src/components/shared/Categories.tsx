@@ -36,7 +36,7 @@ export const categories = [
     value: "education",
   },
   {
-    label: "Writing",
+    label: "Writing", 
     icon: <PencilLine />,
     value: "writing and translation",
   },
@@ -84,7 +84,7 @@ const Categories = () => {
         {categories.map((item) => (
           <CategoryItem
             key={item?.label}
-            label={item?.label}
+            label={item?.label} 
             value={item?.value}
             Icon={item.icon}
           />

@@ -6,6 +6,7 @@ import axios from "axios";
 const openweatherApiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
 const serperApiKey = import.meta.env.VITE_SERPER_API_KEY;
 const rapidApiKey = import.meta.env.VITE_RAPIDAPI_KEY;
+const apifyToken = import.meta.env.VITE_APIFY_API_TOKEN;
 
 interface Weather {
   temperature: number;
@@ -47,7 +48,7 @@ export async function google_search(query: string) {
       headers,
     });
     if (response) {
-      console.log(response, "response from serper api");
+      // console.log(response, "response from serper api");
       return response?.data?.organic;
     } else {
       console.log("No response from serper");
@@ -68,10 +69,123 @@ export async function get_stock_info(symbol: string) {
       headers,
     });
     if (response) {
-      console.log(response, "response from yahoo finance");
+      // console.log(response, "response from yahoo finance");
       return response?.data;
     } else {
       console.log("No response from rapid api");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function youtube_q_and_a(url: string, message: string) {
+  const request_url = `https://2z8fel.buildship.run/chat-with-youtube`;
+  const request_data = {
+    url,
+    message,
+  };
+  try {
+    const response = await axios.post(request_url, request_data);
+    if (response) {
+      return response?.data;
+    } else {
+      console.log("No response from youtube api");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function get_latest_news_on_sahara() {
+  const url = "https://2z8fel.buildship.run/latest-news-sahara-reporters";
+  try {
+    const response = await axios.get(url);
+    if (response) {
+      return response?.data;
+    } else {
+      console.log("No response from news");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+export async function get_amazon_finds() {
+  const url = "https://2z8fel.buildship.run/llm-extract-ecommerce";
+  try {
+    const response = await axios.get(url);
+    if (response) {
+      return response?.data;
+    } else {
+      console.log("No response from amazon");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function scrape_web_url(url: string) {
+  const request_url = "https://2z8fel.buildship.run/scrape-web-url";
+  const request_data = {
+    url,
+  };
+  try {
+    const response = await axios.post(request_url, request_data);
+    if (response) {
+      return response?.data;
+    } else {
+      console.log("No response");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function google_search_apify(query: string) {
+  const url = `https://api.apify.com/v2/actor-tasks/stacksineden~google-search-results-scraper-task/run-sync-get-dataset-items?token=${apifyToken}`;
+  const request_data = {
+    queries: query,
+  };
+  try {
+    const response = await axios.post(url, request_data);
+    if (response) {
+      return response?.data[0]?.organicResults;
+    } else {
+      console.log("No response"); 
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function trip_advisor_search(location: string) {
+  const url = `https://api.apify.com/v2/actor-tasks/stacksineden~tripadvisor-scraper-task/run-sync-get-dataset-items?token=${apifyToken}`;
+  const request_data = {
+    locationFullName: location,
+  };
+  try {
+    const response = await axios.post(url, request_data);
+    if (response) {
+      return response?.data;
+    } else {
+      console.log("No response");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function youtube_scrapper(keyword: string) {
+  const url = `https://api.apify.com/v2/actor-tasks/stacksineden~youtube-scraper-task/run-sync-get-dataset-items?token=${apifyToken}`;
+  const request_data = {
+    searchKeywords: keyword,
+  };
+  try {
+    const response = await axios.post(url, request_data);
+    if (response) {
+      return response?.data;
+    } else {
+      console.log("No response");
     }
   } catch (err) {
     console.log(err);
@@ -165,6 +279,115 @@ export const specilizedFunctions = [
           },
         },
         required: ["symbol"],
+      },
+    },
+  },
+  {
+    name: "youtube_q_and_a",
+    function: {
+      name: "youtube_q_and_a",
+      description: "answer user questions based off a given youtube url",
+      parameters: {
+        type: "object",
+        properties: {
+          url: {
+            type: "string",
+            description:
+              "the youtube video url the user wants to ask question on",
+          },
+          message: {
+            type: "string",
+            description: "the user message or question about the youtube url",
+          },
+        },
+        required: ["url", "message"],
+      },
+    },
+  },
+  // {
+  //   name: "get_latest_news_on_sahara",
+  //   function: {
+  //     name: "get_latest_news_on_sahara",
+  //     description: "get latest news on sahara",
+  //     parameters: {}, //find out what to do if it is empty
+  //   },
+  // },
+  // {
+  //   name: "get_amazon_finds",
+  //   function: {
+  //     name: "get_amazon_finds",
+  //     description: "get latest products on amazon",
+  //     parameters: {}, //find out what to do if it is empty
+  //   },
+  // },
+  {
+    name: "scrape_web_url",
+    function: {
+      name: "scrape_web_url",
+      description: "scrape a web url",
+      parameters: {
+        type: "object",
+        properties: {
+          url: {
+            type: "string",
+            description: "the url to scrape",
+          },
+        },
+        required: ["url"],
+      },
+    },
+  },
+  {
+    name: "google_search_apify",
+    function: {
+      name: "google_search_apify",
+      description: "generate result from a reatime google search",
+      parameters: {
+        type: "object",
+        properties: {
+          queries: {
+            type: "string",
+            description:
+              "the search query which is what the user is searching for",
+          },
+        },
+        required: ["queries"],
+      },
+    },
+  },
+  {
+    name: "trip_advisor_search",
+    function: {
+      name: "trip_advisor_search",
+      description:
+        "generate trip advisor search results based on user location",
+      parameters: {
+        type: "object",
+        properties: {
+          location: {
+            type: "string",
+            description: "the user request location",
+          },
+        },
+        required: ["location"],
+      },
+    },
+  },
+  {
+    name: "youtube_scrapper",
+    function: {
+      name: "youtube_scrapper",
+      description:
+        "get youtube video recommendation based on use search keyword",
+      parameters: {
+        type: "object",
+        properties: {
+          keyword: {
+            type: "string",
+            description: "the user search keyword",
+          },
+        },
+        required: ["keyword"],
       },
     },
   },

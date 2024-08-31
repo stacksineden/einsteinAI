@@ -46,12 +46,12 @@ const UseCases = () => {
       <div className="mx-auto max-w-[1440px] px-5 md:px-20 py-20">
         <div className="text-center flex flex-col gap-1 md:gap-2">
           <div className="max-w-[80%] mx-auto py-2">
-            <h2 className="font-medium text-[24px] md:text-[40px] text-primary-black max-w-[98%] md:max-w-[70%] mx-auto">
+            <h2 className="font-medium text-[24px] md:text-[40px] text-zinc-100 max-w-[98%] md:max-w-[70%] mx-auto">
               Unleash Boundless Brilliance with{" "}
               <span className="text-primary-blue">EinsteinAI</span> Alchemy.
             </h2>
           </div>
-          <div className="text-primary-black text-sm md:text-base w-[90%] md:w-[70%] mx-auto opacity-80">
+          <div className="text-zinc-100 text-sm md:text-base w-[90%] md:w-[70%] mx-auto opacity-80">
             Discover the power of our AI Assistants across various scenarios.
             Explore how our versatile templates can be customized to elevate
             your personal and business experiences.Stay tuned for continuous

@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext.tsx";
 import { ChatProvider } from "./context/ChatContext.tsx";
 import { MatchingPromptProvider } from "./context/MatchingPromptContext.tsx";
 import { AssistantCategoryProvider } from "./context/AssistantCategoryContext.tsx";
+import { AppProvider } from "./context/AppContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
@@ -17,7 +18,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <ChatProvider>
             <MatchingPromptProvider>
               <AssistantCategoryProvider>
-                <App />
+                <AppProvider>
+                  <App />
+                </AppProvider>
               </AssistantCategoryProvider>
             </MatchingPromptProvider>
           </ChatProvider>

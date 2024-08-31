@@ -4,16 +4,18 @@ import { Toaster } from "./components/ui/toaster";
 import {
   AssistantTraining,
   Assistants,
+  CreateAssistant,
   Files,
   Home,
   UpdateAssistant,
-  UserAccount,
+  // UserAccount,
 } from "./_root/pages";
 import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import NotFound from "./_root/NotFound";
 import { Loader2 } from "lucide-react";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 const AuthLayout = lazy(() => import("./_auth/AuthLayout"));
 const SignUpForm = lazy(() => import("./_auth/forms/SignUpForm"));
@@ -23,6 +25,12 @@ const Landing = lazy(() => import("./_root/Landing"));
 const AssistantChat = lazy(() =>
   import("./__chat/chatpage").then((module) => ({
     default: module.AssistantChat,
+  }))
+);
+
+const EinsteinGptChat = lazy(() =>
+  import("./__chat/chatpage").then((module) => ({
+    default: module.EinsteinGptChat,
   }))
 );
 const ChatLayout = lazy(() => import("./__chat/ChatLayout"));
@@ -57,11 +65,11 @@ function App() {
             <Loader2 className="h-10 md:h-20 w-10 md:w-20 text-blue-500 animate-spin" />
             <div className="text-center">
               {showFirstMessage ? (
-                <p className="text-base md:text-lg text-primary-black">
+                <p className="text-base md:text-lg text-zinc-100">
                   Hang tight! Our servers are doing some heavy lifting.
                 </p>
               ) : (
-                <p className="text-base md:text-lg text-primary-black">
+                <p className="text-base md:text-lg text-zinc-100">
                   In the meantime, why not practice your Jedi mind tricks? Try
                   to move the loading spinner with your mind... Almost there...
                 </p>
@@ -70,39 +78,43 @@ function App() {
           </div>
         }
       >
-        <Routes>
-          {/* auth */}
-          <Route element={<AuthLayout />}>
-            <Route path="/sign-up" element={<SignUpForm />} />
-            <Route path="/sign-in" element={<SignInForm />} />
-            <Route path="/verify-user" element={<VerifyAccount />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-          </Route>
-          <Route element={<RootLayout />}>
-            <Route path="/app" element={<Home />} />
-            <Route path="/files" element={<Files />} />
-            <Route
-              path="/pretrained-assistant/:id"
-              element={<AssistantTraining />}
-            />
-            <Route
-              path="/edit-assistant/:id/:docid"
-              element={<UpdateAssistant />}
-            />
-            <Route path="/my-assistants" element={<Assistants />} />
-            <Route path="/account" element={<UserAccount />} />
-          </Route>
-          <Route element={<ChatLayout />}>
-            <Route path="/chat-assistant/:id" element={<AssistantChat />} />
-          </Route>
-          <Route index element={<Landing />} />
-          <Route path="/enterprise" element={<Enterprise />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="use_cases" element={<UseCases />} />
-          <Route path="help-center" element={<HelpCenter />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+          <Routes>
+            {/* auth */}
+            <Route element={<AuthLayout />}>
+              <Route path="/sign-up" element={<SignUpForm />} />
+              <Route path="/sign-in" element={<SignInForm />} />
+              <Route path="/verify-user" element={<VerifyAccount />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+            </Route>
+            <Route element={<RootLayout />}>
+              <Route path="/app" element={<Home />} />
+              <Route path="/files" element={<Files />} />
+              <Route
+                path="/pretrained-assistant/:id"
+                element={<AssistantTraining />}
+              />
+              <Route
+                path="/edit-assistant/:id/:docid"
+                element={<UpdateAssistant />}
+              />
+              <Route path="/my-assistants" element={<Assistants />} />
+              {/* <Route path="/account" element={<UserAccount />} /> */}
+              <Route path="/create-assistant" element={<CreateAssistant />} />
+            </Route>
+            <Route element={<ChatLayout />}>
+              <Route path="/chat-assistant/:id" element={<AssistantChat />} />
+              <Route path="/einsteingpt/:id" element={<EinsteinGptChat />} />
+            </Route>
+            <Route index element={<Landing />} />
+            <Route path="/enterprise" element={<Enterprise />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="use_cases" element={<UseCases />} />
+            <Route path="help-center" element={<HelpCenter />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </SkeletonTheme>
       </Suspense>
       <Toaster />
     </>

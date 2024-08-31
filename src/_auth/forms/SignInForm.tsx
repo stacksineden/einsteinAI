@@ -1,3 +1,4 @@
+import { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,8 @@ const SignInForm = () => {
   const { checkAuthUser } = useUserContext();
   const navigate = useNavigate();
 
+  const [isCheckingAuth, setIsCheckingAuth] = useState(false);
+
   const { mutateAsync: signInAccount, isPending: isLogginInUser } =
     useSignInAccount();
 
@@ -44,18 +47,21 @@ const SignInForm = () => {
       email: values.email,
       password: values.password,
     });
-
-    if (!session) {
+    if (session instanceof Error) {
+      // Assuming err.message contains the API error message
       return toast({
-        title: "Sign in failed, please try again.",
-        className: "bg-primary-red text-white", 
+        title: session?.message || "Sign in failed, please try again.",
+        className: "bg-primary-red text-white",
       });
     }
-    const isLoggedIn = await checkAuthUser(); 
+    setIsCheckingAuth(true);
+    const isLoggedIn = await checkAuthUser();
     if (isLoggedIn) {
       form.reset();
+      setIsCheckingAuth(false);
       navigate("/app");
     } else {
+      setIsCheckingAuth(false);
       return toast({
         title: "Sign up failed, please try again.",
         className: "bg-primary-red text-white",
@@ -65,7 +71,7 @@ const SignInForm = () => {
 
   return (
     <Form {...form}>
-      <div className="sm:w-420 flex-center flex-col">
+      <div className="w-[85%] md:w-[60%] flex-center flex-col">
         <Link to="/" className="w-[150px] md:w-[170px]">
           <img
             src="/assets/images/text-brand.png"
@@ -73,10 +79,10 @@ const SignInForm = () => {
             className="w-full object-contain"
           />
         </Link>
-        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
+        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12 text-zinc-100">
           Log in to your account
         </h2>
-        <p className="text-primary-black font-light small-medium md:base-regular">
+        <p className="text-zinc-400 font-light small-medium md:base-regular">
           Welcome back, Please enter your details
         </p>
         <form
@@ -110,8 +116,12 @@ const SignInForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="shad-button_primary" disabled={isLogginInUser}>
-            {isLogginInUser ? (
+          <Button
+            type="submit"
+            className="shad-button_primary"
+            disabled={isLogginInUser || isCheckingAuth}
+          >
+            {isLogginInUser || isCheckingAuth ? (
               <div className="flex-center gap-2">
                 <Loader /> Logging in ...
               </div>
@@ -120,12 +130,12 @@ const SignInForm = () => {
             )}
           </Button>
           <Link
-            className="w-full flex items-center justify-end cursor-pointer hover:text-primary-blue text-sm text-primary-black"
+            className="w-full flex items-center justify-end cursor-pointer hover:text-primary-blue text-sm text-zinc-100"
             to="/forgot-password"
           >
             Forgot password
           </Link>
-          <p className="text-small-regular text-primary-black text-center mt-2">
+          <p className="text-small-regular text-zinc-100 text-center mt-2">
             First time user?
             <Link
               to="/sign-up"

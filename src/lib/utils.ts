@@ -20,6 +20,12 @@ export const getAssistantLevel = (name: string | undefined): string => {
   return assistant?.level ?? "";
 };
 
+export const getAssistantClassifier = (name: string | undefined):string => {
+  if (!name) return "";
+  const assistant = dataSet?.find((data) => data?.name === name);
+  return assistant?.classifier ?? ""; 
+}
+
 export function getLevelColor(level: string) {
   if (!level) return;
   if (level?.toLowerCase() === "rookie") {
