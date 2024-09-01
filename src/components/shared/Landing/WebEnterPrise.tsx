@@ -15,7 +15,7 @@ const WebEnterPrise = () => {
               </h2>
               <p className="text-[14px] font-light tracking-wide">
                 <span className="font-semibold">
-                  Custom-Built Business Assistants:{" "}
+                  Custom-Built AI Assistants:{" "}
                 </span>
                 Unlock the full potential of AI chatbots with EinsteinAI. Engage
                 instantly with real-time, accurate web data, PDFs, images, and
