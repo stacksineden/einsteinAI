@@ -47,6 +47,7 @@ import { useParams } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import { ICreateMessage, ToolType, messageType } from "@/types";
 import PreviewMediaModal from "./PreviewMediaModal";
+import { Input } from "../ui/input";
 
 type UploadDropZoneProps = {
   setInMessageFiles: React.Dispatch<React.SetStateAction<string[]>>;
@@ -696,18 +697,18 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative mb-7 md:mb-0">
       <div className="mx-2 flex flex-col md:mx-2 lg:mx-auto lg:max-w-3xl xl:max-w-4xl">
         <div className="flex flex-col w-full p-4">
-          {/* <Input
-            className="h-12 border-2 border-light-grey shadow"
+          <Input
+            className="h-12 border-2 border-light-grey shadow md:hidden block"
             placeholder="Enter your message"
             onChange={(e) => setMessage(e.target.value)}
             value={message}
-          /> */}
+          />
           <Textarea
             placeholder="Enter your message"
-            className="h-12 border-2 border-light-grey shadow"
+            className="h-12 border-2 border-light-grey shadow md:block hidden"
             onChange={(e) => setMessage(e.target.value)}
             value={message}
           />
