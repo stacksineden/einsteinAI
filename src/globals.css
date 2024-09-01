@@ -10,7 +10,7 @@
   }
 
   body {
-    @apply bg-zinc-900 text-primary-black min-h-screen font-roboto;
+    @apply bg-zinc-900 text-primary-black font-roboto;
   }
 }
 
