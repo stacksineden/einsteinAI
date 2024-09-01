@@ -11,7 +11,7 @@ const RootLayout = () => {
             <div className="bg-zinc-900 relative overflow-hidden">
               <div className="flex h-screen">
                 <SideBar />
-                <main className="h-[100dvh] flex-1 overflow-x-hidden">
+                <main className="h-screen flex-1 overflow-x-hidden">
                   <Outlet />
                 </main>
               </div>

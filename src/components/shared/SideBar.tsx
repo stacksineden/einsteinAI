@@ -34,7 +34,7 @@ const SideBar = () => {
 
 
   return (
-    <aside className="h-[100dvh] overflow-hidden">
+    <aside className="h-screen overflow-hidden">
       {/* Desktop */}
       <div className="w-full h-full hidden md:flex mr-7">
         <div
