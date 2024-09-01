@@ -30,7 +30,7 @@ const SideBar = () => {
     data: assistants,
     isPending: isAssistantsLoading,
     isError: isErrorAssistants,
-  } = useGetUserAssistants(user?.id);
+  } = useGetUserAssistants(user?.id); 
 
 
   return (

@@ -211,9 +211,9 @@ const ChatSideBar = ({
   };
 
   return (
-    <aside className="h-screen overflow-hidden">
+    <aside className="h-full overflow-hidden">
       {/* Desktop */}
-      <div className="w-full h-full hidden md:flex mr-7">
+      <div className="w-full h-full hidden md:flex mr-7"> 
         <div
           className={`lg:block ${
             chatOpen
@@ -386,7 +386,7 @@ const ChatSideBar = ({
 
       {/* Mobile */}
 
-      <div className="w-full h-screen  flex md:hidden mr-0">
+      <div className="w-full h-full flex md:hidden mr-0">
         <div className="absolute left-0 top-0 z-50 flex h-full">
           <div className="absolute z-0 left-0 top-0 h-full w-full flex-auto bg-transparent"></div>
           <div
