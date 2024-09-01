@@ -1,16 +1,7 @@
-import { useState } from "react";
 import WebLayoutWrapper from "@/components/shared/Landing/WebLayoutWrapper";
 import { Button } from "@/components/ui/button";
 import { CheckCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { pricingItems } from "@/modelDataset";
 
 const Pricing = () => {
