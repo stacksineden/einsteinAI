@@ -4,14 +4,13 @@ import { Outlet } from "react-router-dom";
 const RootLayout = () => {
   return (
     <div className="h-screen">
-            {/* <Navbar/> */}
-      <div className="bg-zinc-900 h-screen">
+      <div className="bg-zinc-900 h-full">
         <main>
           <div>
             <div className="bg-zinc-900 relative overflow-hidden">
-              <div className="flex h-screen">
+              <div className="flex h-full">
                 <SideBar />
-                <main className="h-screen flex-1 overflow-x-hidden">
+                <main className="h-[100dvh] flex-1 overflow-x-hidden">
                   <Outlet />
                 </main>
               </div>

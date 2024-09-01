@@ -34,7 +34,7 @@ const SideBar = () => {
 
 
   return (
-    <aside className="h-screen overflow-hidden">
+    <aside className="h-full overflow-hidden">
       {/* Desktop */}
       <div className="w-full h-full hidden md:flex mr-7">
         <div
@@ -277,15 +277,15 @@ const SideBar = () => {
                       </Button>
                     </div>
 
-                    <div className="flex flex-col overflow-hidden pt-2 md:pt-5 relative">
+                    <div className="flex-grow flex flex-col overflow-hidden pt-2 md:pt-5 relative">
                       <div className="text-zinc-400 block ml-5 ">
                         <p className="font-normal">My Assistants</p>
                       </div>
                       <div
-                        className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto h-[200px]"
+                        className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto"
                         data-slot="base"
                         aria-label="Recent assistants"
-                        // style={{ maxHeight: "calc(100vh - 350px)" }}
+                        style={{ maxHeight: "calc(100vh - 350px)" }}
                       >
                         <div
                           data-slot="list"
