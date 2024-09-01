@@ -5,7 +5,7 @@ const WebLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
      <WebNavBar/>
-      <div className="relative overflow-hidden">{children}</div>
+      <div className="relative overflow-hidden bg-black">{children}</div>
       <WebFooter />
     </>
   );

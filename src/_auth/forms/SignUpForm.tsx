@@ -1,3 +1,4 @@
+import { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,9 +17,7 @@ import { Input } from "@/components/ui/input";
 import { SignupValidationSchema } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  useCreateUserAccount
-} from "@/lib/tanstack-query/queriesAndMutation";
+import { useCreateUserAccount } from "@/lib/tanstack-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 
 const SignUpForm = () => {
@@ -27,6 +26,7 @@ const SignUpForm = () => {
   const { checkAuthUser } = useUserContext();
   const { mutateAsync: createUserAccount, isPending: isCreatingUser } =
     useCreateUserAccount();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(false);
 
   // const { mutateAsync: signInAccount, isPending: isSigningIn } =
   //   useSignInAccount();
@@ -44,11 +44,12 @@ const SignUpForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     const newUser = await createUserAccount(values);
-    if (!newUser) {
+    if (newUser instanceof Error) {
+      // Assuming err.message contains the API error message
       return toast({
-        title: "Sign up failed, please try again.", 
-        className: "bg-primary-red text-white", 
-      });
+        title: newUser?.message || "Sign up failed, please try again.",
+        className: "bg-primary-red text-white",
+      }); 
     }
 
     if (newUser) {
@@ -68,19 +69,21 @@ const SignUpForm = () => {
     //     title: "Sign in failed, please try again.",
     //   });
     // }
-
+    setIsCheckingAuth(true);
     const isLoggedIn = await checkAuthUser();
     if (isLoggedIn) {
       form.reset();
+      setIsCheckingAuth(false);
       navigate("/app");
     } else {
+      setIsCheckingAuth(false);
       navigate("/sign-in");
     }
   }
 
   return (
     <Form {...form}>
-      <div className="sm:w-420 flex-center flex-col">
+      <div className="w-[85%] md:w-[60%] flex-center flex-col">
         <Link to="/" className="w-[150px] md:w-[170px]">
           <img
             src="/assets/images/text-brand.png"
@@ -88,10 +91,10 @@ const SignUpForm = () => {
             className="w-full object-contain"
           />
         </Link>
-        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
+        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12 text-zinc-100">
           Create a new account
         </h2>
-        <p className="text-primary-black font-light small-medium md:base-regular">
+        <p className="text-zinc-400 font-light small-medium md:base-regular">
           To use EinsteinAI, Please enter your details
         </p>
         <form
@@ -139,8 +142,12 @@ const SignUpForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="shad-button_primary">
-            {isCreatingUser ? (
+          <Button
+            type="submit"
+            className="shad-button_primary"
+            disabled={isCreatingUser || isCheckingAuth}
+          >
+            {isCreatingUser || isCheckingAuth ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
@@ -148,7 +155,7 @@ const SignUpForm = () => {
               "Sign Up"
             )}
           </Button>
-          <p className="text-small-regular text-primary-black text-center mt-2">
+          <p className="text-small-regular text-zinc-100 text-center mt-2">
             Already have an account?
             <Link
               to="/sign-in"

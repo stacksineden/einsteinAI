@@ -49,7 +49,7 @@ const WebNavBar = () => {
           className={`w-[100vw] h-screen fixed inset-0 z-50 backdrop-blur-sm`}
         >
           <div
-            className={`fixed inset-x-4 top-8 z-50 origin-top rounded-3xl p-8 ring-1 ring-zinc-900/5 bg-white opacity-100 scale-100`}
+            className={`fixed inset-x-4 top-8 z-50 origin-top rounded-3xl p-8 ring-1 ring-zinc-900/5 bg-black opacity-100 scale-100`}
           >
             <div className="flex flex-row-reverse items-center justify-between">
               <button
@@ -79,7 +79,7 @@ const WebNavBar = () => {
             </div>
             <nav className="mt-6">
               <ul
-                className={`my-2 divide-y text-base divide-zinc-100 text-zinc-800`}
+                className={`my-2 divide-y text-base divide-zinc-100 text-zinc-300`}
                 onClick={() => closenModal()}
               >
                 {/* <Link to="/">
@@ -110,7 +110,7 @@ const WebNavBar = () => {
           </div>
         </div>
       )}
-      <nav className="mx-auto max-w-[1440px] flex items-center justify-between z-30 py-5 px-6 lg:px-20 3xl:px-0 sticky top-0 w-full bg-white">
+      <nav className="mx-auto max-w-[1440px] flex items-center justify-between z-30 py-5 px-6 lg:px-20 3xl:px-0 sticky top-0 w-full bg-black">
         <Link to="/" className="w-[150px] md:w-[170px]">
           <img
             src="/assets/images/text-brand.png"
@@ -124,7 +124,7 @@ const WebNavBar = () => {
             <Link
               to={link?.url}
               key={link?.key}
-              className="text-sm text-primary-black flex items-center justify-center cursor-pointer pb-1.5 transition-all hover:font-bold hover:text-primary-blue font-medium"
+              className="text-sm text-zinc-300 flex items-center justify-center cursor-pointer pb-1.5 transition-all hover:font-bold hover:text-primary-blue font-medium"
             >
               {link?.label}
             </Link>
@@ -132,14 +132,14 @@ const WebNavBar = () => {
         </ul>
         <div className="lg:flex items-center justify-center hidden gap-3">
           <Button
-            className="bg-white text-primary-black flex text-base border border-light-grey hover:shadow-md gap-2"
+            className="bg-zinc-100 text-zinc-900 flex text-base border border-light-grey hover:shadow-md gap-2"
             onClick={() => navigate("/sign-in")}
           >
             {/* <UserCircle className="text-light-grey h-4 w-4" /> */}
             Sign in
           </Button>
           <Button
-            className="shad-button_primary"
+            className="shad-button_zinc" 
             onClick={() => navigate("/sign-in")}
           >
             <UserCircle className="text-light-grey h-4 w-4" /> 
@@ -148,7 +148,7 @@ const WebNavBar = () => {
         </div>
 
         <Menu
-          className="lg:hidden flex items-center justify-center text-primary-black h-7 w-7 cursor-pointer"
+          className="lg:hidden flex items-center justify-center text-zinc-100 h-7 w-7 cursor-pointer"
           onClick={() => setOpen(true)}
         />
       </nav>

@@ -24,6 +24,9 @@ export enum QUERY_KEYS {
   GET_FLUTTERWAVE_PLANS = "getFlutterwavePlans",
 
   //GET USER SUBSCRIPTION  DETAILS
-  GET_USER_SUBSCRIPTION_DETAILS = "getUserSubscriptionDetails"
+  GET_USER_SUBSCRIPTION_DETAILS = "getUserSubscriptionDetails",
+
+  //GET USER VECTOR STORE DETAILS 
+  GET_USER_VECTOR_STORE_DETAILS = "getUserVectorStoreDetails"
 }
 

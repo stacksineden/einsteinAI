@@ -31,16 +31,12 @@ export const CreateAssistantValidationSchema = z.object({
   description: z.string().min(10, { message: "description too short" }),
   alt_prompt: z.string(),
   model: z.string(),
-  files: z.array(z.string()),
-  is_selecting_files: z.boolean(),
-  is_code_interpreter: z.boolean(),
 });
+
+
 
 export const EditAssistantValidationSchema = z.object({
   alt_name: z.string().min(2, { message: "Name too short" }),
   description: z.string().min(10, { message: "description too short" }),
-  alt_prompt: z.string(),
-  files: z.array(z.string()),
-  is_selecting_files: z.boolean(),
-  is_code_interpreter: z.boolean(),
+  alt_prompt: z.string()
 });

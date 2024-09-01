@@ -4,12 +4,15 @@ import {
   getImageUrlByName,
   getMatchingPromptsForAssistants,
 } from "@/modelDataset";
+import Lottie from "lottie-react";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import ChatIntro from "./ChatIntro";
 import ReactMarkdown from "react-markdown";
 import { Loader2, Clipboard, CheckCheck } from "lucide-react";
-import { useUserContext } from "@/context/AuthContext";
+import EinsteinGptIntro from "./EinsteinGptIntro";
+import { useChatContext } from "@/context/ChatContext";
+import AnimatedMessage from "@/icons/message-ani.json";
 
 const Messages = ({
   threadId,
@@ -19,7 +22,8 @@ const Messages = ({
   const { data: messages, isPending: isLoadingMessges } =
     useLoadMessgaeOpenAI(threadId);
 
-  const { user } = useUserContext();
+  const { activityMessage, messageLoading } =
+    useChatContext();
 
   const [copied, setCopied] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -32,51 +36,61 @@ const Messages = ({
     }
   }, [messages]);
 
-  // .message-content {
-  //   white-space: pre-line; /* Ensures formatting and line breaks are respected */
-  //   padding: 0; /* Adjust or remove padding as needed */
-  //   line-height: 1.2; /* Adjust this value as needed */
-  // }
-
   const MessageBlock = ({ message }: MessageBlockProps) => {
     const role = message?.role;
     const contentValue = message?.content?.[0]?.text?.value || "";
 
-    const isCodeSnippet = contentValue.startsWith("```");
-
-    return (
-      <div className={`py-5 text-primary-black overflow-x-scroll`}>
-        <div className="px-5 md:px-10 max-w-3xl mx-auto flex flex-col gap-1">
-          <div className="flex space-x-2 items-center">
-            <img
-              src={
-                role === "user"
-                  ? user?.imageUrl
-                  : getImageUrlByName(pretrainingName)
-              }
-              alt="assistant_image"
-              className="h-8 w-8 rounded-full bg-light-grey"
-            />
-            <p className="text-base text-primary-black font-semibold">
-              {role === "user" ? "You" : assistantName}
-            </p>
-          </div>
-          {/* pt-1 text-sm md:text-base text-primary-black tracking-wide */}
-          {/* <p className="pt-1 text-sm md:text-base text-primary-black tracking-wide"> */}
-          {/* <ReactMarkdown className="text-primary-black text-base">
-            {contentValue}
-          </ReactMarkdown> */}
-          {isCodeSnippet ? (
-            <SyntaxHighlighter language="javascript" style={a11yDark}>
-              {contentValue}
-            </SyntaxHighlighter>
-          ) : (
-            <ReactMarkdown className="text-primary-black text-base">
-              {contentValue}
-            </ReactMarkdown>
+    return ( 
+      <div
+        className={`py-3 text-primary-black overflow-x-scroll scrollbar-hide ${
+          role === "user" && "flex justify-end"
+        }`}
+      >
+        <div
+          className={`px-2 md:px-5 max-w-4xl flex flex-col gap-2 ${
+            role !== "user" && "mx-auto"
+          }`}
+        >
+          {role !== "user" && (
+            <div className="flex space-x-2 items-center">
+              <img
+                src={getImageUrlByName(pretrainingName)}
+                alt="assistant_image"
+                className="h-8 w-8 rounded-full bg-light-grey"
+              />
+              <p className="text-base text-zinc-100 font-semibold">
+                {assistantName}
+              </p>
+            </div>
           )}
-          {/* </p> */}
-          {/* copy chat content */}
+
+          <ReactMarkdown
+            children={contentValue}
+            className={`text-zinc-300 text-sm tracking-wide ${
+              role === "user" &&
+              "bg-zinc-800 py-4 px-4 md:px-5 max-w-[300px] md:max-w-[550px] w-full rounded-3xl overflow-x-scroll"
+            }`}
+            components={{
+              code(props) {
+                const { children, className, node, ...rest } = props;
+                const match = /language-(\w+)/.exec(className || "");
+                return match ? (
+                  <SyntaxHighlighter
+                    // {...rest}
+                    PreTag="div"
+                    children={String(children).replace(/\n$/, "")}
+                    language={match[1]}
+                    style={a11yDark}
+                  />
+                ) : (
+                  <code {...rest} className={className}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          />
+
           {role !== "user" && !copied && (
             <div
               className="w-full flex justify-end items-center gap-1 cursor-pointer"
@@ -88,14 +102,14 @@ const Messages = ({
                 }, 2000);
               }}
             >
-              <Clipboard className="h-5 w-5 text-primary-black opacity-70" />
-              <p className="text-xs text-primary-black">Copy</p>
+              <Clipboard className="h-5 w-5 text-zinc-100 opacity-70" />
+              <p className="text-xs text-zinc-100 ">Copy</p>
             </div>
           )}
           {role !== "user" && copied && (
             <div className="w-full flex justify-end items-center gap-1 cursor-pointer">
-              <CheckCheck className="h-5 w-5 text-primary-black opacity-70" />
-              <p className="text-xs text-primary-black">Copied</p>
+              <CheckCheck className="h-5 w-5 text-zinc-100  opacity-70" />
+              <p className="text-xs text-zinc-100">Copied</p>
             </div>
           )}
         </div>
@@ -106,7 +120,7 @@ const Messages = ({
   return (
     <>
       <div
-        className="flex-1 overflow-y-auto overflow-x-hidden"
+        className="overflow-y-auto overflow-x-hidden scrollbar-hide"
         ref={messagesContainerRef}
       >
         {messages?.data &&
@@ -121,27 +135,46 @@ const Messages = ({
         {isLoadingMessges && (
           <div className="flex items-center justify-center w-full h-full text-center flex-col gap-2">
             <Loader2 className="h-6 w-6 text-blue-500 animate-spin" />
-            <p className="text-primary-black text-base">
-              {" "}
-              Loading messages ....
-            </p>
+            <p className="text-zinc-100 text-base"> Loading messages ....</p>
+          </div>
+        )}
+        {/* save the string in each toast to an in message toast  */}
+        {messageLoading && (
+          <div className="py-2 h-9 max-w-4xl px-2 md:px-5 mx-auto text-zinc-400 flex items-center">
+            <Lottie
+              animationData={AnimatedMessage}
+              loop={true}
+              style={{
+                height: "50px",
+                width: "50px",
+              }}
+            />
+            {activityMessage ? activityMessage : "Analyzing ..."}
           </div>
         )}
       </div>
-        {messages?.data?.length === 0 && !messages?.data && (
+      {messages?.data?.length === 0 &&
+        !messages?.data &&
+        assistantName !== "EinsteinGPT" && (
+          <ChatIntro
+            assistant_name={pretrainingName}
+            user_assistant_name={assistantName}
+            matching_prompts={getMatchingPromptsForAssistants(pretrainingName!)}
+          />
+        )}
+      {messages?.data?.length === 0 &&
+        !messages?.data &&
+        assistantName === "EinsteinGPT" && <EinsteinGptIntro />}
+      {/* {messages?.data?.length === 0 && assistantName !== "EinsteinGPT" && (
         <ChatIntro
           assistant_name={pretrainingName}
           user_assistant_name={assistantName}
           matching_prompts={getMatchingPromptsForAssistants(pretrainingName!)}
         />
-      )}
-      {messages?.data?.length === 0 && (
-        <ChatIntro
-          assistant_name={pretrainingName}
-          user_assistant_name={assistantName}
-          matching_prompts={getMatchingPromptsForAssistants(pretrainingName!)}
-        />
-      )}
+      )} */}
+      {/* {messages?.data?.length === 0 && assistantName === "EinsteinGPT" && (
+        <EinsteinGptIntro />
+      )} */}
     </>
   );
 };

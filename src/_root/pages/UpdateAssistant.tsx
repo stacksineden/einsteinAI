@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Container from "@/components/shared/Container";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   retrieveAssistantOpenAI,
   updateAssistantOpenAI,
@@ -8,10 +7,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { AssistantModel, dataSet, getImageUrlByName } from "@/modelDataset";
 import { getAssistantLevel, getLevelColor } from "@/lib/utils";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { BadgeCheck } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { BadgeCheck, Info } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +16,6 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,27 +23,33 @@ import {
 } from "@/components/ui/form";
 import { EditAssistantValidationSchema } from "@/lib/validation";
 import {
-  useGetUserFiles,
+  useGetUserVectorStoreDetails,
   useUpdateAssistantToDB,
 } from "@/lib/tanstack-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import Loader from "@/components/shared/Loader";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 const UpdateAssistant = () => {
   const { id, docid } = useParams();
   const { user } = useUserContext();
   const { toast } = useToast();
+  const [creatingAssistant, setCreatingAssistant] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   //get assistants-details from open ai
   // const [isExpanded, setIsExpanded] = useState(false);
-  const [shouldSelectFiles, setShouldSelectFiles] = useState(false);
   const [assistantObject, setAssistantObject] = useState<IAssistant>({});
 
   const { mutateAsync: updateAssistant, isPending: isLoadingUpdating } =
     useUpdateAssistantToDB();
+
+  const { data: vectorStore } = useGetUserVectorStoreDetails(user?.id);
 
   const getAssistantInfo = async (id: string) => {
     const data = await retrieveAssistantOpenAI(id);
@@ -62,23 +64,12 @@ const UpdateAssistant = () => {
   //   setIsExpanded(!isExpanded);
   // };
 
-  //get user files
-  const {
-    data: files,
-    isPending: isFilesLoading,
-    isError: isErrorFiles,
-  } = useGetUserFiles(user?.id);
-
-
   // 1. Define your form.
   const form = useForm<z.infer<typeof EditAssistantValidationSchema>>({
     resolver: zodResolver(EditAssistantValidationSchema),
     defaultValues: {
       alt_name: ``,
       alt_prompt: ``,
-      is_selecting_files: false,
-      is_code_interpreter: false,
-      files: [],
       description: "",
     },
   });
@@ -87,26 +78,7 @@ const UpdateAssistant = () => {
     form.setValue("alt_name", assistantObject?.name || "");
     form.setValue("description", assistantObject?.description || "");
     form.setValue("alt_prompt", assistantObject?.instructions || "");
-    form.setValue(
-      "is_selecting_files",
-      assistantObject?.file_ids?.length !== 0
-    );
-    form.setValue("files", assistantObject?.file_ids || []);
-    form.setValue(
-      "is_code_interpreter",
-      assistantObject?.tools?.some(
-        (tool) => tool?.type === "code_interpreter"
-      ) || false
-    );
   }, [assistantObject, form]);
-
-  const { watch } = form;
-
-  const watchIsSelectingFiles = watch("is_selecting_files", false);
-
-  useEffect(() => {
-    setShouldSelectFiles(watchIsSelectingFiles);
-  }, [watchIsSelectingFiles]);
 
   //get toolsets for assistants
 
@@ -126,14 +98,28 @@ const UpdateAssistant = () => {
       instructions: values.alt_prompt,
       description: values.description,
       tools: [
-        ...(values.is_code_interpreter ? [{ type: "code_interpreter" }] : []),
-        ...(values.is_selecting_files ? [{ type: "retrieval" }] : []),
+        {
+          type: "code_interpreter",
+        },
+        {
+          type: "file_search",
+        },
         ...getFunctionToolSets(
           assistantObject?.metadata?.assistant_pretraining_name!
         ),
       ],
-      file_ids: values.files,
+      tool_resources: {
+        file_search: {
+          vector_store_ids: vectorStore?.documents[0]?.vector_store_id
+            ? [vectorStore?.documents[0]?.vector_store_id]
+            : [],
+        },
+        code_interpreter: {
+          file_ids: [],
+        },
+      },
     };
+    setCreatingAssistant(true);
 
     const responseFromOpenAI = await updateAssistantOpenAI(
       id!,
@@ -147,6 +133,7 @@ const UpdateAssistant = () => {
       });
     }
     if (!responseFromOpenAI) {
+      setCreatingAssistant(false);
       toast({
         title: "Something went wrong!",
         description: "Please try again",
@@ -160,15 +147,20 @@ const UpdateAssistant = () => {
     };
 
     const savedAssistant = await updateAssistant(assistantToBeSaved);
-    if (!savedAssistant) {
+
+    if (savedAssistant instanceof Error) {
+      // Assuming err.message contains the API error message
+      setCreatingAssistant(false);
       return toast({
-        title: "Unable to save assistant!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
+        title:
+          savedAssistant?.message ||
+          "Unable to save assistant, please try again.",
+        className: "bg-primary-red text-white",
       });
     }
 
     if (savedAssistant) {
+      setCreatingAssistant(false);
       toast({
         description: "Your Assistant is successfully saved.",
         className: "bg-primary-blue text-white",
@@ -180,323 +172,207 @@ const UpdateAssistant = () => {
   }
 
   return (
-    <Container>
-      <div className="w-full mt-0 md:mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div className="w-full p-4 flex flex-col gap-3  shadow-md">
-          <h2 className="text-primary-black text-xl md:text-3xl font-medium">
-            {assistantObject?.description || <Skeleton height={80} />}
-          </h2>
-          <div className="flex items-center gap-5 border-t border-t-light-grey py-2 px-3">
-            {/* <p className="text-sm md:text-base text-primary-black opacity-60 font-medium">
-              114K Hires
-            </p> */}
-            <div
-              className={`text-xs font-semibold bg-light-grey py-1 px-2 rounded-md uppercase ${getLevelColor(
-                getAssistantLevel(
-                  assistantObject?.metadata?.assistant_pretraining_name!
-                )
-              )}`}
+    <div className="h-full">
+      <div className="flex h-full w-full flex-col px-4 sm:px-8 pt-6">
+        <div className="max-w-7xl self-center w-full">
+          <div className="mt-0 md:mt-2 flex justify-end md:justify-between gap-4 border-b border-gray-700 pb-5 items-center px-3 md:px-4">
+            <h1 className="mb-3 font-bold text-xl md:text-3xl text-zinc-100 hidden md:block">
+              Update Assistant
+            </h1>
+            <Button
+              className={buttonVariants({
+                size: "lg",
+                className: "bg-primary-black text-white rounded-md",
+              })}
+              onClick={() => navigate("/files")}
             >
-              {getAssistantLevel(
-                assistantObject?.metadata?.assistant_pretraining_name ?? ""
-              )}
-            </div>
-          </div>
-          <div className="flex gap-1 md:gap-2">
-            <div className="rounded-full overflow-hidden shadow-lg bg-light-grey w-[100px] h-[100px] md:w-[150px] md:h-[150px]">
-              <img
-                src={
-                  getImageUrlByName(
-                    assistantObject?.metadata?.assistant_pretraining_name!
-                  ) || "/assets/images/assistants/placeholder.png"
-                }
-                alt="assistantimage"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </div>
-            <div className="flex flex-col py-4 flex-[70%] w-full">
-              <h2 className="text-primary-black font-medium text-lg md:text-2xl tracking-wide">
-                {assistantObject?.name! || <Skeleton height={30} />}
-              </h2>
-              <div className="text-base md:text-lg text-primary-blue font-medium">
-                {assistantObject?.metadata?.role || <Skeleton height={30} />}
-              </div>
-              <p className="text-primary-black text-xs md:text-sm font-light opacity-70">{` "Hey, Let's keep it rolling!" `}</p>
-            </div>
-          </div>
-          {/* <div className="text-primary-black font-normal text-xs md:text-sm mt-0 md:mt-2">
-            {assistantObject && (
-              <>
-                {isExpanded
-                  ? assistantObject.instructions
-                  : truncateText(assistantObject.instructions || "", 400)}
-                {assistantObject.instructions &&
-                  assistantObject.instructions.length > 400 && (
-                    <button
-                      className="text-primary-black cursor-pointer underline ml-2 font-medium"
-                      onClick={toggleExpansion}
-                    >
-                      {isExpanded ? "Read Less" : "Read More"}
-                    </button>
-                  )}
-              </>
-            )}
-          </div> */}
-
-          <div className="mt-2 bg-light-grey p-4 rounded-lg shadow-md">
-            <h2 className="text-primary-black font-medium text-sm md:text-base">
-              Tools:
-            </h2>
-            <div className="mt-2 space-y-2">
-              {assistantObject?.tools?.map((capability, _i) => (
-                <div
-                  className="flex items-center justify-start gap-1 text-sm md:text-base"
-                  key={_i}
-                >
-                  <BadgeCheck className="h-5 w-5 text-primary-blue" />
-                  <div className="flex-[80%] w-full">
-                    {" "}
-                    {capability?.type === "function"
-                      ? capability?.function?.name
-                      : capability?.type}
-                  </div>
-                </div>
-              ))}
-            </div>
+              My Files
+            </Button>
           </div>
         </div>
 
-        <div className="w-full flex flex-col p-4 md:p-7">
-          <h2 className="text-primary-blue text-xl md:text-2xl font-medium">
-            {`Update Assistant`}
-          </h2>
-          <p className="text-xs md:text-sm font-normal text-primary-yellow mt-2">
-            Configure your assistant settings below. You have the option to
-            customize the assistant name and prompt, or you can stick with the
-            pre-configured details provided by us. Feel free to personalize your
-            assistant by giving it a unique name, or simply proceed with the
-            default settings.
-          </p>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-5 w-full mt-4"
-            >
-              <FormField
-                control={form.control}
-                name="alt_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="shad-form_label">
-                      Assistant Name (Optional)
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder={`${
-                          assistantObject?.name! || "Assistant Name"
-                        }`}
-                        className="shad-input"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+        <div className="mt-4 md:mt-8 px-3">
+          <div className="w-full md:p-4 flex flex-col gap-3 shadow-lg">
+            <h2 className="text-zinc-100 text-xl md:text-3xl font-medium">
+              {assistantObject?.description || <Skeleton height={80} />}
+            </h2>
+            <div className="flex items-center gap-5 border-t border-t-zinc-800 py-2 px-3">
+              <div
+                className={`text-xs font-semibold bg-light-grey py-1 px-2 rounded-md uppercase ${getLevelColor(
+                  getAssistantLevel(
+                    assistantObject?.metadata?.assistant_pretraining_name!
+                  )
+                )}`}
+              >
+                {getAssistantLevel(
+                  assistantObject?.metadata?.assistant_pretraining_name ?? ""
                 )}
-              />
+              </div>
+              <Dialog
+                open={isOpen}
+                onOpenChange={(visible) => {
+                  if (!visible) {
+                    setIsOpen(visible);
+                  }
+                }}
+              >
+                <DialogTrigger onClick={() => setIsOpen(true)} asChild>
+                  <div className="p-2 flex items-center gap-1 cursor-pointer">
+                    <Info className="w-5 h-5 text-primary-blue" />
+                    <p className="text-sm text-zinc-100">{`See tools for ${
+                      assistantObject?.metadata?.assistant_pretraining_name! ||
+                      ""
+                    }`}</p>
+                  </div>
+                </DialogTrigger>
+                <DialogContent>
+                  <div className="text-zinc-400 font-normal text-xs md:text-sm mt-0 md:mt-2">
+                    {assistantObject?.tools?.map((capability, _i) => (
+                      <div
+                        className="flex items-center justify-start gap-1 text-sm md:text-base"
+                        key={_i}
+                      >
+                        <BadgeCheck className="h-5 w-5 text-primary-blue" />
+                        <div className="flex-[80%] w-full">
+                          {" "}
+                          {capability?.type === "function"
+                            ? capability?.function?.name
+                            : capability?.type}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div className="flex gap-1 md:gap-2">
+              <div className="rounded-full overflow-hidden shadow-lg bg-light-grey w-[100px] h-[100px]">
+                <img
+                  src={
+                    getImageUrlByName(
+                      assistantObject?.metadata?.assistant_pretraining_name!
+                    ) || "/assets/images/assistants/placeholder.png"
+                  }
+                  alt="assistantimage"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
+              <div className="flex flex-col py-4 w-full">
+                <h2 className="text-zinc-100 font-medium text-lg md:text-2xl tracking-wide">
+                  {assistantObject?.name! || <Skeleton height={30} />}
+                </h2>
+                <div className="text-base md:text-lg text-primary-blue font-medium">
+                  {assistantObject?.metadata?.role || <Skeleton height={30} />}
+                </div>
+              </div>
+            </div>
+          </div>
 
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="shad-form_label">
-                      Description
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder={`${
-                          assistantObject?.description ||
-                          "Assistant Description"
-                        }`}
-                        className="shad-input"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <div className="w-full flex flex-col md:p-7">
+            <h2 className="text-primary-blue text-xl md:text-2xl font-medium">
+              {`Train ${assistantObject?.name!}`}
+            </h2>
+            <p className="text-xs font-normal text-primary-yellow mt-2">
+              Configure your assistant settings below. You have the option to
+              customize the assistant name and prompt, or you can stick with the
+              pre-configured details provided by us. Feel free to personalize
+              your assistant by giving it a unique name, or simply proceed with
+              the default settings.
+            </p>
 
-              <FormField
-                control={form.control}
-                name="alt_prompt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="shad-form_label">
-                      Instructions
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder={`${
-                          assistantObject?.instructions! ||
-                          "Assistant Instructions"
-                        }`}
-                        className="shad-input"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="is_selecting_files"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">
-                        Assistant files
-                      </FormLabel>
-                      <FormDescription>
-                        Do you have files you want to train{" "}
-                        {assistantObject?.name} on?
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              {shouldSelectFiles && (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col gap-5 w-full mt-4"
+              >
                 <FormField
                   control={form.control}
-                  name="files"
-                  render={() => (
+                  name="alt_name"
+                  render={({ field }) => (
                     <FormItem>
-                      <div className="mb-4 mx-1">
-                        <FormLabel className="text-base">Your Files</FormLabel>
-                        <FormDescription>
-                          Manage your assistant files or{" "}
-                          <Link
-                            className="text-primary-blue text-sm cursor-pointer"
-                            to="/files"
-                          >
-                            Upload file
-                          </Link>
-                          .
-                          {isErrorFiles && (
-                            <span className="text-primary-red text-sm">
-                              Error fetching files. Try again later.
-                            </span>
-                          )}
-                          {files?.documents?.length === 0 && (
-                            <span>
-                              You don't have any files.{" "}
-                              <span className="text-primary-blue cursor-pointer text-sm">
-                                Upload file
-                              </span>
-                              .
-                            </span>
-                          )}
-                          {isFilesLoading && (
-                            <div className="text-primary-blue">
-                              Loading files...
-                            </div>
-                          )}
-                        </FormDescription>
-                      </div>
-                      {files?.documents &&
-                        files?.documents?.length !== 0 &&
-                        files?.documents.map((file) => (
-                          <FormField
-                            key={file.$id}
-                            control={form.control}
-                            name="files"
-                            render={({ field }) => {
-                              return (
-                                <FormItem
-                                  key={file.$id}
-                                  className="flex flex-row items-center space-x-3 space-y-1 mx-1 rounded-md p-2 border border-light-grey"
-                                >
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value?.includes(
-                                        file.fileId
-                                      )}
-                                      onCheckedChange={(checked) => {
-                                        field.onChange(
-                                          checked
-                                            ? [...field.value, file.fileId]
-                                            : field.value?.filter(
-                                                (value) => value !== file.fileId
-                                              )
-                                        );
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormLabel className="font-light text-primary-black text-xs md:text-sm tracking-wide">
-                                    {file.fileName}
-                                  </FormLabel>
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        ))}
+                      <FormLabel className="shad-form_label">
+                        Assistant Name (Optional)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder={`${
+                            assistantObject?.name! || "Assistant Name"
+                          }`}
+                          className="shad-input"
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              )}
 
-              <FormField
-                control={form.control}
-                name="is_code_interpreter"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">
-                        Turn on code interpreter for {assistantObject?.name}?
-                        (Optional)
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="shad-form_label">
+                        Description
                       </FormLabel>
-                      <FormDescription className="text-sm font-light w-[90%]">
-                        Code Interpreter enables the assistant to write and run
-                        code. This tool can process files with diverse data and
-                        formatting, and generate files such as graphs.
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder={`${
+                            assistantObject?.description ||
+                            "Assistant Description"
+                          }`}
+                          className="shad-input"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <Button type="submit" className="shad-button_primary" disabled={isLoadingUpdating}>
-                {isLoadingUpdating ? (
-                  <div className="flex-center gap-2">
-                    <Loader /> Saving changes ...
-                  </div>
-                ) : (
-                  "Save Changes"
-                )}
-              </Button>
-            </form>
-          </Form>
+                <FormField
+                  control={form.control}
+                  name="alt_prompt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="shad-form_label">
+                        Instructions
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder={`${
+                            assistantObject?.instructions! ||
+                            "Assistant Instructions"
+                          }`}
+                          className="shad-textarea"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="shad-button_primary"
+                  disabled={isLoadingUpdating || creatingAssistant}
+                >
+                  {isLoadingUpdating || creatingAssistant ? (
+                    <div className="flex-center gap-2">
+                      <Loader /> Saving changes ...
+                    </div>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </Button>
+              </form>
+            </Form>
+          </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

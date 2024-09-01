@@ -3,6 +3,8 @@ import { authHeaders } from "./config";
 import { FileWithPath } from "react-dropzone";
 import {
   ChatCompletionResponse,
+  CreateVectorStoresFileBatchesResponse,
+  CreateVectorStoresResponse,
   ICreateAssistantOpenAI,
   ICreateMessage,
   ICreateRun,
@@ -18,8 +20,11 @@ export async function uploadFileToOpenAI(acceptedFiles: FileWithPath[]) {
     const file = acceptedFiles[0];
 
     const requestData = new FormData();
+
+    const mimeType = file.type;
+    const purpose = mimeType.startsWith("image/") ? "vision" : "assistants";
     requestData.append("file", file);
-    requestData.append("purpose", "assistants");
+    requestData.append("purpose", purpose);
 
     const response = await axios.post(url, requestData, {
       headers: authHeaders,
@@ -40,7 +45,7 @@ export async function deleteFileFromOpenAI(fileId: string) {
     const response = await axios.delete(url, {
       headers: authHeaders,
     });
-    console.log(response, "response from deleting");
+    // console.log(response, "response from deleting");
     return response;
   } catch (err) {
     console.log("Error deleting file from OpenAI", err);
@@ -55,10 +60,11 @@ export async function createAssistantOpenAI(payload: ICreateAssistantOpenAI) {
     const response = await axios.post(url, payload, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1",
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
-    console.log(response, "api level response");
+    // console.log(response, "api level response");
     if (response.status >= 200 && response.status < 300) {
       return response?.data;
     } else {
@@ -77,7 +83,8 @@ export async function retrieveAssistantOpenAI(assistant_id: string) {
     const response = await axios.get(url, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1", // Add this line to include the required header
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     // console.log(response, "api assistant response");
@@ -101,7 +108,8 @@ export async function updateAssistantOpenAI(
     const response = await axios.post(url, payload, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1", // Add this line to include the required header
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     if (response.status >= 200 && response.status < 300) {
@@ -121,7 +129,8 @@ export async function deleteAssistantOpenAI(assistant_id: string) {
     const response = await axios.delete(url, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1",
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     if (response.status >= 200 && response.status < 300) {
@@ -142,7 +151,8 @@ export async function listAssistantFilesOpenAI(assistant_id: string) {
     const response = await axios.get(url, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1",
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     if (response.status >= 200 && response.status < 300) {
@@ -170,7 +180,8 @@ export async function createAssistantThreadOpenAI(decription: string) {
       {
         headers: {
           ...authHeaders,
-          "OpenAI-Beta": "assistants=v1",
+          "Content-Type": "application/json",
+          "OpenAI-Beta": "assistants=v2",
         },
       }
     );
@@ -196,7 +207,8 @@ export async function createMessageOpenAi(
     const response = await axios.post(url, payload, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1",
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     if (response.status >= 200 && response.status < 300) {
@@ -216,7 +228,8 @@ export async function listMessagesOpenAI(thread_id: string) {
     const response = await axios.get(url, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1",
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     if (response.status >= 200 && response.status < 300) {
@@ -237,7 +250,8 @@ export async function createRunOpenAI(thread_id: string, payload: ICreateRun) {
     const response = await axios.post(url, payload, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1",
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     if (response.status >= 200 && response.status < 300) {
@@ -258,7 +272,8 @@ export async function retrieveRunOpenAI(thread_id: string, run_id: string) {
     const response = await axios.get(url, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1",
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     if (response.status >= 200 && response.status < 300) {
@@ -281,7 +296,8 @@ export async function cancelRunOpenAI(thread_id: string, run_id: string) {
       {
         headers: {
           ...authHeaders,
-          "OpenAI-Beta": "assistants=v1",
+          "Content-Type": "application/json",
+          "OpenAI-Beta": "assistants=v2",
         },
       }
     );
@@ -314,7 +330,8 @@ export async function submitToolsOutputOpenAI(
     const response = await axios.post(url, payload, {
       headers: {
         ...authHeaders,
-        "OpenAI-Beta": "assistants=v1",
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
       },
     });
     if (response.status >= 200 && response.status < 300) {
@@ -330,7 +347,7 @@ export async function submitToolsOutputOpenAI(
 //functions for openai specialised calls
 
 export async function generateImageOpenAI(prompt: string) {
-  const url = "https://api.openai.com/v1/images/generations"; 
+  const url = "https://api.openai.com/v1/images/generations";
   const requestPayload = {
     prompt,
     model: "dall-e-3",
@@ -345,7 +362,7 @@ export async function generateImageOpenAI(prompt: string) {
         "Content-Type": "application/json",
       },
     });
-    console.log(response, "api response image generation");
+    // console.log(response, "api response image generation");
     if (response?.data) {
       return response?.data?.data[0]?.url;
     } else {
@@ -360,7 +377,7 @@ export async function chatCompletionOpenAI(prompt: string) {
   if (!prompt) return;
   const url = "https://api.openai.com/v1/chat/completions";
   const requestPayload = {
-    model: "gpt-4-turbo-preview", 
+    model: "gpt-4o",
     messages: [
       {
         role: "system",
@@ -391,7 +408,6 @@ export async function chatCompletionOpenAI(prompt: string) {
       response?.data?.choices.length > 0
     ) {
       const messageContent = response?.data?.choices[0]?.message?.content;
-      console.log();
       if (messageContent) {
         return messageContent;
       } else {
@@ -400,6 +416,88 @@ export async function chatCompletionOpenAI(prompt: string) {
     } else {
       console.log("Message content is undefined or null");
     }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// create vector store file batches
+
+export async function createVectorStoreFileBatchesOpenAI(
+  vector_store_id: string,
+  file_ids: string[]
+) {
+  // console.log(vector_store_id, "vector_store_id");
+  const url = `https://api.openai.com/v1/vector_stores/${vector_store_id}/file_batches`;
+
+  const requestPayload = {
+    file_ids,
+  };
+  try {
+    const response: CreateVectorStoresFileBatchesResponse = await axios.post(
+      url,
+      requestPayload,
+      {
+        headers: {
+          ...authHeaders,
+          "Content-Type": "application/json",
+          "OpenAI-Beta": "assistants=v2",
+        },
+      }
+    );
+    // console.log(response);
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+}
+//create vector store
+export async function createVectorStoreOpenAI(fileIds: string[], name: string) {
+  //arguments needed file ids, Property for name
+  //create vector store
+  const url = `https://api.openai.com/v1/vector_stores`;
+  const requestPayload = {
+    name,
+  };
+
+  try {
+    const response: CreateVectorStoresResponse = await axios.post(
+      url,
+      requestPayload,
+      {
+        headers: {
+          ...authHeaders,
+          "Content-Type": "application/json",
+          "OpenAI-Beta": "assistants=v2",
+        },
+      }
+    );
+    // console.log(response?.data);
+    if (response?.data?.id) {
+      const fileBatchUpload = await createVectorStoreFileBatchesOpenAI(
+        response?.data?.id,
+        fileIds
+      );
+      return fileBatchUpload;
+    }
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function retrieveVectorStore(vector_id: string) {
+  try {
+    const url = `https://api.openai.com/v1/vector_stores/${vector_id}`;
+    const response = await axios.get(url, {
+      headers: {
+        ...authHeaders,
+        "Content-Type": "application/json",
+        "OpenAI-Beta": "assistants=v2",
+      },
+    });
+    // console.log(response, "response");
+    return response;
   } catch (err) {
     console.log(err);
   }

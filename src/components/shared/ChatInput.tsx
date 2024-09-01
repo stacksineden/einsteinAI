@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Paperclip, Send } from "lucide-react";
 import { Button } from "../ui/button";
 // import Dropzone from "react-dropzone";
 import {
   cancelRunOpenAI,
   chatCompletionOpenAI,
+  createAssistantThreadOpenAI,
   createMessageOpenAi,
   createRunOpenAI,
   generateImageOpenAI,
   retrieveRunOpenAI,
+  retrieveVectorStore,
   submitToolsOutputOpenAI,
+  uploadFileToOpenAI,
   // uploadFileToOpenAI,
 } from "@/lib/openAI/api";
 import { useToast } from "../ui/use-toast";
@@ -18,7 +21,12 @@ import { QUERY_KEYS } from "@/lib/tanstack-query/queryKeys";
 import {
   get_stock_info,
   get_weather,
-  google_search,
+  // google_search,
+  google_search_apify,
+  scrape_web_url,
+  trip_advisor_search,
+  youtube_q_and_a,
+  youtube_scrapper,
 } from "@/specialisedFunctions";
 import { useMatchingPromptContext } from "@/context/MatchingPromptContext";
 import { Textarea } from "../ui/textarea";
@@ -29,97 +37,169 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  useGetUserVectorStoreDetails,
+  useSaveThreadToDB,
+} from "@/lib/tanstack-query/queriesAndMutation";
+import { useUserContext } from "@/context/AuthContext";
+import { useChatContext } from "@/context/ChatContext";
+import { useParams } from "react-router-dom";
+import Dropzone from "react-dropzone";
+import { ICreateMessage, ToolType, messageType } from "@/types";
+import PreviewMediaModal from "./PreviewMediaModal";
 
-// type UploadDropZoneProps = {
-//   setInMessageFiles: React.Dispatch<React.SetStateAction<string[]>>;
-// };
+type UploadDropZoneProps = {
+  setInMessageFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  setImageUrl: React.Dispatch<React.SetStateAction<string>>;
+};
 
-// const UploadDropZone = ({ setInMessageFiles }: UploadDropZoneProps) => {
-//   const [isUploading, setIsUploading] = useState<boolean>(false);
-//   const { toast } = useToast();
+const UploadDropZone = ({
+  setInMessageFiles,
+  setImageUrl,
+}: UploadDropZoneProps) => {
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const { toast } = useToast();
 
-//   return (
-//     <Dropzone
-//       multiple={false}
-//       onDrop={async (acceptedFile) => {
-//         setIsUploading(true);
-//         const res = await uploadFileToOpenAI(acceptedFile);
-//         if (res) {
-//           setInMessageFiles([res?.id]);
-//           toast({
-//             description: "File Saved! You can now send your message.",
-//             className: "bg-primary-blue text-white",
-//           });
-//         }
-//         if (!res) {
-//           return toast({
-//             title: "Something went wrong!",
-//             description: "Please try again",
-//             className: "bg-red-200 text-white",
-//           });
-//         }
+  return (
+    <Dropzone
+      multiple={false}
+      onDrop={async (acceptedFile) => {
+        setIsUploading(true);
+        const res = await uploadFileToOpenAI(acceptedFile);
+        if (res) {
+          if (res?.purpose === "vision") {
+            setImageUrl(res?.id);
+          } else {
+            setInMessageFiles([res?.id]);
+          }
+          setIsUploading(false);
+          toast({
+            description:
+              "File Saved! You can now send your message.You can also preview your file",
+            className: "bg-primary-blue text-white",
+          });
+        }
+        if (!res) {
+          setIsUploading(false);
+          return toast({
+            title: "Something went wrong!",
+            description: "Please try again",
+            className: "bg-red-200 text-white",
+          });
+        }
 
-//         // set file ids to the res.id
-//       }}
-//     >
-//       {({ getRootProps, getInputProps, acceptedFiles }) => (
-//         <div className="flex items-center justify-center" {...getRootProps()}>
-//           <label
-//             htmlFor="dropzone-file"
-//             className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer"
-//           >
-//             <div className="flex items-center justify-center py-2 px-4 bg-white rounded-lg shadow-lg gap-2">
-//               <div className="text-sm text-primary-black truncate md:block hidden">
-//                 {acceptedFiles && acceptedFiles[0]
-//                   ? acceptedFiles[0]?.name
-//                   : "Attach File"}
-//               </div>
-//               <Paperclip className="h-6 w-6 text-primary-black" />
-//             </div>
-//             <input
-//               {...getInputProps()}
-//               className="hidden"
-//               // id="dropzone-file"
-//             />
-//           </label>
-//         </div>
-//       )}
-//     </Dropzone>
-//   );
-// };
+        // set file ids to the res.id
+      }}
+    >
+      {({ getRootProps, getInputProps, acceptedFiles }) => (
+        <>
+          <div className="flex items-center justify-center" {...getRootProps()}>
+            <label
+              htmlFor="dropzone-file"
+              className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer"
+            >
+              <div className="flex items-center justify-center py-2 px-2 bg-zinc-700 rounded-lg shadow-lg gap-1">
+                {/* <div className="text-sm text-primary-black truncate md:block hidden">
+                {acceptedFiles && acceptedFiles[0]
+                  ? acceptedFiles[0]?.name
+                  : "Attach File"}
+              </div> */}
+                {isUploading ? (
+                  <Loader2 className="h-4 w-4 md:h-6 md:w-6 text-blue-500 animate-spin" />
+                ) : (
+                  <Paperclip className="h-6 w-6 text-zinc-300" />
+                )}
+              </div>
+              <input
+                {...getInputProps()}
+                className="hidden"
+                // id="dropzone-file"
+              />
+            </label>
+          </div>
+          {acceptedFiles && acceptedFiles[0] && (
+            <div className="flex items-center justify-center py-2 px-2 bg-zinc-700 rounded-lg shadow-lg gap-1 cursor-pointer">
+              <PreviewMediaModal file={acceptedFiles[0]} />
+            </div>
+          )}
+        </>
+      )}
+    </Dropzone>
+  );
+};
 
-const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
+const ChatInput = ({ assistantId }: ChatInputProps) => {
+  const { id } = useParams();
+  const [, setIsOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { promptMessage } = useMatchingPromptContext();
+  const {
+    setActivityMessage,
+    setMessageLoading,
+    activeThreadId,
+    setAciveThreadId,
+  } = useChatContext();
+
+  const { mutateAsync: saveThread } = useSaveThreadToDB();
+
+  const { user } = useUserContext();
+
+  const { data: vectorStore } = useGetUserVectorStoreDetails(user?.id);
 
   //state for files that will be uploaded during chat
-  const [inMessageFiles] = useState<string[]>([]);
+  const [inMessageFiles, setInMessageFiles] = useState<string[]>([]);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [message, setMessage] = useState(promptMessage || "");
   const [isRunning, setIsRunning] = useState(false);
   const [isRunId, setIsRunId] = useState("");
+  const [, setIsCreatingThread] = useState(false);
 
   useEffect(() => {
     setMessage(promptMessage || "");
+    setActivityMessage("");
   }, [promptMessage]);
 
   //we need to condtion to check for when there is fileIds else put in an empty array
 
+  //check for vector store status before sending a message
+
   //define a function that checks run status
   const checkRunStatus = async (threadId: string, runId: string) => {
     let runResponseData = await retrieveRunOpenAI(threadId!, runId!);
-    if (runResponseData?.status === "completed") {
-      // Handle completed state
-      // console.log("Run is completed.");
+
+    // Handle cancellations, failures, and expiration
+    if (["cancelled", "failed", "expired"].includes(runResponseData.status)) {
+      // Handle cancellation, failure, or expiration
+      // console.log("Run is cancelled, failed, or expired.");
       toast({
-        description: "We are good to go!",
-        className: "bg-primary-blue text-white",
+        description: "Message delivery failed. Please Try again",
+        className: "bg-primary-red text-white",
       });
-      setMessage("");
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
       });
       setIsRunning(false);
+      setMessageLoading(false);
+      return;
+    }
+
+    if (runResponseData?.status === "completed") {
+      // Handle completed state
+      // console.log("Run is completed.");
+      // toast({
+      //   description: "We are good to go!",
+      //   className: "bg-primary-blue text-white",
+      // });
+      // setActivityMessage("We are good to go!");
+      setMessage("");
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
+      });
+      setImageUrl("");
+      setInMessageFiles([]);
+      setIsRunning(false);
+      setMessageLoading(false);
       //check on this do we have to invalidate quuries here again?
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
@@ -127,10 +207,11 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
     } else if (runResponseData?.status === "requires_action") {
       // Handle requires_action state
       // console.log("Requires action");
-      toast({
-        description: "I need to perform some supplementary actions",
-        className: "bg-primary-blue text-white",
-      });
+      // toast({
+      //   description: "I need to perform some supplementary actions",
+      //   className: "bg-primary-blue text-white",
+      // });
+      setActivityMessage("I need to perform some supplementary actions");
       const toolCalls =
         runResponseData?.required_action?.submit_tool_outputs?.tool_calls;
       const toolOutputs: any[] = [];
@@ -147,7 +228,9 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
             if (!prompt) return; //you should show a toast message
             try {
               const response = await chatCompletionOpenAI(prompt);
+              setActivityMessage("Generating content using GPT-4o-mini...");
               if (response) {
+                setActivityMessage("Content generation has been completed.");
                 toolOutputs.push({
                   tool_call_id: toolCall.id,
                   output: response,
@@ -167,7 +250,9 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
             if (!prompt) return;
             try {
               const response = await generateImageOpenAI(prompt);
+              setActivityMessage("Generating image via DALL.E-3 ...");
               if (response) {
+                setActivityMessage("Image Generation has been completed.");
                 toolOutputs.push({
                   tool_call_id: toolCall.id,
                   output: response,
@@ -182,12 +267,17 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
               console.log(err);
             }
           } else if (functionName === "google_search") {
-            // write a function to get real time serach from google
+            // write a function to get real time serach from google i replaced serper with apify ...i am to test this
             const { query } = args;
             if (!query) return;
             try {
-              const response = await google_search(query);
+              const response = await google_search_apify(query);
+              setActivityMessage("Performing a Google search...");
               if (response) {
+                setActivityMessage(
+                  "Google search results have been generated."
+                );
+
                 toolOutputs.push({
                   tool_call_id: toolCall.id,
                   output: JSON.stringify(response),
@@ -206,7 +296,9 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
             if (!location) return;
             try {
               const response = await get_weather(location);
+              setActivityMessage("Gathering weather results...");
               if (response) {
+                setActivityMessage("Weather results have been generated.");
                 toolOutputs.push({
                   tool_call_id: toolCall.id,
                   output: JSON.stringify(response),
@@ -225,7 +317,9 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
             if (!symbol) return;
             try {
               const response = await get_stock_info(symbol);
+              setActivityMessage("Gathering Stocks Information...");
               if (response) {
+                setActivityMessage("Stocks information found.");
                 toolOutputs.push({
                   tool_call_id: toolCall.id,
                   output: JSON.stringify(response),
@@ -239,7 +333,104 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
               });
               console.log(err);
             }
+          } else if (functionName === "youtube_q_and_a") {
+            const { url, message } = args;
+            if (!url) return;
+            try {
+              const response = await youtube_q_and_a(url, message);
+              setActivityMessage("Scraping YouTube to gather data...");
+              if (response) {
+                setActivityMessage("YouTube content available for Q and A.");
+                toolOutputs.push({
+                  tool_call_id: toolCall.id,
+                  output: JSON.stringify(response),
+                });
+              }
+            } catch (err) {
+              toast({
+                description:
+                  "Getting info about youtube video, please cancel the run and try again.",
+                className: "bg-primary-red text-white",
+              });
+              console.log(err);
+            }
+          } else if (functionName === "scrape_web_url") {
+            const { url } = args;
+            if (!url) return;
+            try {
+              const response = await scrape_web_url(url);
+              setActivityMessage(
+                "Analyzing and scraping the URL to gather data..."
+              );
+              if (response) {
+                setActivityMessage(
+                  "Content has been generated and is available."
+                );
+                toolOutputs.push({
+                  tool_call_id: toolCall.id,
+                  output: JSON.stringify(response),
+                });
+              }
+            } catch (err) {
+              toast({
+                description:
+                  "Getting content failed, please cancel the run and try again.",
+                className: "bg-primary-red text-white",
+              });
+              console.log(err);
+            }
+          } else if (functionName === "trip_advisor_search") {
+            const { location } = args;
+            if (!location) return;
+            try {
+              setActivityMessage(
+                "Searching for trip advisor information based on the location..."
+              );
+              const response = await trip_advisor_search(location);
+              if (response) {
+                setActivityMessage(
+                  "Trip advisor information has been generated and is available."
+                );
+                toolOutputs.push({
+                  tool_call_id: toolCall.id,
+                  output: JSON.stringify(response),
+                });
+              }
+            } catch (err) {
+              toast({
+                description:
+                  "Getting content failed, please cancel the run and try again.",
+                className: "bg-primary-red text-white",
+              });
+              console.log(err);
+            }
+          } else if (functionName === "youtube_scrapper") {
+            const { keyword } = args;
+            if (!keyword) return;
+            try {
+              setActivityMessage(
+                "Scraping YouTube for data based on the keyword..."
+              );
+              const response = await youtube_scrapper(keyword);
+              if (response) {
+                setActivityMessage(
+                  "YouTube data has been generated and is available."
+                );
+                toolOutputs.push({
+                  tool_call_id: toolCall.id,
+                  output: JSON.stringify(response),
+                });
+              }
+            } catch (err) {
+              toast({
+                description:
+                  "Getting content failed, please cancel the run and try again.",
+                className: "bg-primary-red text-white",
+              });
+              console.log(err);
+            }
           } else {
+            //adjust other functions
             console.error(`Function "${functionName}" not found in the map.`);
           }
         }
@@ -259,43 +450,153 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
     } else {
       // Handle other states or wait for completion
 
-      toast({
-        description:
-          getRandomStringFromArray(assistantAlertText) ||
-          "Figuring this out ...",
-        className: "bg-primary-blue text-white",
-      });
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
-      });
+      // save the string in each toast to an in message toast
+
+      // toast({
+      //   description:
+      //     getRandomStringFromArray(assistantAlertText) ||
+      //     "Figuring this out ...",
+      //   className: "bg-primary-blue text-white",
+      // });
+      setActivityMessage(
+        getRandomStringFromArray(assistantAlertText) || "Figuring this out ..."
+      );
+      // queryClient.invalidateQueries({
+      //   queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
+      // });
       setTimeout(() => {
         checkRunStatus(threadId, runId);
       }, 5000);
     }
-    // Handle cancellations, failures, and expiration
-    if (["cancelled", "failed", "expired"].includes(runResponseData.status)) {
-      // Handle cancellation, failure, or expiration
-      // console.log("Run is cancelled, failed, or expired.");
+  };
+
+  const tools: ToolType[] = [
+    { type: "file_search" },
+
+    { type: "code_interpreter" },
+  ];
+
+  // Create the base message object
+  const messageObject: ICreateMessage = {
+    role: "user",
+    content: [
+      {
+        type: "text",
+        text: message,
+      },
+      ...(imageUrl
+        ? ([
+            {
+              type: "image_file",
+              image_file: {
+                file_id: imageUrl,
+              },
+            },
+          ] as { type: "image_file"; image_file: { file_id: string } }[])
+        : []),
+    ] as messageType,
+    attachments:
+      inMessageFiles.length > 0
+        ? [
+            {
+              file_id: inMessageFiles[0],
+              tools: tools,
+            },
+          ]
+        : undefined,
+  };
+
+  async function retrieveStoreDetails(vector_store_id: string) {
+    const response = await retrieveVectorStore(vector_store_id);
+    // console.log(response, "resss");
+    if (response) {
+      setActivityMessage("Memory Updated");
+      return response;
+    }
+    if (!response) {
       toast({
-        description: "Message delivery failed. Please Try again",
-        className: "bg-primary-red text-white",
+        title: "File Memory Update Failed",
+        description: "Please try again",
+        className: "bg-red-200 text-white",
       });
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
+    }
+  }
+
+  const handleThreadCreation = async (description: string) => {
+    let threadTitle = await chatCompletionOpenAI(
+      `Your task is to generate a relevant and concise title for each chat thread based on the user's first message which is ${description}. Analyze the content to understand the main topic, theme, or question, and then suggest a title that accurately represents the subject of the conversation. The title should be clear, specific, and no longer than 5-7 words.`
+    );
+    threadTitle = threadTitle?.replace(/"/g, "");
+
+    // console.log(threadTitle);
+    const res = await createAssistantThreadOpenAI(threadTitle ?? description);
+    if (res) {
+      toast({
+        description: "Your Thread is successfully created.",
+        className: "bg-primary-blue text-white",
       });
-      setIsRunning(false);
+      //save to database
+      const threadObject = {
+        description: res?.metadata?.description,
+        thread_id: res?.id,
+        assistant_id: id!,
+      };
+
+      const newThread = await saveThread(threadObject);
+      if (newThread) {
+        toast({
+          description: "Your Thread is successfully saved.",
+          className: "bg-primary-blue text-white",
+        });
+        setIsCreatingThread(false);
+        setIsOpen(false);
+        setAciveThreadId(threadObject?.thread_id!);
+        return threadObject?.thread_id;
+      }
+      if (!newThread) {
+        setIsCreatingThread(false);
+        return toast({
+          title: "Unable to create thread!",
+          description: "Please try again",
+          className: "bg-red-200 text-white",
+        });
+      }
+    }
+    if (!res) {
+      setIsCreatingThread(false);
+      return toast({
+        title: "Something went wrong!",
+        description: "Please try again",
+        className: "bg-red-200 text-white",
+      });
     }
   };
 
-  //create message to send to openAI
-  const messageObject = {
-    role: "user",
-    content: message,
-    file_ids: inMessageFiles,
+  const handleStartMessage = async () => {
+    setIsRunning(true);
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
+    });
+    if (activeThreadId) {
+      handleCreateOpenAiMessage(activeThreadId);
+    } else {
+      const textContent =
+        messageObject?.content?.find(
+          (item): item is { type: "text"; text: string } => item.type === "text"
+        )?.text || "";
+
+      const threadId = await handleThreadCreation(textContent ?? "");
+      if (threadId) {
+        handleCreateOpenAiMessage(threadId);
+      }
+    }
   };
 
-  const handleCreateOpenAiMessage = async () => {
-    setIsRunning(true);
+  const handleCreateOpenAiMessage = async (threadId: string) => {
+    // create a thread before anything
+    setMessage("");
+    setMessageLoading(true);
+
     if (!threadId) {
       toast({
         description: "Please select or create a thread to start the chat.",
@@ -304,8 +605,14 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
     }
     if (!threadId && !messageObject?.content) {
       setIsRunning(false);
+      setMessageLoading(false);
       return;
     }
+
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
+    });
+
     const res = await createMessageOpenAi(threadId!, messageObject);
     //we need to process run ==> get run Id from res
     if (!res) {
@@ -314,6 +621,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
         className: "bg-black text-white",
       });
       setIsRunning(false);
+      setMessageLoading(false);
       throw new Error();
     }
 
@@ -321,6 +629,24 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
     queryClient.invalidateQueries({
       queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
     });
+    setMessage("Analyzing ...");
+
+    // check for file memory and getting it completed before proceeding
+    // Polling mechanism for vector store status
+    if (vectorStore?.documents[0]?.vector_store_id) {
+      const vectorStoreId = vectorStore.documents[0].vector_store_id;
+      let isCompleted = false;
+
+      while (!isCompleted) {
+        const response = await retrieveStoreDetails(vectorStoreId);
+
+        if (response?.data?.status === "completed") {
+          isCompleted = true;
+        } else {
+          await new Promise((resolve) => setTimeout(resolve, 5000)); // Poll every 5 seconds
+        }
+      }
+    }
 
     const runObject = {
       assistant_id: assistantId,
@@ -332,13 +658,16 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
         className: "bg-primary-red text-white",
       });
       setIsRunning(false);
+      setMessageLoading(false);
       throw new Error();
     }
     //if run id is being return pass it to retrieve run
     if (runResponse) {
       //   // Clear the message input after successfully creating OpenAI message
+      setActivityMessage("");
       setMessage("");
       setIsRunning(true);
+      setMessageLoading(true);
       const runId = runResponse?.id;
       setIsRunId(runId);
       checkRunStatus(threadId!, runId!);
@@ -354,6 +683,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
         className: "bg-primary-blue text-white",
       });
       setIsRunning(false);
+      setMessageLoading(false);
     }
     if (!cancelRun) {
       toast({
@@ -361,6 +691,7 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
         className: "bg-primary-red text-white",
       });
       setIsRunning(false);
+      setMessageLoading(false);
     }
   };
 
@@ -387,8 +718,8 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
                   <Button
                     className="bg-primary-black hover:opacity-90 flex gap-2 text-white"
                     aria-label="send message"
-                    onClick={() => handleCreateOpenAiMessage()}
-                    disabled={isRunning || !threadId}
+                    onClick={() => handleStartMessage()}
+                    disabled={isRunning}
                   >
                     {isRunning ? (
                       <Loader2 className="h-4 w-4 text-white animate-spin" />
@@ -399,7 +730,9 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <div className="text-sm font-medium text-black">{!threadId && "Create a thread to start the chat"}</div>
+                  <div className="text-sm font-medium text-black">
+                    {/* {!threadId && "Create a thread to start the chat"} */}
+                  </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -407,12 +740,15 @@ const ChatInput = ({ assistantId, threadId }: ChatInputProps) => {
               className="bg-primary-red hover:opacity-90 flex gap-2 text-white"
               aria-label="send message"
               disabled={!isRunning}
-              onClick={() => handleCancelRun(threadId!, isRunId!)}
+              onClick={() => handleCancelRun(activeThreadId!, isRunId!)}
             >
               Cancel
             </Button>
             {/* upload input */}
-            {/* <UploadDropZone setInMessageFiles={setInMessageFiles}/>  */}
+            <UploadDropZone
+              setInMessageFiles={setInMessageFiles}
+              setImageUrl={setImageUrl}
+            />
           </div>
         </div>
       </div>

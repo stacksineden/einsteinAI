@@ -1,7 +1,5 @@
 import ChatSideBar from "@/components/shared/ChatSideBar";
-import { useUserContext } from "@/context/AuthContext";
 import { retrieveAssistantOpenAI } from "@/lib/openAI/api";
-import { getAssistantLevel } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useParams } from "react-router-dom";
@@ -10,7 +8,6 @@ const ChatLayout = () => {
   const { id } = useParams();
   const isAuthenticated = false;
   const [assistantObject, setAssistantObject] = useState<IAssistant>({});
-  const { userSubscriptionDetails } = useUserContext();
   const [isLoadingAssistant, setIsLoadingAssistant] = useState(true);
   //get assistants-details from open ai
 
@@ -28,7 +25,7 @@ const ChatLayout = () => {
     return (
       <div className="flex items-center justify-center w-full h-screen flex-col gap-2">
         <Loader2 className="h-7 w-7 text-blue-500 animate-spin" />
-        <p className="text-base text-primary-black">Loading up...</p>
+        <p className="text-base text-zinc-100">Loading up...</p>
       </div>
     );
   }
@@ -38,30 +35,24 @@ const ChatLayout = () => {
       {isAuthenticated ? (
         <Navigate to="/sign-in" />
       ) : (
-        <div className="flex">
-          {!userSubscriptionDetails?.is_subscribed &&
-            getAssistantLevel(
-              assistantObject?.metadata?.assistant_pretraining_name!
-            ) === "Rookie" && (
-              <div className="bg-primary-black max-w-xs h-screen md:min-w-[20rem] hidden md:block">
-                <ChatSideBar
-                  assistant_name={
-                    assistantObject?.metadata?.assistant_pretraining_name
-                  }
-                />
+        <div className="h-screen">
+          <div className="bg-zinc-900 h-screen">
+            <main>
+              <div>
+                <div className="bg-zinc-900 relative overflow-hidden">
+                  <div className="flex h-screen">
+                    <ChatSideBar
+                      assistant_name={ 
+                        assistantObject?.metadata?.assistant_pretraining_name ?? "einsteingpt"
+                      }
+                    />
+                    <main className="h-[100dvh] flex-1 overflow-x-hidden">
+                      <Outlet />
+                    </main>
+                  </div>
+                </div>
               </div>
-            )}
-          {userSubscriptionDetails?.is_subscribed && (
-            <div className="bg-primary-black max-w-xs h-screen md:min-w-[20rem] hidden md:block">
-              <ChatSideBar
-                assistant_name={
-                  assistantObject?.metadata?.assistant_pretraining_name
-                }
-              />
-            </div>
-          )}
-          <div className="flex-1 bg-white w-full">
-            <Outlet />
+            </main>
           </div>
         </div>
       )}

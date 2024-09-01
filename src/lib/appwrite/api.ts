@@ -3,6 +3,7 @@ import { account, appwriteConfig, avatars, databases } from "./config";
 
 import {
   IAssistant,
+  ICreateUserVectorStores,
   IFile,
   INewUser,
   ISavedAssistant,
@@ -42,7 +43,7 @@ export async function createUserAccount(user: INewUser) {
       }
     }
   } catch (err) {
-    console.log(err, "");
+    return err;
   }
 }
 
@@ -55,7 +56,7 @@ export async function updateUserVerification(userId: string, secret: string) {
       console.log("verification failed");
     }
   } catch (err) {
-    console.log(err, "");
+    return err;
   }
 }
 
@@ -65,13 +66,17 @@ export async function saveUserToDB(user: {
   name: string;
   imageUrl: URL;
 }) {
-  const newUser = await databases.createDocument(
-    appwriteConfig.databaseId,
-    appwriteConfig.userCollectionId,
-    ID.unique(),
-    user
-  );
-  return newUser;
+  try {
+    const newUser = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      ID.unique(),
+      user
+    );
+    return newUser;
+  } catch (err) {
+    return err;
+  }
 }
 
 export async function signInAccount(user: { email: string; password: string }) {
@@ -80,6 +85,7 @@ export async function signInAccount(user: { email: string; password: string }) {
     return session;
   } catch (err) {
     console.log(err);
+    return err;
   }
 }
 
@@ -96,6 +102,7 @@ export async function forgotPassword(email: string) {
     }
   } catch (err) {
     console.log(err);
+    return err;
   }
 }
 
@@ -117,7 +124,9 @@ export async function resetPassword(
     } else {
       console.log("reset password failed");
     }
-  } catch (err) {}
+  } catch (err) {
+    return err;
+  }
 }
 
 export async function getCurrentUser() {
@@ -160,6 +169,7 @@ export async function saveFileToDB(file: IFile) {
     return newFile;
   } catch (err) {
     console.log(err);
+    return err;
   }
 }
 
@@ -182,7 +192,9 @@ export async function saveAssistantToDB(assistant: IAssistant) {
 
     if (!newAssistant) throw new Error();
     return newAssistant;
-  } catch (err) {}
+  } catch (err) {
+    return err;
+  }
 }
 
 export async function updateAssistantInDB(assistant: ISavedAssistant) {
@@ -200,9 +212,7 @@ export async function updateAssistantInDB(assistant: ISavedAssistant) {
     if (!updatedAssistant) throw new Error();
     return updatedAssistant;
   } catch (err) {
-    // Handle errors here
-    console.error("Error updating assistant:", err);
-    throw err; // You might want to handle or log the error based on your application's requirements
+    return err;
   }
 }
 
@@ -216,8 +226,7 @@ export async function deleteAssistantInDB(assistant_id: string) {
     if (!deletedAssistant) throw Error;
     return deletedAssistant;
   } catch (err) {
-    console.error("Error deleting assistant:", err);
-    throw err;
+    return err;
   }
 }
 
@@ -232,7 +241,7 @@ export async function deleteUserFiles(fileId: string) {
     if (!deletedFile) throw Error;
     return deletedFile;
   } catch (err) {
-    console.log(err);
+    return err;
   }
 }
 
@@ -275,6 +284,7 @@ export async function saveThreadToDB(thread: Ithread) {
     return newThread;
   } catch (err) {
     console.log(err);
+    return err;
   }
 }
 
@@ -308,13 +318,13 @@ export async function createUserSubcription(payload: IUserSubscription) {
         user_email: payload?.user_email,
         transaction_id: payload?.transaction_id,
         tx_ref: payload?.tx_ref,
-        subscription_type:payload?.subscription_type
+        subscription_type: payload?.subscription_type,
       }
     );
     if (!userSubscription) throw new Error("Failed to add User Subscription");
     return userSubscription;
   } catch (err) {
-    console.log(err);
+    return err;
   }
 }
 
@@ -332,7 +342,9 @@ export async function getUserSubcriptionStatus(user_id: string) {
 }
 
 //update user subscription status
-export async function updateUserSubscriptionDetails(payload: IUpdateSubscription) {
+export async function updateUserSubscriptionDetails(
+  payload: IUpdateSubscription
+) {
   try {
     const updatedSubscription = await databases.updateDocument(
       appwriteConfig.databaseId,
@@ -345,14 +357,13 @@ export async function updateUserSubscriptionDetails(payload: IUpdateSubscription
         tx_ref: payload?.tx_ref,
         transaction_id: payload?.transaction_id,
         amount: payload?.amount,
-        subscription_type:payload?.subscription_type
+        subscription_type: payload?.subscription_type,
       }
     );
     if (!updatedSubscription) throw new Error();
     return updatedSubscription;
   } catch (err) {
-    console.error("Error updating subscription details:", err);
-    throw err; // You might want to handle or log the error based on your application's requirements
+    return err;
   }
 }
 
@@ -373,11 +384,47 @@ export async function updateUserSubscriptionDetails(payload: IUpdateSubscription
 //   }
 // }
 
+// create user vector store
+export async function createUserVectorStore(payload: ICreateUserVectorStores) {
+  if (!payload) return;
+  try {
+    const userVectorStore = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userVectorStoresCollectionId,
+      ID.unique(),
+      {
+        user_id: payload.user_id,
+        name: payload.name,
+        vector_store_id: payload?.vector_store_id,
+      }
+    );
+    if (!userVectorStore) throw new Error("Failed to add User Vector stores");
+    return userVectorStore;
+  } catch (err) {
+    return err;
+  }
+}
+
+// get user vector store details
+export async function getUserVectoreStoresDetails(user_id: string) {
+  if (!user_id) return;
+  try {
+    const vectorStoreDetails = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userVectorStoresCollectionId,
+      [Query.equal("user_id", user_id)]
+    );
+    return vectorStoreDetails;
+  } catch (err) {
+   console.log(err)
+  }
+}
+
 export async function signOutAccount() {
   try {
     const session = await account.deleteSession("current");
     return session;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 }

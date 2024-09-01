@@ -9,7 +9,7 @@ const ChatIntro = ({
 }: ChatIntroProps) => {
   const { setPromptMessage } = useMatchingPromptContext(); 
   return (
-    <div className="text-primary-black overflow-y-auto flex-col items-center justify-center px-2">
+    <div className="text-primary-black overflow-y-auto flex-col items-center justify-center px-2 mt-5">
       <div className="flex flex-col items-center gap-2 mb-32">
         <div className="h-20 w-20 rounded-full shadow-md bg-light-grey">
           <img
@@ -28,7 +28,7 @@ const ChatIntro = ({
             <div className=" bg-light-grey h-6 w-[300px] rounded-md animate-pulse"></div>
           )}
         </h1>
-        <p className="text-2xl font-medium text-primary-black tracking-wide">
+        <p className="text-2xl font-medium text-zinc-100 tracking-wide">
           How can I help you today?
         </p>
       </div>
@@ -37,14 +37,14 @@ const ChatIntro = ({
         {matching_prompts &&
           matching_prompts?.map((prompt, _i) => (
             <div
-              className="px-4 py-3 rounded-xl border border-light-grey flex flex-col cursor-pointer hover:bg-light-grey"
+              className="px-4 py-3 rounded-xl border border-zinc-700 flex flex-col cursor-pointer hover:bg-zinc-700"
               key={_i}
               onClick={() => setPromptMessage(prompt?.prompt!)}
             >
-              <h2 className="text-sm text-primary-black font-medium truncate">
+              <h2 className="text-sm text-zinc-100 font-medium truncate">
                 {prompt?.head}
               </h2>
-              <p className="font-normal text-primary-black opacity-50 text-sm">
+              <p className="font-normal text-zinc-400 opacity-50 text-sm">
                 {prompt?.text}
               </p>
             </div>
