@@ -386,8 +386,8 @@ const ChatSideBar = ({
 
       {/* Mobile */}
 
-      <div className="w-full h-full flex md:hidden mr-0">
-        <div className="absolute left-0 top-0 z-50 flex h-screen">
+      <div className="w-full h-screen  flex md:hidden mr-0">
+        <div className="absolute left-0 top-0 z-50 flex h-full">
           <div className="absolute z-0 left-0 top-0 h-full w-full flex-auto bg-transparent"></div>
           <div
             className={`absolute z-50 top-0 h-full w-64 border-r border-r-zinc-700 bg-zinc-900 ${
@@ -446,7 +446,7 @@ const ChatSideBar = ({
                         <p className="font-normal">My Threads</p>
                       </div>
                       <div
-                        className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto"
+                        className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto scrollbar-hide"
                         data-slot="base"
                         aria-label="Recent threads"
                         style={{ maxHeight: "calc(100vh - 200px)" }}
@@ -509,7 +509,7 @@ const ChatSideBar = ({
                     </div>
                   </div>
 
-                  <div className="flex flex-col justify-end pb-2 px-5">
+                  <div className="flex flex-col justify-end pb-2 px-5 mb-8 md:mb-0">
                     <div
                       data-aria-orientation="horizontal"
                       role="none"

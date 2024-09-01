@@ -112,7 +112,7 @@ const EinsteinGptChat = () => {
           <div className="max-w-5xl self-center w-full flex-1 flex flex-col overflow-hidden">
             {/* CHAT INTRO */}
             {!activeThreadId && (
-              <div className="flex-1 overflow-y-auto overflow-x-hidden">
+              <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide"> 
                 <EinsteinGptIntro />
               </div>
             )}
