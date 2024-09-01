@@ -222,7 +222,7 @@ const SideBar = () => {
 
       {/* Mobile */}
       <div className="w-full h-full flex md:hidden mr-0">
-        <div className="absolute left-0 top-0 z-50 flex h-screen">
+        <div className="absolute left-0 top-0 z-50 flex h-full">
           <div className="absolute z-0 left-0 top-0 h-full w-full flex-auto bg-transparent"></div>
           <div
             className={`absolute z-50 top-0 h-full w-64 border-r border-r-zinc-700 bg-zinc-900 ${
@@ -282,7 +282,7 @@ const SideBar = () => {
                         <p className="font-normal">My Assistants</p>
                       </div>
                       <div
-                        className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto h-[400px]"
+                        className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto h-[200px]"
                         data-slot="base"
                         aria-label="Recent assistants"
                         // style={{ maxHeight: "calc(100vh - 350px)" }}
@@ -318,7 +318,7 @@ const SideBar = () => {
                             </div>
                           )}
                           {isAssistantsLoading && (
-                            <div className="w-full flex flex-col justify-center items-center my-7  gap-2">
+                            <div className="w-full flex flex-col justify-center items-center my-7 gap-2">
                               <Loader2 className="h-6 w-6 text-blue-500 animate-spin" />
                               <p className="text-zinc-100 text-sm">
                                 Loading Your Assistants ....
