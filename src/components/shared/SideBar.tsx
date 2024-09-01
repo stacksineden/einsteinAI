@@ -251,7 +251,7 @@ const SideBar = () => {
                     </div>
                   </div>
 
-                  <div className="flex-grow flex-col overflow-hidden mt-4">
+                  <div className="flex-col overflow-hidden mt-4">
                     <div className="w-full px-4">
                       <Button
                         className="bg-zinc-700 hover:opacity-90 flex gap-2 text-zinc-100 rounded-full text-sm"
@@ -282,10 +282,10 @@ const SideBar = () => {
                         <p className="font-normal">My Assistants</p>
                       </div>
                       <div
-                        className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto h-[500px]"
+                        className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto"
                         data-slot="base"
                         aria-label="Recent assistants"
-                        // style={{ maxHeight: "calc(100vh - 350px)" }}
+                        style={{ maxHeight: "calc(100vh - 350px)" }}
                       >
                         <div
                           data-slot="list"
