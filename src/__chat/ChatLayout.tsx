@@ -36,11 +36,11 @@ const ChatLayout = () => {
         <Navigate to="/sign-in" />
       ) : (
         <div className="h-screen">
-          <div className="bg-zinc-900 h-screen">
+          <div className="bg-zinc-900 h-full">
             <main>
               <div>
                 <div className="bg-zinc-900 relative overflow-hidden">
-                  <div className="flex h-screen">
+                  <div className="flex h-full">
                     <ChatSideBar
                       assistant_name={ 
                         assistantObject?.metadata?.assistant_pretraining_name ?? "einsteingpt"
