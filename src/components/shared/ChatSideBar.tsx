@@ -386,7 +386,7 @@ const ChatSideBar = ({
 
       {/* Mobile */}
 
-      <div className="w-full h-full flex md:hidden mr-0">
+      <div className="w-full h-full flex md:hidden mr-0 overflow-hidden">
         <div className="absolute left-0 top-0 z-50 flex h-full">
           <div className="absolute z-0 left-0 top-0 h-full w-full flex-auto bg-transparent"></div>
           <div
