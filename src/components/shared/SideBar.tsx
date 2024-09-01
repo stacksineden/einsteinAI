@@ -258,7 +258,7 @@ const SideBar = () => {
                         aria-label="upgrade"
                         onClick={() => {
                           setMobileOpen(false);
-                          navigate("/create-assistant");
+                          navigate("/create-assistant"); 
                         }}
                       >
                         <Plus className="text-zinc-100" />
