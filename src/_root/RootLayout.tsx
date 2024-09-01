@@ -3,12 +3,12 @@ import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
   return (
-    <div className="h-screen">
+    <div className="h-screen overflow-hidden">
       <div className="bg-zinc-900 h-full">
         <main>
           <div>
             <div className="bg-zinc-900 relative overflow-hidden">
-              <div className="flex h-full">
+              <div className="flex h-full overflow-hidden">
                 <SideBar />
                 <main className="h-[100dvh] flex-1 overflow-x-hidden">
                   <Outlet />
