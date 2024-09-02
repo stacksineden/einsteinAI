@@ -449,7 +449,7 @@ const ChatSideBar = ({
                         className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto scrollbar-hide"
                         data-slot="base"
                         aria-label="Recent threads"
-                        style={{ maxHeight: "calc(100vh - 200px)" }}
+                        style={{ maxHeight: "calc(100vh - 350px)" }}
                       >
                         <div
                           data-slot="list"
