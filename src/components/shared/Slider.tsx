@@ -27,7 +27,7 @@ const Slider = ({ key, modules, data, vector_store_id }: SliderProps) => {
       key={key}
       breakpoints={{
         320: {
-          slidesPerView: 2,
+          slidesPerView: 1,
           spaceBetween: 10,
         },
         768: {

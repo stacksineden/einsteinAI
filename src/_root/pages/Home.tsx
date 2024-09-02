@@ -38,8 +38,7 @@ const Home = () => {
   const { toast } = useToast();
 
   const { assistantCategory } = useAssistantCategoryContext();
-  const { user, checkAuthUser, userSubscriptionDetails } =
-    useUserContext();
+  const { user, checkAuthUser, userSubscriptionDetails } = useUserContext();
 
   const { mutateAsync: signOut, isPending: isSigningOut } = useSignOutAccount();
 
@@ -148,7 +147,9 @@ const Home = () => {
   }, [category]);
 
   // featured AI agents
-  const featuredAgents = dataSet?.filter((item) => item?.level === "Maestro");
+  const featuredAgents = dataSet
+    ?.filter((item) => item?.level === "Maestro")
+    .reverse();
 
   const filteredAssistants = assistantCategory
     ? dataSet?.filter((item) => item?.category === assistantCategory)

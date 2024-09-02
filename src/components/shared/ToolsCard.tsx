@@ -99,7 +99,7 @@ const ToolsCard = ({ assistant, vector_store_id }: ToolsCardProps) => {
 
   return (
     <div
-      className={`h-[80px] md:h-[90px] bg-zinc-800 w-full rounded-xl cursor-pointer ${
+      className={`h-[90px] md:h-[90px] bg-zinc-800 w-full rounded-xl cursor-pointer ${
         isLoadingSaving && "animate-pulse opacity-75"
       }`}
       onClick={() => {
@@ -118,7 +118,7 @@ const ToolsCard = ({ assistant, vector_store_id }: ToolsCardProps) => {
               loading="lazy"
             />
           </span>
-          <div className="overflow-auto h-full flex flex-col justify-between w-full">
+          <div className="overflow-hidden h-full flex flex-col justify-between w-full">
             <div className="flex flex-col gap-1">
               <p className="font-medium text-xs md:text-sm overflow-hidden text-zinc-100 tracking-wide">
                 {assistant?.pitch}
