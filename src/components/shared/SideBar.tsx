@@ -231,7 +231,7 @@ const SideBar = () => {
           >
             <div className="h-full overflow-hidden">
               <div className="h-full border-r border-r-500 w-64 overflow-hidden">
-                <div className="flex h-full flex-col overflow-hidden bg-red-100 border-r-zinc-700 w-full">
+                <div className="flex h-full flex-col overflow-hidden bg-black border-r-zinc-700 w-full">
                   <div className="pl-6 pt-6 grid grid-cols-2 w-full items-center">
                     <img
                       src="/assets/images/text-brand.png"
