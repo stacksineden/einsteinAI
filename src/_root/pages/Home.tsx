@@ -304,7 +304,7 @@ const Home = () => {
                   <div className="mb-4 ml-4">
                     <p className="text-lg font-medium text-zinc-100">For You</p>
                   </div>
-                  <div className="my-4 relative w-full">
+                  <div className="my-2 md:my-4 relative w-full">
                     <Slider
                       key="slider1"
                       modules={[FreeMode, Mousewheel]}
@@ -326,7 +326,7 @@ const Home = () => {
                       <span className="text-primary-blue">{category}</span>
                     </p>
                   </div>
-                  <div className="my-4 relative w-full">
+                  <div className="my-2 md:my-4 relative w-full">
                     <Slider
                       key="slider2"
                       modules={[FreeMode, Mousewheel]}
@@ -361,7 +361,7 @@ const Home = () => {
                       Featured
                     </p>
                   </div>
-                  <div className="my-4 relative w-full">
+                  <div className="my-2 md:my-4 relative w-full">
                     <Slider
                       key="slider4"
                       modules={[FreeMode, Mousewheel]}
