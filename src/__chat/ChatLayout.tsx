@@ -46,7 +46,7 @@ const ChatLayout = () => {
                         assistantObject?.metadata?.assistant_pretraining_name ?? "einsteingpt"
                       }
                     />
-                    <main className="h-screen flex-1 overflow-x-hidden">
+                    <main className="h-[100dvh] flex-1 overflow-x-hidden">
                       <Outlet />
                     </main>
                   </div>
