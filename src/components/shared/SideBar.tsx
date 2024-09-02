@@ -277,7 +277,7 @@ const SideBar = () => {
                       </Button>
                     </div>
 
-                    <div className="flex-grow flex flex-col overflow-hidden pt-2 md:pt-5 relative">
+                    <div className="flex-grow flex flex-col pt-2 md:pt-5 relative">
                       <div className="text-zinc-400 block ml-5 ">
                         <p className="font-normal">My Assistants</p>
                       </div>

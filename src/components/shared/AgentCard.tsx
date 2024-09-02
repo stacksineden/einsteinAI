@@ -8,7 +8,6 @@ import { AssistantModel } from "@/modelDataset";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 
-
 const AgentCard = ({ assistant, vector_store_id }: AgentCardProps) => {
   const navigate = useNavigate();
 
@@ -111,7 +110,7 @@ const AgentCard = ({ assistant, vector_store_id }: AgentCardProps) => {
 
   return (
     <div
-      className={`h-[120px] md:h-[146px] bg-zinc-800 w-full rounded-xl cursor-pointer ${
+      className={`h-[120px] md:h-[146px] bg-zinc-800 w-full rounded-xl cursor-pointer scrollbar-hide ${
         isLoadingSaving || (creatingAssistant && "animate-pulse opacity-75")
       }`}
       onClick={() => {
@@ -134,7 +133,7 @@ const AgentCard = ({ assistant, vector_store_id }: AgentCardProps) => {
     >
       <div className="p-2 md:p-4 h-full w-full flex flex-col gap-2">
         <div className="flex flex-row h-full w-full space-x-2 scrollbar-hide">
-          <span className="h-[40px] md:h-auto w-[40px] md:w-[100px] overflow-hidden rounded-full md:rounded-md shrink-0 grow-0 relative flex bg-zinc-800">
+          <span className="h-[90px] md:h-auto w-[90px] md:w-[100px] overflow-hidden rounded-full md:rounded-md shrink-0 grow-0 relative flex bg-zinc-800">
             <img
               src={assistant?.imageUrl}
               alt="assistant-image"
@@ -142,7 +141,7 @@ const AgentCard = ({ assistant, vector_store_id }: AgentCardProps) => {
               loading="lazy"
             />
           </span>
-          <div className="overflow-auto h-full flex flex-col justify-between w-full">
+          <div className="overflow-hidden h-full flex flex-col justify-between w-full">
             <div className="flex flex-col gap-1">
               <div className="flex items-center justify-between">
                 <p className="font-medium text-sm overflow-hidden whitespace-nowrap text-zinc-100 tracking-wide">
@@ -152,8 +151,11 @@ const AgentCard = ({ assistant, vector_store_id }: AgentCardProps) => {
               <div className="text-zinc-400 text-xs font-medium truncate">
                 {assistant?.role}
               </div>
-              <p className="text-[10px] md:text-xs text-zinc-50 font-light">
+              <p className="text-xs md:text-xs text-zinc-50 font-light md:block hidden">
                 {truncateText(assistant?.pitch ?? "", 55)}
+              </p>
+              <p className="text-xs md:text-xs text-zinc-50 font-light md:hidden">
+                {truncateText(assistant?.pitch ?? "", 120)}
               </p>
             </div>
             {assistant?.level === "Rookie" && (
