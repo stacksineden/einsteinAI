@@ -35,7 +35,7 @@ const ChatLayout = () => {
       {isAuthenticated ? (
         <Navigate to="/sign-in" />
       ) : (
-        <div className="h-screen">
+        <div className="h-full">
           <div className="bg-zinc-900 h-full">
             <main>
               <div>
