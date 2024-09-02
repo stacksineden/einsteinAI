@@ -34,7 +34,7 @@ const SideBar = () => {
 
 
   return (
-    <aside className="h-full overflow-hidden">
+    <aside className="h-[100dvh] overflow-hidden">
       {/* Desktop */}
       <div className="w-full h-full hidden md:flex mr-7">
         <div
@@ -221,7 +221,7 @@ const SideBar = () => {
       {/* Desktop */}
 
       {/* Mobile */}
-      <div className="w-full h-full flex md:hidden mr-0 overflow-hidden">
+      <div className="w-full h-full flex md:hidden mr-0">
         <div className="absolute left-0 top-0 z-50 flex h-full">
           <div className="absolute z-0 left-0 top-0 h-full w-full flex-auto bg-transparent"></div>
           <div
@@ -229,9 +229,9 @@ const SideBar = () => {
               mobileOpen ? "left-0 " : "transform -translate-x-full"
             }`}
           >
-            <div className="h-full">
-              <div className="h-full border-r border-r-500 w-64">
-                <div className="flex h-full flex-col overflow-hidden bg-black border-r-zinc-700 w-full">
+            <div className="h-full overflow-hidden">
+              <div className="h-full border-r border-r-500 w-64 overflow-hidden">
+                <div className="flex h-full flex-col overflow-hidden bg-red-100 border-r-zinc-700 w-full">
                   <div className="pl-6 pt-6 grid grid-cols-2 w-full items-center">
                     <img
                       src="/assets/images/text-brand.png"
