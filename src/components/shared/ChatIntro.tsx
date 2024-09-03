@@ -9,7 +9,7 @@ const ChatIntro = ({
   const { setPromptMessage } = useMatchingPromptContext();
   return (
     <div className="text-primary-black overflow-y-auto overflow-hidden scrollbar-hide flex-col items-center justify-center px-2 mt-5">
-      <div className="flex flex-col items-center gap-2 mb-32">
+      <div className="flex flex-col items-center gap-2 mb-4 md:mb-32">
         <div className="h-20 w-20 rounded-full shadow-md">
           <img
             src={
