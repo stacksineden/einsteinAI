@@ -9,7 +9,7 @@ const ChatIntro = ({
   const { setPromptMessage } = useMatchingPromptContext();
   return (
     <div className="text-primary-black overflow-y-auto overflow-hidden scrollbar-hide flex-col items-center justify-center px-2 mt-5">
-      <div className="flex flex-col items-center gap-2 mb-6 md:mb-32">
+      <div className="flex flex-col items-center gap-2 mb-7 md:mb-32">
         <div className="h-20 w-20 rounded-full shadow-md">
           <img
             src={
@@ -55,7 +55,7 @@ const ChatIntro = ({
         {matching_prompts &&
           matching_prompts.map((prompt, _i) => (
             <div
-              className="flex-shrink-0 px-4 py-4 rounded-xl border border-zinc-700 flex flex-col cursor-pointer hover:bg-zinc-700"
+              className="w-[300px] flex-shrink-0 px-4 py-4 rounded-xl border border-zinc-700 flex flex-col cursor-pointer hover:bg-zinc-700"
               key={_i}
               onClick={() => setPromptMessage(prompt.prompt)}
             >
