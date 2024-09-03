@@ -9,7 +9,7 @@ const ChatIntro = ({
   const { setPromptMessage } = useMatchingPromptContext();
   return (
     <div className="text-primary-black overflow-y-auto overflow-hidden scrollbar-hide flex-col items-center justify-center px-2 mt-5">
-      <div className="flex flex-col items-center gap-2 mb-4 md:mb-32">
+      <div className="flex flex-col items-center gap-2 mb-6 md:mb-32">
         <div className="h-20 w-20 rounded-full shadow-md">
           <img
             src={
@@ -52,23 +52,21 @@ const ChatIntro = ({
       </div>
       {/* mobile */}
       <div className="flex md:hidden overflow-x-auto gap-2 max-w-full md:max-w-[80%] px-2 scrollbar-hide">
-        <div className="grid grid-cols-2 gap-2">
-          {matching_prompts &&
-            matching_prompts.map((prompt, _i) => (
-              <div
-                className="flex-shrink-0 px-4 py-3 rounded-xl border border-zinc-700 flex flex-col cursor-pointer hover:bg-zinc-700"
-                key={_i}
-                onClick={() => setPromptMessage(prompt.prompt)}
-              >
-                <h2 className="text-sm text-zinc-100 font-medium md:truncate">
-                  {prompt.head}
-                </h2>
-                <p className="font-normal text-zinc-400 opacity-50 text-sm">
-                  {prompt.text}
-                </p>
-              </div>
-            ))}
-        </div>
+        {matching_prompts &&
+          matching_prompts.map((prompt, _i) => (
+            <div
+              className="flex-shrink-0 px-4 py-4 rounded-xl border border-zinc-700 flex flex-col cursor-pointer hover:bg-zinc-700"
+              key={_i}
+              onClick={() => setPromptMessage(prompt.prompt)}
+            >
+              <h2 className="text-base text-zinc-100 font-medium md:truncate">
+                {prompt.head}
+              </h2>
+              <p className="font-normal text-zinc-400 opacity-50 text-sm">
+                {prompt.text}
+              </p>
+            </div>
+          ))}
       </div>
     </div>
   );
