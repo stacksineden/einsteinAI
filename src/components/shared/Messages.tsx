@@ -22,8 +22,7 @@ const Messages = ({
   const { data: messages, isPending: isLoadingMessges } =
     useLoadMessgaeOpenAI(threadId);
 
-  const { activityMessage, messageLoading } =
-    useChatContext();
+  const { activityMessage, messageLoading } = useChatContext();
 
   const [copied, setCopied] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -40,7 +39,7 @@ const Messages = ({
     const role = message?.role;
     const contentValue = message?.content?.[0]?.text?.value || "";
 
-    return ( 
+    return (
       <div
         className={`py-3 text-primary-black overflow-x-scroll scrollbar-hide ${
           role === "user" && "flex justify-end"
@@ -56,7 +55,7 @@ const Messages = ({
               <img
                 src={getImageUrlByName(pretrainingName)}
                 alt="assistant_image"
-                className="h-8 w-8 rounded-full bg-light-grey"
+                className="h-8 w-8 rounded-full bg-transparent"
               />
               <p className="text-base text-zinc-100 font-semibold">
                 {assistantName}
@@ -135,7 +134,10 @@ const Messages = ({
         {isLoadingMessges && (
           <div className="flex items-center justify-center w-full h-full text-center flex-col gap-2">
             <Loader2 className="h-6 w-6 text-blue-500 animate-spin" />
-            <p className="text-zinc-100 text-base"> Loading messages ....</p>
+            <p className="text-zinc-100 text-sm md:text-base">
+              {" "}
+              Loading messages ....
+            </p>
           </div>
         )}
         {/* save the string in each toast to an in message toast  */}
@@ -145,11 +147,19 @@ const Messages = ({
               animationData={AnimatedMessage}
               loop={true}
               style={{
-                height: "50px",
-                width: "50px",
+                height: "45px",
+                width: "45px",
               }}
             />
-            {activityMessage ? activityMessage : "Analyzing ..."}
+            {activityMessage ? (
+              <div className="text-zinc-300 md:text-base text-sm">
+                {activityMessage}
+              </div>
+            ) : (
+              <div className="text-zinc-300 md:text-base text-sm">
+                Analyzing ...
+              </div>
+            )}
           </div>
         )}
       </div>

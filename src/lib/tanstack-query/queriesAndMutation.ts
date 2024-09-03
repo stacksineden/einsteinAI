@@ -116,6 +116,7 @@ export const useGetUserFiles = (userId?: string) => {
     queryKey: [QUERY_KEYS.GET_USER_FILES, userId],
     queryFn: () => getUserFiles(userId),
     enabled: !!userId,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -124,6 +125,7 @@ export const useGetAssistantThreads = (assistant_id?: string) => {
     queryKey: [QUERY_KEYS.GET_ASSISTANT_THREADS, assistant_id],
     queryFn: () => getAssistantThreads(assistant_id!),
     enabled: !!assistant_id,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -132,6 +134,7 @@ export const useGetUserAssistants = (userId?: string) => {
     queryKey: [QUERY_KEYS.GET_ASSISTANTS_FOR_USER, userId],
     queryFn: () => getUserAssistants(userId),
     enabled: !!userId,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -141,6 +144,7 @@ export const useLoadMessgaeOpenAI = (thread_id: string) => {
     queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES, thread_id],
     queryFn: () => listMessagesOpenAI(thread_id),
     enabled: !!thread_id,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -149,6 +153,7 @@ export const useGetFlutterwavePaymentPlans = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_FLUTTERWAVE_PLANS],
     queryFn: () => getFlutterwavePaymentPlans(),
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -212,6 +217,7 @@ export const useGetUserVectorStoreDetails = (userId?: string) => {
     queryKey: [QUERY_KEYS.GET_USER_VECTOR_STORE_DETAILS, userId],
     queryFn: () => getUserVectoreStoresDetails(userId!),
     enabled: !!userId,
+    refetchOnWindowFocus: false,
   });
 };
 
