@@ -185,7 +185,7 @@ const SideBar = () => {
                 ></div>
                 <div className="flex flex-col gap-3 py-3">
                   <Button
-                    className="bg-transparent border border-zinc-700 rounded-full hover:opacity-90 flex gap-2 text-zinc-100 mt-3 w-full text-sm z-0 group relative items-center font-normal"
+                    className="bg-zinc-700 border border-zinc-700 rounded-full hover:opacity-90 flex gap-2 text-zinc-100 mt-3 w-full text-sm z-0 group relative items-center font-normal"
                     aria-label="upgrade"
                     onClick={() => navigate("/files")}
                   >
@@ -379,7 +379,7 @@ const SideBar = () => {
                     ></div>
                     <div className="flex flex-col gap-3 py-3">
                       <Button
-                        className="bg-transparent border border-zinc-700 rounded-full hover:opacity-90 flex gap-2 text-zinc-100 mt-3 w-full text-sm z-0 group relative items-center font-normal"
+                        className="bg-zinc-700 border border-zinc-700 rounded-full hover:opacity-90 flex gap-2 text-zinc-100 mt-3 w-full text-sm z-0 group relative items-center font-normal"
                         aria-label="upgrade"
                         onClick={() => {
                           setMobileOpen(false);
