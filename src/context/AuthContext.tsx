@@ -84,9 +84,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const startDate = new Date(response?.subscription_start_date);
           const currentDate = new Date();
           const timeDifference = currentDate.getTime() - startDate.getTime();
-          const daysDifference = timeDifference / (1000 * 3600 * 24);
+          const daysDifference = timeDifference / (1000 * 3600 * 24); 
 
-          if (daysDifference > 1 && response?.subscription_type === "daydash") {
+          if (
+            daysDifference > 7 &&
+            response?.subscription_type === "One-Time Payment Plan"
+          ) {
             const payload = {
               document_id: response?.$id,
               is_subscribed: false,

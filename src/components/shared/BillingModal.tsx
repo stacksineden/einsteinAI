@@ -198,6 +198,10 @@ const BillingModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
               />
             </div>
 
+            <div className="text-base text-zinc-100">
+              Email:{" "}
+              <span className="text-zinc-400">{user?.email ?? "-- --"}</span>
+            </div>
             <div className="flex items-center gap-1">
               <Switch onCheckedChange={() => setSub(!sub)} checked={sub} />
               <p className="text-zinc-500 text-base">
