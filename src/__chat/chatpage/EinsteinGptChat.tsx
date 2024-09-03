@@ -86,7 +86,7 @@ const EinsteinGptChat = () => {
             </Button>
           </div>
         </div>
-      )}
+      )} 
 
       {userSubscriptionDetails?.is_subscribed && (
         // <div className="h-screen">
