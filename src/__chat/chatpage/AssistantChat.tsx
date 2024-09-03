@@ -141,7 +141,7 @@ const AssistantChat = () => {
         )}
       {userSubscriptionDetails?.is_subscribed && (
         // <div className="h-screen">
-        <div className="flex h-screen w-full flex-col justify-between px-4 sm:px-8">
+        <div className="flex h-[100dvh] w-full flex-col justify-between px-4 sm:px-8">
           {/* CHAT HEADER */}
           <div className="py-4 px-3 md:px-1 flex items-center justify-between sticky">
             <div className="w-full flex justify-end px-3 items-center">
