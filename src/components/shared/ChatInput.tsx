@@ -15,7 +15,7 @@ import {
   uploadFileToOpenAI,
   // uploadFileToOpenAI,
 } from "@/lib/openAI/api";
-import { useToast } from "../ui/use-toast";
+import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/lib/tanstack-query/queryKeys";
 import {
@@ -59,7 +59,6 @@ const UploadDropZone = ({
   setImageUrl,
 }: UploadDropZoneProps) => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const { toast } = useToast();
 
   return (
     <Dropzone
@@ -74,19 +73,13 @@ const UploadDropZone = ({
             setInMessageFiles([res?.id]);
           }
           setIsUploading(false);
-          toast({
-            description:
-              "File Saved! You can now send your message.You can also preview your file",
-            className: "bg-primary-blue text-white",
-          });
+          toast.success(
+            "File Saved! You can now send your message.You can also preview your file"
+          );
         }
         if (!res) {
           setIsUploading(false);
-          return toast({
-            title: "Something went wrong!",
-            description: "Please try again",
-            className: "bg-red-200 text-white",
-          });
+          return toast.error("File Processing Failed. Please try again");
         }
 
         // set file ids to the res.id
@@ -133,7 +126,6 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
   const { id } = useParams();
   const [, setIsOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
-  const { toast } = useToast();
   const { promptMessage } = useMatchingPromptContext();
   const {
     setActivityMessage,
@@ -173,10 +165,7 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
     if (["cancelled", "failed", "expired"].includes(runResponseData.status)) {
       // Handle cancellation, failure, or expiration
       // console.log("Run is cancelled, failed, or expired.");
-      toast({
-        description: "Message delivery failed. Please Try again",
-        className: "bg-primary-red text-white",
-      });
+      toast.error("Message delivery failed. Please Try again");
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.LOAD_OPENAI_MESSAGES],
       });
@@ -238,11 +227,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Content generation has failed, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Content generation has failed, please cancel the message and try again."
+              );
               console.log(err);
             }
             //write functions for generating image urls
@@ -260,11 +247,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Image url generation has failed, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Image url generation has failed, please cancel the message and try again."
+              );
               console.log(err);
             }
           } else if (functionName === "google_search") {
@@ -285,11 +270,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Google search query has failed, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Google search query has failed, please cancel the message and try again."
+              );
               console.log(err);
             }
           } else if (functionName === "get_weather") {
@@ -306,11 +289,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Getting weather details has failed, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Getting weather details has failed, please cancel the message and try again."
+              );
               console.log(err);
             }
           } else if (functionName === "get_stock_info") {
@@ -327,11 +308,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Getting stocks info has failed, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Getting stocks info has failed, please cancel the message and try again."
+              );
               console.log(err);
             }
           } else if (functionName === "youtube_q_and_a") {
@@ -348,11 +327,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Getting info about youtube video, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Getting info about YouTube video, please cancel the message and try again."
+              );
               console.log(err);
             }
           } else if (functionName === "scrape_web_url") {
@@ -373,11 +350,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Getting content failed, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Getting content failed, please cancel the message and try again."
+              );
               console.log(err);
             }
           } else if (functionName === "trip_advisor_search") {
@@ -398,11 +373,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Getting content failed, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Getting content failed, please cancel the message and try again."
+              );
               console.log(err);
             }
           } else if (functionName === "youtube_scrapper") {
@@ -423,11 +396,9 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
                 });
               }
             } catch (err) {
-              toast({
-                description:
-                  "Getting content failed, please cancel the run and try again.",
-                className: "bg-primary-red text-white",
-              });
+              toast.error(
+                "Getting content failed, please cancel the message and try again."
+              );
               console.log(err);
             }
           } else {
@@ -515,11 +486,7 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
       return response;
     }
     if (!response) {
-      toast({
-        title: "File Memory Update Failed",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      toast.error("File Memory Update Failed");
     }
   }
 
@@ -532,10 +499,7 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
     // console.log(threadTitle);
     const res = await createAssistantThreadOpenAI(threadTitle ?? description);
     if (res) {
-      toast({
-        description: "Your Thread is successfully created.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Thread is successfully created.");
       //save to database
       const threadObject = {
         description: res?.metadata?.description,
@@ -545,10 +509,7 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
 
       const newThread = await saveThread(threadObject);
       if (newThread) {
-        toast({
-          description: "Your Thread is successfully saved.",
-          className: "bg-primary-blue text-white",
-        });
+        toast.success("Your Thread is successfully saved.");
         setIsCreatingThread(false);
         setIsOpen(false);
         setAciveThreadId(threadObject?.thread_id!);
@@ -556,20 +517,12 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
       }
       if (!newThread) {
         setIsCreatingThread(false);
-        return toast({
-          title: "Unable to create thread!",
-          description: "Please try again",
-          className: "bg-red-200 text-white",
-        });
+        return toast.error("Unable to create thread!");
       }
     }
     if (!res) {
       setIsCreatingThread(false);
-      return toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      return toast.error("Something went wrong!");
     }
   };
 
@@ -599,10 +552,7 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
     setMessageLoading(true);
 
     if (!threadId) {
-      toast({
-        description: "Please select or create a thread to start the chat.",
-        className: "bg-primary-black text-white",
-      });
+      toast.error("Please select or create a thread to start the chat.");
     }
     if (!threadId && !messageObject?.content) {
       setIsRunning(false);
@@ -617,10 +567,7 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
     const res = await createMessageOpenAi(threadId!, messageObject);
     //we need to process run ==> get run Id from res
     if (!res) {
-      toast({
-        description: "Please select or create a thread to start the chat.",
-        className: "bg-black text-white",
-      });
+      toast.error("Please select or create a thread to start the chat.");
       setIsRunning(false);
       setMessageLoading(false);
       throw new Error();
@@ -654,10 +601,7 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
     };
     const runResponse = await createRunOpenAI(threadId!, runObject);
     if (!runResponse) {
-      toast({
-        description: "Run has failed",
-        className: "bg-primary-red text-white",
-      });
+      toast.error("Message processing has failed");
       setIsRunning(false);
       setMessageLoading(false);
       throw new Error();
@@ -679,18 +623,12 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
     if (!threadId && !runId) return;
     const cancelRun = await cancelRunOpenAI(threadId!, runId!);
     if (cancelRun) {
-      toast({
-        description: "Run Cancelled Successfully",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Run Cancelled Successfully");
       setIsRunning(false);
       setMessageLoading(false);
     }
     if (!cancelRun) {
-      toast({
-        description: "Run cancelling failed.",
-        className: "bg-primary-red text-white",
-      });
+      toast.error("Run cancelling failed.");
       setIsRunning(false);
       setMessageLoading(false);
     }

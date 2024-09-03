@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { deleteAssistantOpenAI } from "@/lib/openAI/api";
-import { useToast } from "../ui/use-toast";
+import toast from "react-hot-toast";
 import { useDeleteAssistantInDB } from "@/lib/tanstack-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import { useAppContext } from "@/context/AppContext";
@@ -29,8 +29,6 @@ const DeleteAssitantModal = ({
   assistant_id,
   assistant_db_id,
 }: DeleteAssistantModal) => {
-  const { toast } = useToast();
-
   const { mutateAsync: deleteAssistant, isPending: isDeletingAssistant } =
     useDeleteAssistantInDB();
 
@@ -38,34 +36,20 @@ const DeleteAssitantModal = ({
     if (!assistant_id) return;
     const response = await deleteAssistantOpenAI(assistant_id);
     if (response) {
-      toast({
-        description: "Your Assistant is successfully deleted.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Assistant is successfully deleted.");
 
       // handle appwrite deletion
       const deletedAssistantInDB = await deleteAssistant(assistant_db_id);
       if (deletedAssistantInDB) {
-        toast({
-          description: "Your Assistant is successfully deleted.",
-          className: "bg-primary-blue text-white",
-        });
+        toast.success("Your Assistant is successfully deleted.");
         setIsOpen(false);
       }
       if (!deletedAssistantInDB) {
-        return toast({
-          title: "Unable to delete thread!",
-          description: "Please try again",
-          className: "bg-red-200 text-white",
-        });
+        return toast.error("Unable to delete assistant!");
       }
     }
     if (!response) {
-      return toast({
-        title: "Unable to delete assistant!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      return toast.error("Unable to delete assistant!");
     }
   };
   return (

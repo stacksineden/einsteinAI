@@ -1,6 +1,7 @@
 import { useEffect, lazy, Suspense, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { Toaster } from "./components/ui/toaster";
+// import { Toaster } from "./components/ui/toaster";
+import { Toaster } from 'react-hot-toast';
 import {
   AssistantTraining,
   Assistants,
@@ -116,7 +117,7 @@ function App() {
           </Routes>
         </SkeletonTheme>
       </Suspense>
-      <Toaster />
+      <Toaster position="top-right"/>
     </>
   );
 }

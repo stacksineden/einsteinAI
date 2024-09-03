@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, buttonVariants } from "../ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { useToast } from "../ui/use-toast";
+import toast from "react-hot-toast";
 import Dropzone from "react-dropzone";
 import { Cloud, File } from "lucide-react";
 import { Progress } from "../ui/progress";
@@ -39,8 +39,6 @@ const UploadDropZone = ({
 
   // console.log(fileIDs, "fileIDsfileIDs");
 
-  const { toast } = useToast();
-
   const determinateProgress = () => {
     setUploadProgress(0);
     const interval = setInterval(() => {
@@ -67,11 +65,9 @@ const UploadDropZone = ({
         //save the res to the db on behalf of the user.
 
         if (res) {
-          toast({
-            description:
-              "Your File is successfully uploaded. Updating memory, Please wait ...",
-            className: "bg-primary-blue text-white",
-          });
+          toast.success(
+            "Your File is successfully uploaded. Updating memory, Please wait ..."
+          );
 
           //if the user hasn't created vector stores before
           //call create vector calls
@@ -82,17 +78,10 @@ const UploadDropZone = ({
                 res?.id,
               ]);
             if (updatevectorStoreResponse) {
-              toast({
-                description: "File Memory Updated.",
-                className: "bg-primary-blue text-white",
-              });
+              toast.success("File Memory Updated.");
             }
             if (!updatevectorStoreResponse) {
-              return toast({
-                title: "File to update memory.",
-                description: "Please try again",
-                className: "bg-red-200 text-white",
-              });
+              return toast.error("Error Updating File Memory.");
             }
           } else {
             const updatedFileIDs = [...(fileIDs ?? []), res?.id];
@@ -111,27 +100,16 @@ const UploadDropZone = ({
               };
               // console.log(payload, "payloadpayload");
               await createVectorFile(payload);
-              toast({
-                description: "File Memory Updated.",
-                className: "bg-primary-blue text-white",
-              });
+              toast.success("File Memory Updated.");
               // console.log(saveVectoreStoreFilesToDB);
             }
             //if the user has created vector stores before call createVectorStoreFileBatchesOpenAI()
             if (!vectorStoreresponse) {
-              return toast({
-                title: "File to update memory.",
-                description: "Please try again",
-                className: "bg-red-200 text-white",
-              });
+              return toast.error("Error Updating File Memory.");
             }
           }
           if (!res) {
-            return toast({
-              title: "Something went wrong!",
-              description: "Please try again",
-              className: "bg-red-200 text-white",
-            });
+            return toast.error("Something went wrong!");
           }
         }
 
@@ -146,11 +124,7 @@ const UploadDropZone = ({
         const newFile = await saveFile(fileObject);
 
         if (!newFile) {
-          return toast({
-            title: "Unable to save file!",
-            description: "Please try again",
-            className: "bg-red-200 text-white",
-          });
+          return toast.error("Unable to save file!");
         }
 
         //if vector store has been created, retrive from the user object and for store id and pass file id to the vector store after every upload
@@ -158,10 +132,7 @@ const UploadDropZone = ({
         // try to delete file uploaded to open ai if saving failed.
 
         if (newFile) {
-          toast({
-            description: "Your File is successfully saved.",
-            className: "bg-primary-blue text-white",
-          });
+          toast.success("Your File is successfully saved.");
         }
 
         clearInterval(progressInterval);

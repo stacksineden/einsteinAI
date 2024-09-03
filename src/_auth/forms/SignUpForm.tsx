@@ -3,8 +3,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-
+import toast from "react-hot-toast";
 import {
   Form,
   FormControl,
@@ -21,7 +20,6 @@ import { useCreateUserAccount } from "@/lib/tanstack-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 
 const SignUpForm = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const { checkAuthUser } = useUserContext();
   const { mutateAsync: createUserAccount, isPending: isCreatingUser } =
@@ -46,18 +44,15 @@ const SignUpForm = () => {
     const newUser = await createUserAccount(values);
     if (newUser instanceof Error) {
       // Assuming err.message contains the API error message
-      return toast({
-        title: newUser?.message || "Sign up failed, please try again.",
-        className: "bg-primary-red text-white",
-      }); 
+      return toast.error(
+        newUser?.message || "Sign up failed, please try again."
+      );
     }
 
     if (newUser) {
-      toast({
-        description:
-          "A verification email has been sent. Plese verify your account",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success(
+        "A verification email has been sent. Plese verify your account"
+      );
     }
     // const session = await signInAccount({
     //   email: values.email,

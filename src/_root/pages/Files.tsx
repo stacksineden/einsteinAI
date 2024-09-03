@@ -9,15 +9,12 @@ import { Ghost, File, Plus, Trash, Loader2, BadgeCheck } from "lucide-react";
 import { format } from "date-fns";
 import Skeleton from "react-loading-skeleton";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { deleteFileFromOpenAI } from "@/lib/openAI/api";
 import { useUserContext } from "@/context/AuthContext";
-
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const Files = () => {
-  const { toast } = useToast();
-
   const { user } = useUserContext();
 
   const [currentlyDeletedFile, setCurrentlyDeletedFile] = useState<
@@ -46,18 +43,13 @@ const Files = () => {
       const deletedFile = await deleteFile(fileId);
       if (deletedFile instanceof Error) {
         // Assuming err.message contains the API error message
-        return toast({
-          title:
-            deletedFile?.message || "Unable to delete file, please try again.",
-          className: "bg-primary-red text-white",
-        });
+        return toast.error(
+          deletedFile?.message || "Unable to delete file, please try again."
+        );
       }
       if (deletedFile) {
         await deleteFileFromOpenAI(openAIfileId);
-        toast({
-          description: "File successfully deleted.",
-          className: "bg-primary-blue text-white",
-        });
+        toast.success("File successfully deleted.");
       }
     } catch (err) {}
   };

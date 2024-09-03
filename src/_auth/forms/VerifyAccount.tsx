@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { updateUserVerification } from "@/lib/appwrite/api";
 import { Link, useNavigate } from "react-router-dom";
 
 const VerifyAccount = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const urlParams = new URLSearchParams(window.location.search);
   const secret = urlParams.get("secret");
@@ -13,19 +12,13 @@ const VerifyAccount = () => {
 
   const handleUserVerification = async () => {
     try {
-      const response = await updateUserVerification(userId!, secret!); 
+      const response = await updateUserVerification(userId!, secret!);
       if (response) {
         // console.log("Account has been verified");
-        toast({
-          description: "Your Account has been successfully verified",
-          className: "bg-primary-blue text-white",
-        });
+        toast.success("Your Account has been successfully verified.");
         navigate("/app");
       } else {
-        return toast({
-          title: "Verification failed, please try again",
-          className: "bg-red-200 text-white",
-        });
+        return toast.error("Verification failed, please try again");
       }
     } catch (err) {
       console.log(err);
@@ -34,13 +27,13 @@ const VerifyAccount = () => {
 
   return (
     <div className="w-[85%] md:w-[60%] flex-center flex-col text-center">
-       <Link to="/" className="w-[150px] md:w-[170px]">
-          <img
-            src="/assets/images/text-brand.png"
-            alt="brand"
-            className="w-full object-contain"
-          />
-        </Link>
+      <Link to="/" className="w-[150px] md:w-[170px]">
+        <img
+          src="/assets/images/text-brand.png"
+          alt="brand"
+          className="w-full object-contain"
+        />
+      </Link>
       <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12 text-zinc-100">
         Account Verification.
       </h2>

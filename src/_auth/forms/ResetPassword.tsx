@@ -12,12 +12,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ResetPasswordValidationSchema } from "@/lib/validation";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { resetPassword } from "@/lib/appwrite/api";
 
 const ResetPassword = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -44,18 +43,14 @@ const ResetPassword = () => {
       values?.confirmPassword
     );
     if (response) {
-      toast({
-        description: "Password Reset successful",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Password Reset successful");
       navigate("/sign-in");
     }
     if (response instanceof Error) {
       // Assuming err.message contains the API error message
-      return toast({
-        title: response?.message || "Reset password failed, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(
+        response?.message || "Reset password failed, please try again."
+      );
     }
   }
 

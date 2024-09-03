@@ -6,7 +6,7 @@ import { einsteinGPTObject, einsteinGptFeatures } from "@/modelDataset";
 import { CheckCheck } from "lucide-react";
 import { useUserContext } from "@/context/AuthContext";
 import { createAssistantOpenAI } from "@/lib/openAI/api";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import {
   useGetUserVectorStoreDetails,
   useSaveAssistantToDB,
@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 
 const EinsteinGptModal = ({ is_subscribed }: { is_subscribed: boolean }) => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [creatingAssistant, setCreatingAssistant] = useState<boolean>(false);
 
@@ -65,18 +64,11 @@ const EinsteinGptModal = ({ is_subscribed }: { is_subscribed: boolean }) => {
     setCreatingAssistant(true);
     const responseFromOpenAI = await createAssistantOpenAI(assistantObject);
     if (responseFromOpenAI) {
-      toast({
-        description: "Your Virtual Assistant is ready to work with you.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Virtual Assistant is ready to work with you.");
     }
     if (!responseFromOpenAI) {
       setCreatingAssistant(false);
-      toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      toast.error("Assistant Creation failed.");
     }
 
     const assistantToBeSaved = {
@@ -93,20 +85,14 @@ const EinsteinGptModal = ({ is_subscribed }: { is_subscribed: boolean }) => {
     if (newAssistant instanceof Error) {
       // Assuming err.message contains the API error message
       setCreatingAssistant(false);
-      return toast({
-        title:
-          newAssistant?.message ||
-          "Unable to save assistant, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(
+        newAssistant?.message || "Unable to save assistant, please try again."
+      );
     }
 
     if (newAssistant) {
       setCreatingAssistant(false);
-      toast({
-        description: "EinsteinGPT successfully updated.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("EinsteinGPT successfully updated.");
 
       navigate(`/einsteingpt/${responseFromOpenAI?.id}`);
     }

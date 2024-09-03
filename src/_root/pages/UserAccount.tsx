@@ -1,5 +1,4 @@
-
-//legacy 
+//legacy
 
 import { useEffect, useState } from "react";
 import Container from "@/components/shared/Container";
@@ -16,7 +15,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import {
   Select,
-  SelectContent, 
+  SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
@@ -28,7 +27,7 @@ import {
   useUpdateUserSubscriptionDetails,
 } from "@/lib/tanstack-query/queriesAndMutation";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ISubscription, IUser } from "@/types";
 import { formatDateString } from "@/lib/utils";
@@ -61,8 +60,6 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
   // Billing Information
   const [billingFrequency, setBillingFrequency] = useState("hourly");
   const [currency, setCurrency] = useState("USD");
-
-  const { toast } = useToast();
 
   const { mutateAsync: createSubscritpion } = useCreateUserSubscription();
   const { mutateAsync: updateSubcription } = useUpdateUserSubscriptionDetails();
@@ -308,23 +305,18 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                               updatedPaymentPayload
                             );
                             if (updatedSubscription) {
-                              toast({
-                                description:
-                                  "Hey Champ! Your have successfully subsribed to the pro plan",
-                                className: "bg-primary-blue text-white",
-                              });
+                              toast.success(
+                                "Hey Champ! Your have successfully subsribed to the pro plan"
+                              );
                               //handle redirection
                               navigate("/my-assistants");
                             }
                             if (!updatedSubscription) {
                               //we need to get the user payment details from flutterwave and resolve the issue if they successfully paid
-                              toast({
-                                title:
-                                  "Unable to save Subcription details, please contact us, let's help you figure this out asap",
-                                description:
-                                  "Something went wrong, Don't panic, It will be resolved",
-                                className: "bg-primary-red text-white",
-                              });
+
+                              toast.error(
+                                "Unable to save Subcription details, please contact us, let's help you figure this out asap. Something went wrong, Don't panic, It will be resolved"
+                              );
                               navigate("/my-assistants");
                             }
                           } else {
@@ -355,34 +347,24 @@ const PaymentModal = ({ user, userSubscriptionDetails }: PaymentModalProps) => {
                               paymentPayload
                             );
                             if (createSubscription) {
-                              toast({
-                                description:
-                                  "Hey Champ! Your have successfully subsribed to the pro plan",
-                                className: "bg-primary-blue text-white",
-                              });
+                              toast.success(
+                                "Hey Champ! Your have successfully subsribed to the pro plan"
+                              );
                               //handle redirection
                               navigate("/my-assistants");
                             }
                             if (!createSubscription) {
                               //we need to get the user payment details from flutterwave and resolve the issue if they successfully paid
-                              toast({
-                                title:
-                                  "Unable to save Subcription details, please contact us, let's help you figure this out asap",
-                                description:
-                                  "Something went wrong, Don't panic, It will be resolved",
-                                className: "bg-primary-red text-white",
-                              });
+                              toast.error(
+                                "Unable to save Subcription details, please contact us, let's help you figure this out asap. Something went wrong, Don't panic, It will be resolved"
+                              );
                               navigate("/my-assistants");
                             }
                           }
                         }
                         if (!response) {
                           //definetely and issuw from flutterwave, we can still get their payment details and help them verify with flutterwave but definetly not on us
-                          toast({
-                            title: "Payment Unsuccessful",
-                            description: "Something went wrong",
-                            className: "bg-red-200 text-white",
-                          });
+                          toast.error("Payment Unsuccessful");
                         }
                         closePaymentModal(); // this will close the modal programmatically
                       },

@@ -19,7 +19,7 @@ import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { createAssistantThreadOpenAI } from "@/lib/openAI/api";
-import { useToast } from "../ui/use-toast";
+import toast from "react-hot-toast";
 import { useChatContext } from "@/context/ChatContext";
 import { getImageUrlByName } from "@/modelDataset";
 import { Link } from "react-router-dom";
@@ -119,7 +119,6 @@ const ChatSideBar = ({
   assistant_name,
 }: ChatSideBarProps) => {
   const { id } = useParams();
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   const { activeThreadId, setAciveThreadId } = useChatContext();
@@ -150,10 +149,7 @@ const ChatSideBar = ({
     setIsCreatingThread(true);
     const res = await createAssistantThreadOpenAI(description);
     if (res) {
-      toast({
-        description: "Your Thread is successfully created.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Thread is successfully created.");
       //save to database
       const threadObject = {
         description: res?.metadata?.description,
@@ -163,10 +159,7 @@ const ChatSideBar = ({
 
       const newThread = await saveThread(threadObject);
       if (newThread) {
-        toast({
-          description: "Your Thread is successfully saved.",
-          className: "bg-primary-blue text-white",
-        });
+        toast.success("Your Thread is successfully saved.");
         setIsCreatingThread(false);
         setIsOpen(false);
         showMobileSideBar && showMobileSideBar(false);
@@ -175,41 +168,25 @@ const ChatSideBar = ({
       }
       if (!newThread) {
         setIsCreatingThread(false);
-        return toast({
-          title: "Unable to create thread!",
-          description: "Please try again",
-          className: "bg-red-200 text-white",
-        });
+        return toast.error("Unable to create thread!");
       }
     }
     if (!res) {
       setIsCreatingThread(false);
-      return toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      return toast.error("Something went wrong!");
     }
   };
 
   const handleSignOut = async () => {
     const response = await signOut();
     if (response) {
-      toast({
-        description: "Logout successful!",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success('"Logout successful!"');
       navigate("/sign-in");
     }
     if (!response) {
-      return toast({
-        title: "Something went wrong!",
-        description: "Unable to sign you out",
-        className: "bg-red-200 text-white",
-      });
+      return toast.error("Unable to logout!");
     }
   };
-
 
   return (
     <aside className="h-[100dvh] overflow-hidden">
