@@ -13,11 +13,10 @@ import { Input } from "@/components/ui/input";
 import { ForgetPasswordValidationSchema } from "@/lib/validation";
 import { Button } from "@/components/ui/button";
 import { forgotPassword } from "@/lib/appwrite/api";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
-  const { toast } = useToast();
   // 1. Define your form.
   const form = useForm<z.infer<typeof ForgetPasswordValidationSchema>>({
     resolver: zodResolver(ForgetPasswordValidationSchema),
@@ -32,17 +31,13 @@ const ForgotPassword = () => {
   ) {
     const response = await forgotPassword(values?.email);
     if (response) {
-      toast({
-        description: "An Email has been set to reset your password",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("An Email has been set to reset your password");
     }
     if (response instanceof Error) {
       // Assuming err.message contains the API error message
-      return toast({
-        title: response?.message || "Reset password failed, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(
+        response?.message || "Reset password failed, please try again."
+      );
     }
   }
 
@@ -56,7 +51,9 @@ const ForgotPassword = () => {
             className="w-full object-contain"
           />
         </Link>
-        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12 text-zinc-100">Forgot Password</h2>
+        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12 text-zinc-100">
+          Forgot Password
+        </h2>
         <p className="text-zinc-400 font-light small-medium md:base-regular">
           Please Input your email to reset password
         </p>

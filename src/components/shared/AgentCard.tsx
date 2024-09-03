@@ -6,12 +6,10 @@ import { useSaveAssistantToDB } from "@/lib/tanstack-query/queriesAndMutation";
 import { truncateText } from "@/lib/utils";
 import { AssistantModel } from "@/modelDataset";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 
 const AgentCard = ({ assistant, vector_store_id }: AgentCardProps) => {
   const navigate = useNavigate();
-
-  const { toast } = useToast();
 
   const [creatingAssistant, setCreatingAssistant] = useState<boolean>(false);
 
@@ -60,18 +58,11 @@ const AgentCard = ({ assistant, vector_store_id }: AgentCardProps) => {
     const responseFromOpenAI = await createAssistantOpenAI(assistantObject);
 
     if (responseFromOpenAI) {
-      toast({
-        description: "Your Virtual Assistant is ready to work with you.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Virtual Assistant is ready to work with you.");
     }
     if (!responseFromOpenAI) {
       setCreatingAssistant(false);
-      toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      toast.error("Assistant Creation failed.");
     }
 
     const assistantToBeSaved = {
@@ -89,20 +80,14 @@ const AgentCard = ({ assistant, vector_store_id }: AgentCardProps) => {
     if (newAssistant instanceof Error) {
       // Assuming err.message contains the API error message
       setCreatingAssistant(false);
-      return toast({
-        title:
-          newAssistant?.message ||
-          "Unable to save assistant, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(
+        newAssistant?.message || "Unable to save assistant, please try again."
+      );
     }
 
     if (newAssistant) {
       setCreatingAssistant(false);
-      toast({
-        description: "Agent successfully updated.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Agent successfully updated.");
 
       navigate(`/chat-assistant/${responseFromOpenAI?.id}`);
     }

@@ -8,7 +8,7 @@ import { useAppContext } from "@/context/AppContext";
 import { AssistantModel } from "@/modelDataset";
 import { useSaveAssistantToDB } from "@/lib/tanstack-query/queriesAndMutation";
 import { createAssistantOpenAI } from "@/lib/openAI/api";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 
 let interval: any;
 
@@ -27,8 +27,6 @@ export const CardStack = ({
   const CARD_OFFSET = offset || 10;
   const SCALE_FACTOR = scaleFactor || 0.06;
   const [cards, setCards] = useState<AssistantModel[]>(items);
-
-  const { toast } = useToast();
 
   const { user, userSubscriptionDetails } = useUserContext();
   const { setOpenPaymentModal } = useAppContext();
@@ -89,17 +87,10 @@ export const CardStack = ({
     const responseFromOpenAI = await createAssistantOpenAI(assistantObject);
 
     if (responseFromOpenAI) {
-      toast({
-        description: "Your Virtual Assistant is ready to work with you.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Virtual Assistant is ready to work with you.");
     }
     if (!responseFromOpenAI) {
-      toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white", 
-      });
+      toast.error("Assistant Creation failed.");
     }
 
     const assistantToBeSaved = {
@@ -115,19 +106,13 @@ export const CardStack = ({
     const newAssistant = await saveAssistant(assistantToBeSaved);
     if (newAssistant instanceof Error) {
       // Assuming err.message contains the API error message
-      return toast({
-        title:
-          newAssistant?.message ||
-          "Unable to save assistant, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(
+        newAssistant?.message || "Unable to save assistant, please try again."
+      );
     }
 
     if (newAssistant) {
-      toast({
-        description: "Assistant successfully Created.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Assistant successfully Created.");
 
       navigate(`/chat-assistant/${responseFromOpenAI?.id}`);
     }

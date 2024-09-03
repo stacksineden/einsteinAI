@@ -17,7 +17,7 @@ import { getLevelColor, truncateText } from "@/lib/utils";
 import { AssistantModel, dataSet } from "@/modelDataset";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { BadgeCheck, Info } from "lucide-react";
-import { CreateAssistantValidationSchema } from "@/lib/validation"; 
+import { CreateAssistantValidationSchema } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
 import {
   useGetUserVectorStoreDetails,
@@ -25,7 +25,7 @@ import {
 } from "@/lib/tanstack-query/queriesAndMutation";
 import { createAssistantOpenAI } from "@/lib/openAI/api";
 import { useUserContext } from "@/context/AuthContext";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const AssistantTraining = () => {
@@ -38,14 +38,12 @@ const AssistantTraining = () => {
 
   const { user, userSubscriptionDetails } = useUserContext();
 
-  const { toast } = useToast();
-
   const { mutateAsync: saveAssistant, isPending: isLoadingSaving } =
     useSaveAssistantToDB();
 
   const { id } = useParams();
   const assistantTrainingObject = dataSet?.filter(
-    (assistant: AssistantModel) => assistant?.id === id 
+    (assistant: AssistantModel) => assistant?.id === id
   );
 
   const { data: vectorStore } = useGetUserVectorStoreDetails(user?.id);
@@ -110,18 +108,11 @@ const AssistantTraining = () => {
     const responseFromOpenAI = await createAssistantOpenAI(assistantObject);
 
     if (responseFromOpenAI) {
-      toast({
-        description: "Your Assistant is successfully created.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Assistant is successfully created.");
     }
     if (!responseFromOpenAI) {
       setCreatingAssistant(false);
-      toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      toast.error("Assistant Creation failed. Please try again");
     }
 
     const assistantToBeSaved = {
@@ -139,20 +130,14 @@ const AssistantTraining = () => {
     if (newAssistant instanceof Error) {
       // Assuming err.message contains the API error message
       setCreatingAssistant(false);
-      return toast({
-        title:
-          newAssistant?.message ||
-          "Unable to save assistant, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(
+        newAssistant?.message || "Unable to save assistant, please try again."
+      );
     }
 
     if (newAssistant) {
       setCreatingAssistant(false);
-      toast({
-        description: "Your Assistant is successfully saved.",
-        className: "bg-primary-blue text-white",
-      });
+      toast("Your Assistant is successfully saved.");
     }
 
     //handle redirection

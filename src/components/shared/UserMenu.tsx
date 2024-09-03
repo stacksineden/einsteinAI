@@ -7,7 +7,7 @@ import { useSignOutAccount } from "@/lib/tanstack-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { useToast } from "../ui/use-toast";
+import toast from "react-hot-toast";
 
 type CreateAssistantModalProps = {
   isOpen: boolean;
@@ -64,11 +64,10 @@ const CreateAssistantModal = ({
       </DialogContent>
     </Dialog>
   );
-};
+}; 
 
 const UserMenu = () => {
   const Navigate = useNavigate();
-  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -79,18 +78,11 @@ const UserMenu = () => {
   const handleSignOut = async () => {
     const response = await signOut();
     if (response) {
-      toast({
-        description: "Logout successful!",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Logout successful!");
       Navigate("/sign-in");
     }
     if (!response) {
-      return toast({
-        title: "Something went wrong!",
-        description: "Unable to sign you out",
-        className: "bg-red-200 text-white",
-      });
+      return toast.error("Unable to logout!");
     }
   };
 

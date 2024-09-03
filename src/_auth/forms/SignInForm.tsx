@@ -15,12 +15,11 @@ import { Input } from "@/components/ui/input";
 import { SigninValidationSchema } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { useUserContext } from "@/context/AuthContext";
 import { useSignInAccount } from "@/lib/tanstack-query/queriesAndMutation";
 
 const SignInForm = () => {
-  const { toast } = useToast();
   const { checkAuthUser } = useUserContext();
   const navigate = useNavigate();
 
@@ -47,12 +46,21 @@ const SignInForm = () => {
       email: values.email,
       password: values.password,
     });
+    // if (session) {
+    //   return toast.success("Login Successful.");
+    // }
     if (session instanceof Error) {
       // Assuming err.message contains the API error message
-      return toast({
-        title: session?.message || "Sign in failed, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      console.log(session?.message);
+      if (
+        session?.message ===
+        "Creation of a session is prohibited when a session is active."
+      ) {
+        navigate("/app");
+      }
+      return toast.error(
+        session?.message || "Sign in failed, please try again."
+      );
     }
     setIsCheckingAuth(true);
     const isLoggedIn = await checkAuthUser();
@@ -62,10 +70,7 @@ const SignInForm = () => {
       navigate("/app");
     } else {
       setIsCheckingAuth(false);
-      return toast({
-        title: "Sign up failed, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error("Sign up failed, please try again.");
     }
   }
 

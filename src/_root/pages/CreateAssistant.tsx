@@ -26,12 +26,10 @@ import AvatarSlider from "@/components/shared/AvatarSlider";
 import { create_agent_tool_set, emojiDictionary } from "@/modelDataset";
 import { useAssistantCategoryContext } from "@/context/AssistantCategoryContext";
 import { createAssistantOpenAI } from "@/lib/openAI/api";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 
 const CreateAssistant = () => {
   const navigate = useNavigate();
-
-  const { toast } = useToast();
 
   const { user, userSubscriptionDetails } = useUserContext();
 
@@ -58,6 +56,7 @@ const CreateAssistant = () => {
   async function onSubmit(
     values: z.infer<typeof CreateAssistantValidationSchema>
   ) {
+    if (!selectedAvatar) return toast.error("Select your Assistant Avatar");
     const assistantObject = {
       name: values.alt_name,
       instructions: values.alt_prompt,
@@ -96,18 +95,11 @@ const CreateAssistant = () => {
     const responseFromOpenAI = await createAssistantOpenAI(assistantObject);
 
     if (responseFromOpenAI) {
-      toast({
-        description: "Your Assistant is successfully created.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Assistant is successfully created.");
     }
     if (!responseFromOpenAI) {
       setCreatingAssistant(false);
-      toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      toast.error("Assistant Creation failed.");
     }
 
     const assistantToBeSaved = {
@@ -125,20 +117,14 @@ const CreateAssistant = () => {
     if (newAssistant instanceof Error) {
       // Assuming err.message contains the API error message
       setCreatingAssistant(false);
-      return toast({
-        title:
-          newAssistant?.message ||
-          "Unable to save assistant, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(
+        newAssistant?.message || "Unable to save assistant, please try again"
+      );
     }
 
     if (newAssistant) {
       setCreatingAssistant(false);
-      toast({
-        description: "Your Assistant is successfully saved.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Assistant is successfully saved.");
     }
 
     //handle redirection
@@ -253,7 +239,7 @@ const CreateAssistant = () => {
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                  )} 
+                  )}
                 />
 
                 {userSubscriptionDetails?.is_subscribed ? (

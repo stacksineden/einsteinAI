@@ -2,13 +2,12 @@ import { useAppContext } from "@/context/AppContext";
 import { useUserContext } from "@/context/AuthContext";
 import { createAssistantOpenAI } from "@/lib/openAI/api";
 import { AssistantModel } from "@/modelDataset";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useSaveAssistantToDB } from "@/lib/tanstack-query/queriesAndMutation";
 
 const ToolsCard = ({ assistant, vector_store_id }: ToolsCardProps) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const { mutateAsync: saveAssistant, isPending: isLoadingSaving } =
     useSaveAssistantToDB();
@@ -55,17 +54,10 @@ const ToolsCard = ({ assistant, vector_store_id }: ToolsCardProps) => {
     const responseFromOpenAI = await createAssistantOpenAI(assistantObject);
 
     if (responseFromOpenAI) {
-      toast({
-        description: "Your Virtual Assistant is ready to work with you.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Virtual Assistant is ready to work with you.");
     }
     if (!responseFromOpenAI) {
-      toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      toast.error("Assistant Creation failed.");
     }
 
     const assistantToBeSaved = {
@@ -80,18 +72,11 @@ const ToolsCard = ({ assistant, vector_store_id }: ToolsCardProps) => {
 
     const newAssistant = await saveAssistant(assistantToBeSaved);
     if (!newAssistant) {
-      return toast({
-        title: "Unable to save assistant!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      return toast.error("Unable to save assistant!");
     }
 
     if (newAssistant) {
-      toast({
-        description: "Agent successfully updated.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Agent successfully updated.");
 
       navigate(`/chat-assistant/${responseFromOpenAI?.id}`);
     }

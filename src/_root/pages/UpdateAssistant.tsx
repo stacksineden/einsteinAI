@@ -12,7 +12,7 @@ import { BadgeCheck, Info } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import {
   Form,
   FormControl,
@@ -35,7 +35,6 @@ import { Textarea } from "@/components/ui/textarea";
 const UpdateAssistant = () => {
   const { id, docid } = useParams();
   const { user } = useUserContext();
-  const { toast } = useToast();
   const [creatingAssistant, setCreatingAssistant] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -127,18 +126,11 @@ const UpdateAssistant = () => {
     );
 
     if (responseFromOpenAI) {
-      toast({
-        description: "Your Assistant is successfully updated.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Assistant is successfully updated.");
     }
     if (!responseFromOpenAI) {
       setCreatingAssistant(false);
-      toast({
-        title: "Something went wrong!",
-        description: "Please try again",
-        className: "bg-red-200 text-white",
-      });
+      toast.error("Assistant Update failed.");
     }
     const assistantToBeSaved = {
       id: docid!,
@@ -151,20 +143,14 @@ const UpdateAssistant = () => {
     if (savedAssistant instanceof Error) {
       // Assuming err.message contains the API error message
       setCreatingAssistant(false);
-      return toast({
-        title:
-          savedAssistant?.message ||
-          "Unable to save assistant, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(
+        savedAssistant?.message || "Unable to save assistant, please try again."
+      );
     }
 
     if (savedAssistant) {
       setCreatingAssistant(false);
-      toast({
-        description: "Your Assistant is successfully saved.",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Your Assistant is successfully saved.");
     }
 
     //handle redirection

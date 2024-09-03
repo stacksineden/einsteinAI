@@ -30,12 +30,11 @@ import {
   useGetUserVectorStoreDetails,
   useSignOutAccount,
 } from "@/lib/tanstack-query/queriesAndMutation";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import EinsteinGptModal from "@/components/shared/EinsteinGptModal";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const { assistantCategory } = useAssistantCategoryContext();
   const { user, checkAuthUser, userSubscriptionDetails } = useUserContext();
@@ -162,18 +161,12 @@ const Home = () => {
   const handleSignOut = async () => {
     const response = await signOut();
     if (response) {
-      toast({
-        description: "Logout successful!",
-        className: "bg-primary-blue text-white",
-      });
+      toast.success("Logout successful!");
       navigate("/sign-in");
     }
     if (response instanceof Error) {
       // Assuming err.message contains the API error message
-      return toast({
-        title: response?.message || "Sign out, please try again.",
-        className: "bg-primary-red text-white",
-      });
+      return toast.error(response?.message || "Sign out, please try again.");
     }
   };
 
