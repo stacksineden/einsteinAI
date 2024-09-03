@@ -285,7 +285,7 @@ const SideBar = () => {
                         className="w-full relative flex flex-1 flex-col gap-1 p-4 pt-3 overflow-y-auto"
                         data-slot="base"
                         aria-label="Recent assistants"
-                        style={{ maxHeight: "calc(100vh - 380px)" }}
+                        style={{ maxHeight: "calc(100vh - 350px)" }}
                       >
                         <div
                           data-slot="list"
