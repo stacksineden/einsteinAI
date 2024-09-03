@@ -697,7 +697,7 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
   };
 
   return (
-    <div className="relative mb-7 md:mb-0">
+    <div className="relative mb-2 md:mb-0">
       <div className="mx-2 flex flex-col md:mx-2 lg:mx-auto lg:max-w-3xl xl:max-w-4xl">
         <div className="flex flex-col w-full p-4">
           <Input
