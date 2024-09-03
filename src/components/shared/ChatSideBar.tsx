@@ -210,10 +210,11 @@ const ChatSideBar = ({
     }
   };
 
+
   return (
     <aside className="h-[100dvh] overflow-hidden">
       {/* Desktop */}
-      <div className="w-full h-full hidden md:flex mr-7"> 
+      <div className="w-full h-full hidden md:flex mr-7">
         <div
           className={`lg:block ${
             chatOpen
@@ -234,7 +235,13 @@ const ChatSideBar = ({
                   alt="brand"
                   className="w-full object-contain cursor-pointer"
                   loading="lazy"
-                  onClick={() => navigate(`einsteingpt/${id!}`)}
+                  onClick={() => {
+                    if (assistant_name === "EinsteinGPT") {
+                      navigate(`einsteingpt/${id}`);
+                    } else {
+                      navigate("/app");
+                    }
+                  }}
                 />
                 <div
                   className="z-0 group inline-flex items-center justify-center justify-self-end mr-2 cursor-pointer"
@@ -408,9 +415,15 @@ const ChatSideBar = ({
                       className="w-full object-contain cursor-pointer"
                       loading="lazy"
                       onClick={() => {
-                        setChatMobileOpen(false);
-                        setMobileOpen(false);
-                        navigate(`einsteingpt/${id!}`);
+                        if (assistant_name === "EinsteinGPT") {
+                          navigate(`einsteingpt/${id}`);
+                          setChatMobileOpen(false);
+                          setMobileOpen(false);
+                        } else {
+                          navigate("/app");
+                          setChatMobileOpen(false);
+                          setMobileOpen(false);
+                        }
                       }}
                     />
 
@@ -502,7 +515,7 @@ const ChatSideBar = ({
                                   {thread.description}
                                 </p>
                               </li>
-                            </ul> 
+                            </ul>
                           ))}
                         </div>
                       </div>
