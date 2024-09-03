@@ -211,7 +211,7 @@ const ChatSideBar = ({
   };
 
   return (
-    <aside className="h-full overflow-hidden">
+    <aside className="h-[100dvh] overflow-hidden">
       {/* Desktop */}
       <div className="w-full h-full hidden md:flex mr-7"> 
         <div
@@ -422,7 +422,7 @@ const ChatSideBar = ({
                     </div>
                   </div>
 
-                  <div className="flex-grow flex-col overflow-hidden mt-4">
+                  <div className="flex flex-col overflow-hidden mt-4">
                     <div className="w-full px-4">
                       <CreateThreadModal
                         submitFunc={handleThreadCreation}
@@ -449,7 +449,7 @@ const ChatSideBar = ({
                         className="w-full relative flex flex-col gap-1 p-4 pt-3 overflow-y-auto scrollbar-hide"
                         data-slot="base"
                         aria-label="Recent threads"
-                        style={{ maxHeight: "calc(100vh - 350px)" }}
+                        style={{ maxHeight: "calc(100vh - 400px)" }}
                       >
                         <div
                           data-slot="list"
@@ -502,7 +502,7 @@ const ChatSideBar = ({
                                   {thread.description}
                                 </p>
                               </li>
-                            </ul>
+                            </ul> 
                           ))}
                         </div>
                       </div>

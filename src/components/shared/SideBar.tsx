@@ -251,7 +251,7 @@ const SideBar = () => {
                     </div>
                   </div>
 
-                  <div className="flex-col overflow-hidden mt-4">
+                  <div className="flex flex-col overflow-hidden mt-4">
                     <div className="w-full px-4">
                       <Button
                         className="bg-zinc-700 hover:opacity-90 flex gap-2 text-zinc-100 rounded-full text-sm"
@@ -277,7 +277,7 @@ const SideBar = () => {
                       </Button>
                     </div>
 
-                    <div className="flex flex-col pt-2 md:pt-5 relative">
+                    <div className="flex flex-col overflow-hidden pt-2 md:pt-5 relative">
                       <div className="text-zinc-400 block ml-5 ">
                         <p className="font-normal">My Assistants</p>
                       </div>
