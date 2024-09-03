@@ -67,7 +67,7 @@ const Messages = ({
             children={contentValue}
             className={`text-zinc-300 text-sm tracking-wide ${
               role === "user" &&
-              "bg-zinc-800 py-4 px-4 md:px-5 max-w-[300px] md:max-w-[550px] w-full rounded-3xl overflow-x-scroll"
+              "bg-zinc-800 py-4 px-4 md:px-5 max-w-[280px] md:max-w-[550px] w-full rounded-3xl overflow-x-scroll"
             }`}
             components={{
               code(props) {

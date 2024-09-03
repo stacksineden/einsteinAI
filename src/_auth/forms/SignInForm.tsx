@@ -51,7 +51,6 @@ const SignInForm = () => {
     // }
     if (session instanceof Error) {
       // Assuming err.message contains the API error message
-      console.log(session?.message);
       if (
         session?.message ===
         "Creation of a session is prohibited when a session is active."
