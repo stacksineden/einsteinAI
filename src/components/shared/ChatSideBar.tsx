@@ -234,7 +234,7 @@ const ChatSideBar = ({
                   alt="brand"
                   className="w-full object-contain cursor-pointer"
                   loading="lazy"
-                  onClick={() => navigate("/app")}
+                  onClick={() => navigate(`einsteingpt/${id!}`)}
                 />
                 <div
                   className="z-0 group inline-flex items-center justify-center justify-self-end mr-2 cursor-pointer"
@@ -410,7 +410,7 @@ const ChatSideBar = ({
                       onClick={() => {
                         setChatMobileOpen(false);
                         setMobileOpen(false);
-                        navigate("/app");
+                        navigate(`einsteingpt/${id!}`);
                       }}
                     />
 
