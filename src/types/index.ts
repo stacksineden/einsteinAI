@@ -48,11 +48,11 @@ export type Ithread = {
 };
 
 export type IupdateAssistantOpenAI = {
-  name: string;
-  instructions: string;
-  description: string;
-  tools: Array<{
-    type: string;
+  name?: string;
+  instructions?: string;
+  description?: string;
+  tools?: Array<{
+    type?: string;
     function?: {
       name: string;
       description: string;
@@ -63,11 +63,11 @@ export type IupdateAssistantOpenAI = {
       };
     };
   }>;
-  tool_resources: {
-    file_search: {
+  tool_resources?: {
+    file_search?: {
       vector_store_ids: string[];
     };
-    code_interpreter: {
+    code_interpreter?: {
       file_ids: string[];
     };
   };

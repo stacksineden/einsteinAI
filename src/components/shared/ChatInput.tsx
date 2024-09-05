@@ -12,6 +12,7 @@ import {
   retrieveRunOpenAI,
   retrieveVectorStore,
   submitToolsOutputOpenAI,
+  updateAssistantOpenAI,
   uploadFileToOpenAI,
   // uploadFileToOpenAI,
 } from "@/lib/openAI/api";
@@ -122,7 +123,7 @@ const UploadDropZone = ({
   );
 };
 
-const ChatInput = ({ assistantId }: ChatInputProps) => {
+const ChatInput = ({ assistantId, vector_store_ids }: ChatInputProps) => {
   const { id } = useParams();
   const [, setIsOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
@@ -579,10 +580,39 @@ const ChatInput = ({ assistantId }: ChatInputProps) => {
     });
     setMessage("Analyzing ...");
 
+    //if veector id is present and the assistant object tools resources is empty update assistant
+    if (
+      vectorStore?.documents[0]?.vector_store_id &&
+      vector_store_ids?.length === 0
+    ) {
+      const assistantObjectTobeUpdated = {
+        tool_resources: {
+          file_search: {
+            vector_store_ids: [vectorStore?.documents[0]?.vector_store_id],
+          },
+          code_interpreter: {
+            file_ids: [],
+          },
+        },
+      };
+      setMessage("Optimizing memeory for your files ...");
+      const responseFromOpenAI = await updateAssistantOpenAI(
+        id!,
+        assistantObjectTobeUpdated
+      );
+      console.log(responseFromOpenAI);
+      if (responseFromOpenAI) {
+        setMessage("File Memory Updated ...");
+      }
+      if (!responseFromOpenAI) {
+        console.log("here is a dead end");
+      }
+    }
+
     // check for file memory and getting it completed before proceeding
     // Polling mechanism for vector store status
     if (vectorStore?.documents[0]?.vector_store_id) {
-      const vectorStoreId = vectorStore.documents[0].vector_store_id;
+      const vectorStoreId = vectorStore.documents[0]?.vector_store_id;
       let isCompleted = false;
 
       while (!isCompleted) {
@@ -700,6 +730,8 @@ export default ChatInput;
 type ChatInputProps = {
   assistantId: string;
   threadId?: string;
+  // assistantObject:IAssistant
+  vector_store_ids: string[];
 };
 
 // type ToolCall = {

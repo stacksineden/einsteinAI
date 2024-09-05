@@ -101,7 +101,7 @@ export async function retrieveAssistantOpenAI(assistant_id: string) {
 //update assistant
 export async function updateAssistantOpenAI(
   assistant_id: string,
-  payload: IupdateAssistantOpenAI
+  payload: IupdateAssistantOpenAI 
 ) {
   try {
     const url = `https://api.openai.com/v1/assistants/${assistant_id}`;
