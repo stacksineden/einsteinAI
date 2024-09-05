@@ -600,7 +600,7 @@ const ChatInput = ({ assistantId, vector_store_ids }: ChatInputProps) => {
         id!,
         assistantObjectTobeUpdated
       );
-      console.log(responseFromOpenAI);
+      // console.log(responseFromOpenAI);
       if (responseFromOpenAI) {
         setMessage("File Memory Updated ...");
       }

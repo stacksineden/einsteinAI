@@ -129,7 +129,7 @@ const EinsteinGptChat = () => {
               />
             )}
           </div>
-          <ChatInput
+          <ChatInput 
             assistantId={id!}
             threadId={activeThreadId!}
             vector_store_ids={
