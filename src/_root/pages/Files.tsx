@@ -28,7 +28,7 @@ const Files = () => {
 
   const { data: vectorStore, isPending: isVectorStoreLoading } =
     useGetUserVectorStoreDetails(user?.id); 
-    console.log(vectorStore?.documents[0])
+ 
 
   // console.log(files,'files')
 
