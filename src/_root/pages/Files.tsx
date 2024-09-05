@@ -28,6 +28,7 @@ const Files = () => {
 
   const { data: vectorStore, isPending: isVectorStoreLoading } =
     useGetUserVectorStoreDetails(user?.id); 
+    console.log(vectorStore?.documents[0])
 
   // console.log(files,'files')
 
@@ -80,7 +81,7 @@ const Files = () => {
                 )}
               <UploadButton
                 files={files}
-                vector_store_id={vectorStore?.documents[0]?.vector_store_id}
+                vector_store_id={vectorStore?.documents[0]?.vector_store_id} 
               />
             </div>
           </div>
