@@ -3,7 +3,7 @@ import ChatInput from "@/components/shared/ChatInput";
 import { useUserContext } from "@/context/AuthContext";
 import { useChatContext } from "@/context/ChatContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader2} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import EinsteinGptIntro from "@/components/shared/EinsteinGptIntro";
 import { useGetUserAssistants } from "@/lib/tanstack-query/queriesAndMutation";
@@ -86,7 +86,7 @@ const EinsteinGptChat = () => {
             </Button>
           </div>
         </div>
-      )} 
+      )}
 
       {userSubscriptionDetails?.is_subscribed && (
         // <div className="h-screen">
@@ -112,12 +112,12 @@ const EinsteinGptChat = () => {
           <div className="max-w-5xl self-center w-full flex-1 flex flex-col overflow-hidden">
             {/* CHAT INTRO */}
             {!activeThreadId && (
-              <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide"> 
+              <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
                 <EinsteinGptIntro />
               </div>
             )}
             {activeThreadId && (
-              <Messages 
+              <Messages
                 threadId={activeThreadId!}
                 assistantName={assistantObject?.name!}
                 pretrainingName={
@@ -129,7 +129,14 @@ const EinsteinGptChat = () => {
               />
             )}
           </div>
-          <ChatInput assistantId={id!} threadId={activeThreadId!} />
+          <ChatInput 
+            assistantId={id!}
+            threadId={activeThreadId!}
+            vector_store_ids={
+              assistantObject?.tool_resources?.file_search?.vector_store_ids ??
+              []
+            }
+          />
         </div>
         // </div>
       )}
@@ -156,4 +163,9 @@ type IAssistant = {
   };
   description?: string;
   tools?: Tools[];
+  tool_resources?: {
+    file_search?: {
+      vector_store_ids?: string[];
+    };
+  };
 };

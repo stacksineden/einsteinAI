@@ -27,11 +27,9 @@ const Files = () => {
   } = useGetUserFiles(user?.id);
 
   const { data: vectorStore, isPending: isVectorStoreLoading } =
-    useGetUserVectorStoreDetails(user?.id);
+    useGetUserVectorStoreDetails(user?.id); 
 
   // console.log(files,'files')
-
-  // console.log(vectorStore, "vectorStorevectorStore");
 
   const { mutateAsync: deleteFile, isPending: isDeletingFileLoading } =
     useDeleteUserFiles();

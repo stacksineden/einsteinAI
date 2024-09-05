@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useChatContext } from "@/context/ChatContext";
 import { retrieveAssistantOpenAI } from "@/lib/openAI/api";
 import { Loader2, Share } from "lucide-react";
-import {  useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ChatIntro from "@/components/shared/ChatIntro";
 import {
   getMatchingPromptsForAssistants,
@@ -136,7 +136,14 @@ const AssistantChat = () => {
                 />
               )}
             </div>
-            <ChatInput assistantId={id!} threadId={activeThreadId!} />
+            <ChatInput
+              assistantId={id!}
+              threadId={activeThreadId!}
+              vector_store_ids={
+                assistantObject?.tool_resources?.file_search
+                  ?.vector_store_ids ?? []
+              }
+            />
           </div>
         )}
       {userSubscriptionDetails?.is_subscribed && (
@@ -186,7 +193,14 @@ const AssistantChat = () => {
               />
             )}
           </div>
-          <ChatInput assistantId={id!} threadId={activeThreadId!} />
+          <ChatInput
+            assistantId={id!}
+            threadId={activeThreadId!}
+            vector_store_ids={
+              assistantObject?.tool_resources?.file_search?.vector_store_ids ??
+              []
+            }
+          />
         </div>
         // </div>
       )}
@@ -213,8 +227,12 @@ type IAssistant = {
   };
   description?: string;
   tools?: Tools[];
+  tool_resources?: {
+    file_search: {
+      vector_store_ids: string[];
+    };
+  };
 };
-
 {
   /* chat sidebar on mobile */
 }
