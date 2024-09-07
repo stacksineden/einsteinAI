@@ -335,7 +335,7 @@ const Home = () => {
               {/* Third Slider */}
               <div className="w-full flex flex-col gap-4 mb-4">
                 <p className="ml-4 text-lg font-medium text-zinc-100">
-                  Try These
+                  Try These <span className="text-primary-blue">GPTs</span>
                 </p>
                 <div className="relative group w-full flex">
                   <ToolsSlider
